@@ -17,12 +17,10 @@ EOF
 # //usage
 
 # options
-OPTIONS="l,a,s"
+OPTIONS="l"
 LONGOPTIONS=""
 source ../common.sh
 LIST_MODE=0
-ARCHIVE_MODE=0
-STORAGE_MODE=0
 function SetOptions {
   opts=$( getopt --options $_OPTIONS,$OPTIONS \
                  --longoptions $_LONGOPTIONS,$LONGOPTIONS \
@@ -37,12 +35,6 @@ function SetOptions {
       -l)
         LIST_MODE=1
         ;;
-      -a)
-        ARCHIVE_MODE=1
-        ;;
-      -s)
-        STORAGE_MODE=1
-        ;;
       --)
         ;;
       *)
@@ -52,6 +44,10 @@ function SetOptions {
     shift
   done
   
+  if [ -z "${params[*]}" ]; then
+    USAGE
+  fi
+  
   OUTDIR=$( GetProp "backup.outdir" )
   STORAGE=$( GetProp "backup.storage" )
   
@@ -60,8 +56,6 @@ function SetOptions {
 - SetOptions
   OUTDIR = $OUTDIR
   STORAGE = $STORAGE
-  ARCHIVE_MODE = $ARCHIVE_MODE
-  STORAGE_MODE = $STORAGE_MODE
 
 EOF
   fi
@@ -104,7 +98,7 @@ EOF
   params = ${params[*]}
   ENTRIES = [ ${ENTRIES[*]} ]
   mtot = $mtotd
-
+  
 EOF
   
   ## process
@@ -113,21 +107,12 @@ EOF
     row=$( jq -r '.backup.entries[] | select(.name == "'$entry'") | "\(.name)|\(.source)"' <<< $PROP | sed '' )
     IFS='|'; read name source <<< $row; unset IFS
     
-    if [ ! -e "$source" ]; then
-      LOG "\e[0;31merror\e[0m: \"$entry\" \"$source\" 가 존재하지 않습니다." 
+    if [ ! -e "$STORAGE/${source##*/}" ]; then
+      LOG "\e[0;31merror\e[0m: \"$entry\" \"$STORAGE/${source##*/}\" 가 존재하지 않습니다." 
       continue
     fi
     
-    EXEC "bcomp @\"$SCRDIR/bcomp.script\" \"$source\" \"$OUTDIR/${source##*/}\""
-    
-    if [ $ARCHIVE_MODE == 1 ]; then
-      EXEC "cd $OUTDIR; tar cf \"$OUTDIR/${source##*/}.tar\" \"${source##*/}\""
-    fi
-    
-    if [ $STORAGE_MODE == 1 ]; then
-      EXEC "bcomp @\"$SCRDIR/bcomp.script\" \"$source\" \"$STORAGE/${source##*/}\""
-      EXEC "cd $OUTDIR; tar cvf - \"${source##*/}.tar\" | (cd \"$STORAGE\" ; tar xvf -)"
-    fi
+    EXEC "bcomp @\"$SCRDIR/bcomp.script\" \"$STORAGE/${source##*/}\" \"$OUTDIR/${source##*/}\""
     
     let "midx = midx + 1"
   done
