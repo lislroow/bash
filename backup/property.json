@@ -1,0 +1,54 @@
+{
+  "config": {
+    "precmd": [
+      "set -o vi",
+      "shopt -s extglob"
+    ],
+    "env": [
+      {
+        "name": "JAVA_HOME",
+        "value": "/c/develop/tools/java/openjdk-17.0.3.0.6-1"
+      },
+      {
+        "name": "JAVA_TOOL_OPTIONS",
+        "value": ""
+      }
+    ],
+    "path": [
+      "/c/develop/tools/java/openjdk-17.0.3.0.6-1/bin",
+      "/c/develop/tools/maven/bin",
+      "/c/develop/tools/7z",
+      "/c/develop/tools/bcomp"
+    ]
+  },
+  "backup": {
+    "outdir": "/c/backup",
+    "storage": "/d",
+    "entries": [
+      {
+        "name": "wallpaper",
+        "source": "/c/wallpaper"
+      },
+      {
+        "name": "itunes",
+        "source": "/c/Users/MYEONGGU.KIM/Music/iTunes"
+      },
+      {
+        "name": "develop",
+        "source": "/c/develop"
+      },
+      {
+        "name": "editplus",
+        "source": "/c/Users/MYEONGGU.KIM/AppData/Roaming/EditPlus"
+      },
+      {
+        "name": "picture",
+        "source": "/c/미디어/@사진"
+      },
+      {
+        "name": "picture2",
+        "source": "/c/미디어/@사진2"
+      }
+    ]
+  }
+}
