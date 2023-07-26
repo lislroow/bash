@@ -30,24 +30,28 @@
         "source": "/c/wallpaper"
       },
       {
-        "name": "itunes",
-        "source": "/c/Users/MYEONGGU.KIM/Music/iTunes"
+        "name": "editplus",
+        "source": "/c/Users/MYEONGGU.KIM/AppData/Roaming/EditPlus"
       },
       {
         "name": "develop",
         "source": "/c/develop"
       },
       {
-        "name": "editplus",
-        "source": "/c/Users/MYEONGGU.KIM/AppData/Roaming/EditPlus"
+        "name": "plex",
+        "source": "/c/Users/MYEONGGU.KIM/AppData/Local/Plex Media Server"
+      },
+      {
+        "name": "itunes",
+        "source": "/c/Users/MYEONGGU.KIM/Music/iTunes"
       },
       {
         "name": "picture",
-        "source": "/c/미디어/@사진"
+        "source": "/h/미디어/@사진"
       },
       {
         "name": "picture2",
-        "source": "/c/미디어/@사진2"
+        "source": "/h/미디어/@사진2"
       }
     ]
   }

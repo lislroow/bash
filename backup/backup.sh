@@ -17,9 +17,10 @@ EOF
 # //usage
 
 # options
-OPTIONS="a,s"
+OPTIONS="l,a,s"
 LONGOPTIONS=""
 source ../common.sh
+LIST_MODE=0
 ARCHIVE_MODE=0
 STORAGE_MODE=0
 function SetOptions {
@@ -33,6 +34,9 @@ function SetOptions {
     fi
     case $1 in
       -h | -v | --help | --verbose) ;;
+      -l)
+        LIST_MODE=1
+        ;;
       -a)
         ARCHIVE_MODE=1
         ;;
@@ -47,10 +51,6 @@ function SetOptions {
     esac
     shift
   done
-  
-  if [ -z "${params[*]}" ]; then
-    USAGE
-  fi
   
   OUTDIR=$( GetProp "backup.outdir" )
   STORAGE=$( GetProp "backup.storage" )
@@ -77,13 +77,24 @@ fi
 # main
 function main {
   ## prepare
+  if [ $LIST_MODE == 1 ] || [ -z "${params[*]}" ]; then
+    ENTRIES=($( jq -r '.backup.entries[] | .name' <<< $PROP | sed '' ))
+    cat << EOF
+  - main
+    ENTRIES = [ ${ENTRIES[*]} ]
+
+EOF
+    USAGE
+  fi
+  
+  ## entries
   IFS=","; read -a ENTRIES <<< ${params[*]}; unset IFS
   mtot=${#ENTRIES[*]}
   midx=1
   for entry in ${ENTRIES[*]}; do
     if [ $entry == 'all' ]; then
       ENTRIES=($( jq -r '.backup.entries[] | .name' <<< $PROP | sed '' ))
-      mtot=${#ENTRIES[*]}
+      mtot=${#list[*]}
       break
     fi
   done
@@ -92,8 +103,8 @@ function main {
 - main
   params = ${params[*]}
   ENTRIES = [ ${ENTRIES[*]} ]
-  mtot = $mtot
-  
+  mtot = $mtotd
+
 EOF
   
   ## process
@@ -103,24 +114,19 @@ EOF
     IFS='|'; read name source <<< $row; unset IFS
     
     if [ ! -e "$source" ]; then
-      LOG "\e[0;31merror\e[0m: \"$entry\" source 가 존재하지 않습니다." 
+      LOG "\e[0;31merror\e[0m: \"$entry\" \"$source\" 가 존재하지 않습니다." 
       continue
     fi
     
-    output=$OUTDIR/${source##*/}
-    
-    EXEC "bcomp @\"$SCRDIR/bcomp.script\" \"$source\" \"$output\""
+    EXEC "bcomp @\"$SCRDIR/bcomp.script\" \"$source\" \"$OUTDIR/${source##*/}\""
     
     if [ $ARCHIVE_MODE == 1 ]; then
-      EXEC "cd $OUTDIR; tar cf \"${output}.tar\" ${source##*/}"
+      EXEC "cd $OUTDIR; tar cf \"$OUTDIR/${source##*/}.tar\" \"${source##*/}\""
     fi
     
     if [ $STORAGE_MODE == 1 ]; then
       EXEC "bcomp @\"$SCRDIR/bcomp.script\" \"$source\" \"$STORAGE/${source##*/}\""
-    fi
-    
-    if [ $STORAGE_MODE == 1 ] && [ $ARCHIVE_MODE == 1 ]; then
-      EXEC "cd $OUTDIR; tar cvf - \"${output##*/}.tar\" | (cd \"$STORAGE\" ; tar xvf -)"
+      EXEC "cd $OUTDIR; tar cvf - \"${source##*/}.tar\" | (cd \"$STORAGE\" ; tar xvf -)"
     fi
     
     let "midx = midx + 1"
