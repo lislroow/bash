@@ -1,15 +1,21 @@
 #!/bin/bash
 
+# essential
+BASEDIR=$( cd $( dirname $0 ) && cd .. && pwd -P )
+
 # usage
 function USAGE {
   cat << EOF
 - USAGE
 Usage: $0 [options] <entries>
- -a   : 7z 아카이브 생성하기 (default: disabled)
+ -a   : 백업 디렉토리 tar 생성하기
+ -s   : 스토리지 복사하기
 
 sample:
-  $0 [options] all             : 전체 실행
-  $0 [options] develop itunes  : develop, itunes 실행
+  $0 <entries>       : sync (source -> backup)
+  $0 -a <entries>    : sync (source -> backup) + tar (backup)
+  $0 -s <entries>    : sync (source -> backup) + sync (backup -> storage) 
+  $0 -s -a <entries> : sync (source -> backup) + tar (backup) + sync (backup -> storage) + cp (backup tar) 
 
 EOF
   exit 1
@@ -19,7 +25,7 @@ EOF
 # options
 OPTIONS="l,a,s"
 LONGOPTIONS=""
-source ../common.sh
+source $BASEDIR/common.sh
 LIST_MODE=0
 ARCHIVE_MODE=0
 STORAGE_MODE=0
@@ -109,7 +115,7 @@ EOF
   
   ## process
   for entry in ${ENTRIES[*]}; do
-    printf " \e[1;37m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
+    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
     row=$( jq -r '.backup.entries[] | select(.name == "'$entry'") | "\(.name)|\(.source)"' <<< $PROP | sed '' )
     IFS='|'; read name source <<< $row; unset IFS
     
@@ -118,14 +124,14 @@ EOF
       continue
     fi
     
-    EXEC "bcomp @\"$SCRDIR/bcomp.script\" \"$source\" \"$OUTDIR/${source##*/}\""
+    EXEC "bcomp @\"$FUNCDIR/bcomp.script\" \"$source\" \"$OUTDIR/${source##*/}\""
     
     if [ $ARCHIVE_MODE == 1 ]; then
       EXEC "cd $OUTDIR; tar cf \"$OUTDIR/${source##*/}.tar\" \"${source##*/}\""
     fi
     
     if [ $STORAGE_MODE == 1 ]; then
-      EXEC "bcomp @\"$SCRDIR/bcomp.script\" \"$source\" \"$STORAGE/${source##*/}\""
+      EXEC "bcomp @\"$FUNCDIR/bcomp.script\" \"$source\" \"$STORAGE/${source##*/}\""
       EXEC "cd $OUTDIR; tar cvf - \"${source##*/}.tar\" | (cd \"$STORAGE\" ; tar xvf -)"
     fi
     

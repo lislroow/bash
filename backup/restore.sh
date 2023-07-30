@@ -1,15 +1,16 @@
 #!/bin/bash
 
+# essential
+BASEDIR=$( cd $( dirname $0 ) && cd .. && pwd -P )
+
 # usage
 function USAGE {
   cat << EOF
 - USAGE
 Usage: $0 [options] <entries>
- -a   : 7z 아카이브 생성하기 (default: disabled)
 
 sample:
-  $0 [options] all             : 전체 실행
-  $0 [options] develop itunes  : develop, itunes 실행
+  $0 <entries>       : sync (storage -> backup)
 
 EOF
   exit 1
@@ -19,7 +20,7 @@ EOF
 # options
 OPTIONS="l"
 LONGOPTIONS=""
-source ../common.sh
+source $BASEDIR/common.sh
 LIST_MODE=0
 function SetOptions {
   opts=$( getopt --options $_OPTIONS,$OPTIONS \
@@ -103,7 +104,7 @@ EOF
   
   ## process
   for entry in ${ENTRIES[*]}; do
-    printf " \e[1;37m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
+    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
     row=$( jq -r '.backup.entries[] | select(.name == "'$entry'") | "\(.name)|\(.source)"' <<< $PROP | sed '' )
     IFS='|'; read name source <<< $row; unset IFS
     
@@ -112,7 +113,7 @@ EOF
       continue
     fi
     
-    EXEC "bcomp @\"$SCRDIR/bcomp.script\" \"$STORAGE/${source##*/}\" \"$OUTDIR/${source##*/}\""
+    EXEC "bcomp @\"$FUNCDIR/bcomp.script\" \"$STORAGE/${source##*/}\" \"$OUTDIR/${source##*/}\""
     
     let "midx = midx + 1"
   done

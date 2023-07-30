@@ -35,10 +35,8 @@ fi
 
 # [2] variables
 CURDIR=$( pwd -P )
-CURDIRNM=${CURDIR##*/}
-SCRDIR=$( cd $( dirname $0 ) && pwd -P )
-BASEDIR=$( cd $( dirname $SCRDIR ) && pwd -P )
-PROP=$( cat $SCRDIR/property.json )
+FUNCDIR=$( cd $( dirname $0 ) && pwd -P )
+PROP=$( cat $FUNCDIR/property.json )
 
 cat << EOF
   DEBUG_MODE = $DEBUG_MODE
@@ -49,11 +47,10 @@ if [ $DEBUG_MODE == 1 ]; then
   cat << EOF
 - common.sh
   ** VAR **
-  CURDIR = $CURDIR
-  CURDIRNM = $CURDIRNM
-  SCRDIR = $SCRDIR
   BASEDIR = $BASEDIR
-  PROP = \$( cat $SCRDIR/property.json )
+  CURDIR = $CURDIR
+  FUNCDIR = $FUNCDIR
+  PROP = \$( cat $FUNCDIR/property.json )
 
 EOF
 fi
@@ -81,7 +78,7 @@ function EXEC {
   local lineNo=${BASH_LINENO[0]}
   local TS=`date "+%Y-%m-%d %H:%M:%S"`
   
-  printf "%s %s \e[1;37m%s \e[1;36m%s\e[0m " "$TS" "[$func:$lineNo]" "\$" "$cmd" 1>&2
+  printf "%s %s \e[1;37m%s %s\e[0m " "$TS" "[$func:$lineNo]" "\$" "$cmd" 1>&2
   local start=$( date +%s%N )
   if [ $DEBUG_MODE == 1 ]; then
     bash -c "$cmd"

@@ -23,7 +23,7 @@
   },
   "backup": {
     "outdir": "/c/backup",
-    "storage": "/d",
+    "storage": "/z",
     "entries": [
       {
         "name": "wallpaper",
@@ -47,11 +47,11 @@
       },
       {
         "name": "picture",
-        "source": "/h/미디어/@사진"
+        "source": "/c/미디어/@사진"
       },
       {
         "name": "picture2",
-        "source": "/h/미디어/@사진2"
+        "source": "/c/미디어/@사진2"
       }
     ]
   }
