@@ -9,7 +9,7 @@ function USAGE {
 - USAGE
 Usage: $0 [options] <entries>
 
-  ${0##*/} <entries>       : sync (storage -> backup)
+  ${0##*/} <entries>       : sync (storage-> backup)
 
 EOF
   exit 1
