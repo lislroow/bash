@@ -11,11 +11,10 @@ Usage: $0 [options] <entries>
  -a   : 백업 디렉토리 tar 생성하기
  -s   : 스토리지 복사하기
 
-sample:
-  $0 <entries>       : sync (source -> backup)
-  $0 -a <entries>    : sync (source -> backup) + tar (backup)
-  $0 -s <entries>    : sync (source -> backup) + sync (backup -> storage) 
-  $0 -s -a <entries> : sync (source -> backup) + tar (backup) + sync (backup -> storage) + cp (backup tar) 
+  ${0##*/} <entries>       : sync (source -> backup)
+  ${0##*/} -a <entries>    : sync (source -> backup) + tar (backup)
+  ${0##*/} -s <entries>    : sync (source -> backup) + sync (backup -> storage) 
+  ${0##*/} -s -a <entries> : sync (source -> backup) + tar (backup) + sync (backup -> storage) + cp (backup tar) 
 
 EOF
   exit 1
