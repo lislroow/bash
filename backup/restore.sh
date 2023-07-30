@@ -107,11 +107,13 @@ EOF
     row=$( jq -r '.backup.entries[] | select(.name == "'$entry'") | "\(.name)|\(.source)"' <<< $PROP | sed '' )
     IFS='|'; read name source <<< $row; unset IFS
     
+    ### validation
     if [ ! -e "$STORAGE/${source##*/}" ]; then
       LOG "\e[0;31merror\e[0m: \"$entry\" \"$STORAGE/${source##*/}\" 가 존재하지 않습니다." 
       continue
     fi
     
+    ### sync (storage-> backup)
     EXEC "bcomp @\"$FUNCDIR/bcomp.script\" \"$STORAGE/${source##*/}\" \"$OUTDIR/${source##*/}\""
     
     let "midx = midx + 1"

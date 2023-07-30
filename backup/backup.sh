@@ -13,7 +13,7 @@ Usage: $0 [options] <entries>
 
   ${0##*/} <entries>       : sync (source-> backup)
   ${0##*/} -a <entries>    : sync (source-> backup) + tar (backup)
-  ${0##*/} -s <entries>    : sync (source-> backup) + sync (backup -> storage) 
+  ${0##*/} -s <entries>    : sync (source-> backup) + sync (backup -> storage)
   ${0##*/} -s -a <entries> : sync (source-> backup) + tar (backup) + sync (backup-> storage) + cp (backup tar) 
 
 EOF
@@ -118,19 +118,25 @@ EOF
     row=$( jq -r '.backup.entries[] | select(.name == "'$entry'") | "\(.name)|\(.source)"' <<< $PROP | sed '' )
     IFS='|'; read name source <<< $row; unset IFS
     
+    ### validation
     if [ ! -e "$source" ]; then
       LOG "\e[0;31merror\e[0m: \"$entry\" \"$source\" 가 존재하지 않습니다." 
       continue
     fi
     
+    ### sync (source-> backup)
     EXEC "bcomp @\"$FUNCDIR/bcomp.script\" \"$source\" \"$OUTDIR/${source##*/}\""
     
     if [ $ARCHIVE_MODE == 1 ]; then
+      ### tar (backup)
       EXEC "cd $OUTDIR; tar cf \"$OUTDIR/${source##*/}.tar\" \"${source##*/}\""
     fi
     
     if [ $STORAGE_MODE == 1 ]; then
+      ### sync (backup -> storage)
       EXEC "bcomp @\"$FUNCDIR/bcomp.script\" \"$source\" \"$STORAGE/${source##*/}\""
+      
+      ### cp (backup tar)
       EXEC "cd $OUTDIR; tar cvf - \"${source##*/}.tar\" | (cd \"$STORAGE\" ; tar xvf -)"
     fi
     
