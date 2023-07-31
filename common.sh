@@ -36,7 +36,7 @@ fi
 # [2] variables
 CURDIR=$( pwd -P )
 FUNCDIR=$( cd $( dirname $0 ) && pwd -P )
-PROP=$( cat $FUNCDIR/property.json )
+PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 
 cat << EOF
   DEBUG_MODE = $DEBUG_MODE

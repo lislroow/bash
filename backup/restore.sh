@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # essential
-BASEDIR=$( cd $( dirname $0 ) && cd .. && pwd -P )
+BASEDIR=$( cd $( dirname $0 ) && pwd -P )
+BASEDIR=${BASEDIR%/*}
 
 # usage
 function USAGE {
@@ -19,7 +20,7 @@ EOF
 # options
 OPTIONS="l"
 LONGOPTIONS=""
-source $BASEDIR/common.sh
+eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
 function SetOptions {
   opts=$( getopt --options $_OPTIONS,$OPTIONS \
