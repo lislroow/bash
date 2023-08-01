@@ -120,7 +120,7 @@ EOF
     fi
     
     ### sync (storage-> backup)
-    EXEC "bcomp @\"$FUNCDIR/bcomp.script\" \"$STORAGE/${source##*/}\" \"$OUTDIR/${source##*/}\""
+    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$STORAGE/${source##*/}\" \"$OUTDIR/${source##*/}\""
     
     let "midx = midx + 1"
   done

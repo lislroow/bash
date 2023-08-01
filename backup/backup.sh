@@ -131,7 +131,7 @@ EOF
     fi
     
     ### sync (source-> backup)
-    EXEC "bcomp @\"$FUNCDIR/bcomp.script\" \"$source\" \"$OUTDIR/${source##*/}\""
+    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$source\" \"$OUTDIR/${source##*/}\""
     
     if [ $ARCHIVE_MODE == 1 ]; then
       ### tar (backup)
@@ -140,10 +140,14 @@ EOF
     
     if [ $STORAGE_MODE == 1 ]; then
       ### sync (backup -> storage)
-      EXEC "bcomp @\"$FUNCDIR/bcomp.script\" \"$source\" \"$STORAGE/${source##*/}\""
+      EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$source\" \"$STORAGE/${source##*/}\""
       
       ### cp (backup tar)
-      EXEC "cd $OUTDIR; tar cvf - \"${source##*/}.tar\" | (cd \"$STORAGE\" ; tar xvf -)"
+      if [ -e $OUTDIR/${source##*/}.tar ]; then
+        EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$OUTDIR/${source##*/}.tar\" \"$STORAGE/${source##*/}.tar\""
+        #EXEC "cd $OUTDIR; tar cvf - \"${source##*/}.tar\" | (cd \"$STORAGE\" ; tar xvf -)"
+      fi
+      
     fi
     
     let "midx = midx + 1"
