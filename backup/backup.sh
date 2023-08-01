@@ -19,8 +19,8 @@ Usage: $0 [options] <entries>
 
   ${0##*/} <entries>       : sync (source-> backup)
   ${0##*/} -a <entries>    : sync (source-> backup) + tar (backup)
-  ${0##*/} -s <entries>    : sync (source-> backup) + sync (backup -> storage)
-  ${0##*/} -s -a <entries> : sync (source-> backup) + tar (backup) + sync (backup-> storage) + cp (backup tar) 
+  ${0##*/} -s <entries>    : sync (source-> backup) + sync (backup-> storage)
+  ${0##*/} -s -a <entries> : sync (source-> backup) + sync (backup-> storage) + tar (backup) + cp (storage) 
 
 EOF
   exit 1
@@ -130,25 +130,33 @@ EOF
       continue
     fi
     
-    ### sync (source-> backup)
-    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$source\" \"$OUTDIR/${source##*/}\""
-    
-    if [ $ARCHIVE_MODE == 1 ]; then
-      ### tar (backup)
-      EXEC "cd $OUTDIR; tar cf \"$OUTDIR/${source##*/}.tar\" \"${source##*/}\""
-    fi
-    
-    if [ $STORAGE_MODE == 1 ]; then
-      ### sync (backup -> storage)
-      EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$source\" \"$STORAGE/${source##*/}\""
+    ### sync
+    {
+      ### sync (source-> backup)
+      EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$source\" \"$OUTDIR/${source##*/}\""
       
-      ### cp (backup tar)
-      if [ -e $OUTDIR/${source##*/}.tar ]; then
-        EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$OUTDIR/${source##*/}.tar\" \"$STORAGE/${source##*/}.tar\""
-        #EXEC "cd $OUTDIR; tar cvf - \"${source##*/}.tar\" | (cd \"$STORAGE\" ; tar xvf -)"
+      if [ $STORAGE_MODE == 1 ]; then
+        ### sync (backup -> storage)
+        EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$source\" \"$STORAGE/${source##*/}\""
+      fi
+    }
+    
+    ### tar
+    {
+      ### tar (backup)
+      if [ $ARCHIVE_MODE == 1 ]; then
+        EXEC "cd $OUTDIR; tar cf \"$OUTDIR/${source##*/}.tar\" \"${source##*/}\""
       fi
       
-    fi
+      ### cp (storage)
+      #if [ $STORAGE_MODE == 1 ]; then
+      #  if [ -e $OUTDIR/${source##*/}.tar ]; then
+      #    EXEC "cp \"$OUTDIR/${source##*/}.tar\" \"$STORAGE/${source##*/}.tar\""
+      #    EXEC "cd $OUTDIR; tar cvf - \"${source##*/}.tar\" | (cd \"$STORAGE\" ; tar xvf -)"
+      #    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$OUTDIR/${source##*/}.tar\" \"$STORAGE/${source##*/}.tar\""
+      #  fi
+      #fi
+    }
     
     let "midx = midx + 1"
   done
