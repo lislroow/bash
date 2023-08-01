@@ -30,13 +30,6 @@ if [ $? -ne 0 ]; then
   USAGE
   exit 1
 fi
-# //[1] options
-
-
-# [2] variables
-CURDIR=$( pwd -P )
-FUNCDIR=$( cd $( dirname $0 ) && pwd -P )
-PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 
 cat << EOF
   DEBUG_MODE = $DEBUG_MODE
@@ -47,17 +40,18 @@ if [ $DEBUG_MODE == 1 ]; then
   cat << EOF
 - common.sh
   ** VAR **
-  BASEDIR = $BASEDIR
-  CURDIR = $CURDIR
-  FUNCDIR = $FUNCDIR
-  PROP = \$( cat $FUNCDIR/property.json )
+  CURRDIR  = $CURRDIR
+  FUNCFILE = $FUNCFILE
+  FUNCDIR  = $FUNCDIR
+  BASEDIR  = $BASEDIR
+  PROP     = \$( cat $FUNCDIR/property.json )
 
 EOF
 fi
-# //[2] variables
+# //[1] options
 
 
-# [3] functions
+# [2] functions
 function LOG {
   local str=$*
   local func lineNo
@@ -100,10 +94,10 @@ function GetProp {
     echo $value
   }
 }
-# //[3] functions
+# //[2] functions
 
 
-# [4] config
+# [3] config
 function _SetConfig {
   jq -r '.config.precmd[]' <<< $PROP | {
     while read -r line; do
@@ -136,4 +130,4 @@ EOF
   fi
 }
 _SetConfig
-# //[4] config
+# //[3] config

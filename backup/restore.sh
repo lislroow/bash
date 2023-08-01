@@ -1,8 +1,13 @@
 #!/bin/bash
 
-# essential
-BASEDIR=$( cd $( dirname $0 ) && pwd -P )
-BASEDIR=${BASEDIR%/*}
+# VAR
+CURRDIR=$( pwd -P )
+FUNCFILE=$0
+#FUNCDIR=$( cd $( dirname $0 ) && pwd -P )
+FUNCDIR=${FUNCFILE%/*}
+BASEDIR=${FUNCDIR%/*}
+PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
+# //VAR
 
 # usage
 function USAGE {
