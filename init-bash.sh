@@ -1,25 +1,32 @@
 #!/bin/bash
 
-BASEDIR=$( cd $( dirname $0 ) && pwd -P )
+BASHDIR=$( cd $( dirname $0 ) && pwd -P )
 
 cat << EOF > ~/.bash_profile
 #!/bin/bash
 
-PATH="$BASEDIR:\$PATH"
-PATH="$BASEDIR/bin:\$PATH"
-PATH="$BASEDIR/bin/bcomp:\$PATH"
-PATH="$BASEDIR/backup:\$PATH"
+PATH="$BASHDIR:\$PATH"
+PATH="$BASHDIR/bin:\$PATH"
+PATH="$BASHDIR/bin/bcomp:\$PATH"
+PATH="$BASHDIR/backup:\$PATH"
 export PATH
 
-BASEDIR='$BASEDIR'
-echo BASEDIR=$BASEDIR
-alias gobase="cd '$BASEDIR'"
+alias gobash="cd '$BASHDIR'"
+alias gospring="cd '/c/project/spring'"
 
 EOF
 
+echo "generated '~/.bash_profile'"
+
 cat << EOF
-generated "~/.bash_profile" file
-type "source ~/.bash_profile"
+[ git clone ]
+
+  $ git clone https://github.com/lislroow/spring
+
+[ alias ]
+
+  alias gobash="cd '$BASHDIR'"
+  alias gospring="cd '/c/project/spring'"
 
 EOF
 
