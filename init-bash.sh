@@ -10,6 +10,16 @@ PATH="$BASEDIR/bin:\$PATH"
 PATH="$BASEDIR/bin/bcomp:\$PATH"
 PATH="$BASEDIR/backup:\$PATH"
 export PATH
+
+BASEDIR='$BASEDIR'
+echo BASEDIR=$BASEDIR
+alias gobase="cd '$BASEDIR'"
+
 EOF
 
-source ~/.bash_profile
+cat << EOF
+generated "~/.bash_profile" file
+type "source ~/.bash_profile"
+
+EOF
+

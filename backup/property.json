@@ -21,6 +21,10 @@
         "source": "/c/develop"
       },
       {
+        "name": "project",
+        "source": "/c/project"
+      },
+      {
         "name": "plex",
         "source": "/c/Users/MYEONGGU.KIM/AppData/Local/Plex Media Server"
       },
