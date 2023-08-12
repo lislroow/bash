@@ -28,7 +28,7 @@ EOF
 # //usage
 
 # options
-OPTIONS="l,a,s"
+OPTIONS="l,a,s:"
 LONGOPTIONS=""
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
@@ -53,6 +53,11 @@ function SetOptions {
         ;;
       -s)
         STORAGE_MODE=1
+        STORAGE=$2
+        shift
+        if [ -z $STORAGE ]; then
+          STORAGE=$( GetProp "backup.storage" )
+        fi
         ;;
       --)
         ;;
@@ -64,7 +69,6 @@ function SetOptions {
   done
   
   OUTDIR=$( GetProp "backup.outdir" )
-  STORAGE=$( GetProp "backup.storage" )
   
   if [ $DEBUG_MODE == 1 ]; then
     cat << EOF
