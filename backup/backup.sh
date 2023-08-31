@@ -14,8 +14,11 @@ function USAGE {
   cat << EOF
 - USAGE
 Usage: $0 [options] <entries>
- -a   : 백업 디렉토리 tar 생성하기
- -s   : 스토리지 복사하기
+ -l            : <entries> 보기
+ -a            : 백업 디렉토리 tar 생성하기
+ -s            : 스토리지 복사하기
+ --outdir      : 백업 디렉토리 지정
+ --storage-drv : 스토리지 드라이브 지정
 
   ${0##*/} <entries>       : sync (source-> backup)
   ${0##*/} -a <entries>    : sync (source-> backup) + tar (backup)
@@ -28,8 +31,8 @@ EOF
 # //usage
 
 # options
-OPTIONS="l,a,s:"
-LONGOPTIONS=""
+OPTIONS="l,a,s"
+LONGOPTIONS="outdir:,storage-drv:"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
 ARCHIVE_MODE=0
@@ -39,6 +42,11 @@ function SetOptions {
                  --longoptions $_LONGOPTIONS,$LONGOPTIONS \
                  -- $* )
   eval set -- $opts
+  
+  if [ $DEBUG_MODE == 1 ]; then
+    LOG "opts: " $opts
+  fi
+  
   while true; do
     if [ -z $1 ]; then
       break
@@ -53,10 +61,31 @@ function SetOptions {
         ;;
       -s)
         STORAGE_MODE=1
-        STORAGE=$2
-        shift
-        if [ -z $STORAGE ]; then
-          STORAGE=$( GetProp "backup.storage" )
+        ;;
+      --outdir)
+        OUTDIR=$2
+        if [ ! -z $OUTDIR ]; then
+          if [[ $OUTDIR != '/'* ]]; then
+            OUTDIR="/c/$OUTDIR"
+          fi
+          if [ ! -e $OUTDIR ]; then
+            LOG "\e[0;31merror\e[0m: \"OUTDIR\" \"$OUTDIR\" 디렉토리가 존재하지 않습니다."
+            exit 1
+          fi
+          shift
+        fi
+        ;;
+      --storage-drv)
+        STORAGE_DRV=$2
+        if [ ! -z $STORAGE_DRV ]; then
+          if [[ $STORAGE_DRV != '/'* ]]; then
+            STORAGE_DRV="/$STORAGE_DRV"
+          fi
+          if [ ! -e $STORAGE_DRV ]; then
+            LOG "\e[0;31merror\e[0m: \"STORAGE_DRV\" \"$STORAGE_DRV\" 가 존재하지 않습니다."
+            exit 1
+          fi
+          shift
         fi
         ;;
       --)
@@ -68,13 +97,18 @@ function SetOptions {
     shift
   done
   
-  OUTDIR=$( GetProp "backup.outdir" )
+  if [ -z $OUTDIR ]; then
+    OUTDIR=$( GetProp "backup.outdir" )
+  fi
+  if [ -z $STORAGE_DRV ]; then
+    STORAGE_DRV=$( GetProp "backup.storage" )
+  fi
   
   if [ $DEBUG_MODE == 1 ]; then
     cat << EOF
 - SetOptions
   OUTDIR = $OUTDIR
-  STORAGE = $STORAGE
+  STORAGE_DRV = $STORAGE_DRV
   ARCHIVE_MODE = $ARCHIVE_MODE
   STORAGE_MODE = $STORAGE_MODE
 
@@ -95,11 +129,12 @@ function main {
   if [ $LIST_MODE == 1 ] || [ -z "${params[*]}" ]; then
     ENTRIES=($( jq -r '.backup.entries[] | .name' <<< $PROP | sed '' ))
     cat << EOF
-  - main
-    ENTRIES = [ ${ENTRIES[*]} ]
+- main
+  ENTRIES = [ ${ENTRIES[*]} ]
 
 EOF
-    USAGE
+    #USAGE
+    exit 0
   fi
   
   ## entries
@@ -118,7 +153,7 @@ EOF
 - main
   params = ${params[*]}
   ENTRIES = [ ${ENTRIES[*]} ]
-  mtot = $mtotd
+  mtot = $mtot
 
 EOF
   
@@ -141,7 +176,7 @@ EOF
       
       if [ $STORAGE_MODE == 1 ]; then
         ### sync (backup -> storage)
-        EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$source\" \"$STORAGE/${source##*/}\""
+        EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$source\" \"$STORAGE_DRV/${source##*/}\""
       fi
     }
     
@@ -155,13 +190,14 @@ EOF
       ### cp (storage)
       #if [ $STORAGE_MODE == 1 ]; then
       #  if [ -e $OUTDIR/${source##*/}.tar ]; then
-      #    EXEC "cp \"$OUTDIR/${source##*/}.tar\" \"$STORAGE/${source##*/}.tar\""
-      #    EXEC "cd $OUTDIR; tar cvf - \"${source##*/}.tar\" | (cd \"$STORAGE\" ; tar xvf -)"
-      #    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$OUTDIR/${source##*/}.tar\" \"$STORAGE/${source##*/}.tar\""
+      #    EXEC "cp \"$OUTDIR/${source##*/}.tar\" \"$STORAGE_DRV/${source##*/}.tar\""
+      #    EXEC "cd $OUTDIR; tar cvf - \"${source##*/}.tar\" | (cd \"$STORAGE_DRV\" ; tar xvf -)"
+      #    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$OUTDIR/${source##*/}.tar\" \"$STORAGE_DRV/${source##*/}.tar\""
       #  fi
       #fi
     }
     
+    #((midx++))
     let "midx = midx + 1"
   done
 }

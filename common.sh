@@ -96,7 +96,6 @@ function GetProp {
 }
 # //[2] functions
 
-
 # [3] config
 function _SetConfig {
   jq -r '.config.precmd[]' <<< $PROP | {
