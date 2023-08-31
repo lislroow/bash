@@ -10,7 +10,8 @@
     "entries": [
       {
         "name": "wallpaper",
-        "source": "/c/wallpaper"
+        "source": "/c/wallpaper",
+        "storageOnly": true
       },
       {
         "name": "editplus",
@@ -33,12 +34,14 @@
         "source": "/c/Users/MYEONGGU.KIM/Music/iTunes"
       },
       {
-        "name": "picture",
-        "source": "/c/미디어/@사진"
+        "name": "dosbox",
+        "source": "/c/dosbox",
+        "storageOnly": true
       },
       {
-        "name": "picture2",
-        "source": "/c/미디어/@사진2"
+        "name": "util",
+        "source": "/d/유틸리티",
+        "storageOnly": true
       }
     ]
   }

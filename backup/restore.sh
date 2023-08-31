@@ -55,13 +55,13 @@ function SetOptions {
   fi
   
   OUTDIR=$( GetProp "backup.outdir" )
-  STORAGE=$( GetProp "backup.storage" )
+  STORAGE_DRV=$( GetProp "backup.storage" )
   
   if [ $DEBUG_MODE == 1 ]; then
     cat << EOF
 - SetOptions
   OUTDIR = $OUTDIR
-  STORAGE = $STORAGE
+  STORAGE_DRV = $STORAGE_DRV
 
 EOF
   fi
@@ -114,13 +114,14 @@ EOF
     IFS='|'; read name source <<< $row; unset IFS
     
     ### validation
-    if [ ! -e "$STORAGE/${source##*/}" ]; then
-      LOG "\e[0;31merror\e[0m: \"$entry\" \"$STORAGE/${source##*/}\" 가 존재하지 않습니다." 
+    if [ ! -e "$STORAGE_DRV/${source##*/}" ]; then
+      LOG "\e[0;31merror\e[0m: \"$entry\" \"$STORAGE_DRV/@backup-sync/${source##*/}\" 가 존재하지 않습니다." 
       continue
     fi
     
     ### sync (storage-> backup)
-    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$STORAGE/${source##*/}\" \"$OUTDIR/${source##*/}\""
+    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$STORAGE_DRV/@backup-sync/${source##*/}\" \"$OUTDIR/${source##*/}\""
+    LOG "\e[0;32msource path:\e[0m" $source
     
     let "midx = midx + 1"
   done
