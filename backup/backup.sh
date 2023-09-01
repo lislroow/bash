@@ -160,8 +160,8 @@ EOF
   ## process
   for entry in ${ENTRIES[*]}; do
     printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
-    row=$( jq -r '.backup.entries[] | select(.name == "'$entry'") | "\(.name)|\(.source)|\(.storageOnly)"' <<< $PROP | sed '' )
-    IFS='|'; read name source storageOnly <<< $row; unset IFS
+    row=$( jq -r '.backup.entries[] | select(.name == "'$entry'") | "\(.name)|\(.source)|\(.storageOnly)|\(.bcScript)"' <<< $PROP | sed '' )
+    IFS='|'; read name source storageOnly bcScript <<< $row; unset IFS
     
     ### validation
     if [ ! -e "$source" ]; then
@@ -169,16 +169,20 @@ EOF
       continue
     fi
     
+    if [ $bcScript == "null" ]; then
+      bcScript="sync-mirror.bc"
+    fi
+    
     ### sync
     {
       ### sync (source-> backup)
       if [ $storageOnly != 'true' ]; then
-        EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$source\" \"$OUTDIR/${source##*/}\""
+        EXEC "bcomp @\"$FUNCDIR/$bcScript\" \"$source\" \"$OUTDIR/${source##*/}\""
       fi
       
       if [ $STORAGE_MODE == 1 ]; then
         ### sync (backup -> storage)
-        EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$source\" \"$STORAGE_DRV/@backup-sync/${source##*/}\""
+        EXEC "bcomp @\"$FUNCDIR/$bcScript\" \"$source\" \"$STORAGE_DRV/@backup-sync/${source##*/}\""
       fi
     }
     

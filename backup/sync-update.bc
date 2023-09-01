@@ -1,0 +1,2 @@
+load create:rt "%1" "%2"
+sync create-empty update:left->right
