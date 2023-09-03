@@ -114,7 +114,7 @@ EOF
     IFS='|'; read name source <<< $row; unset IFS
     
     ### validation
-    if [ ! -e "$STORAGE_DRV/${source##*/}" ]; then
+    if [ ! -e "$STORAGE_DRV/@backup-sync/${source##*/}" ]; then
       LOG "\e[0;31merror\e[0m: \"$entry\" \"$STORAGE_DRV/@backup-sync/${source##*/}\" 가 존재하지 않습니다." 
       continue
     fi
