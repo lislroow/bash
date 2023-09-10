@@ -5,8 +5,8 @@
     "path": []
   },
   "backup": {
-    "outdir": "/c/backup",
-    "storage": "/z",
+    "outdir": "/y/backup",
+    "drive": "/e",
     "entries": [
       {
         "name": "wallpaper",

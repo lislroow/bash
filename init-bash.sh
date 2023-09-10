@@ -14,9 +14,9 @@ export PATH
 alias gobash="cd '$BASHDIR'"
 alias gospring="cd '/c/project/spring'"
 
-alias backup-e='backup.sh -s --storage-drv=e itunes plex tv movie youtube util'
-alias backup-z='backup.sh -s --storage-drv=z itunes wallpaper editplus develop project util'
-alias itunes='backup.sh -s --storage-drv=z itunes'
+alias backup-s='backup.sh --drive=s itunes movie tv youtube'
+alias backup-t='backup.sh --drive=t itunes develop project util wallpaper editplus'
+alias backup-u='backup.sh --drive=u itunes'
 
 EOF
 
@@ -32,9 +32,9 @@ cat << EOF
   alias gobash="cd '$BASHDIR'"
   alias gospring="cd '/c/project/spring'"
   
-  alias backup-e='backup.sh -s --storage-drv=e itunes plex tv movie youtube util'
-  alias backup-z='backup.sh -s --storage-drv=z itunes wallpaper editplus develop project util'
-  alias itunes='backup.sh -s --storage-drv=z itunes'
+  alias backup-s='backup.sh --drive=s itunes movie tv youtube'
+  alias backup-t='backup.sh --drive=t itunes develop project util wallpaper editplus'
+  alias backup-u='backup.sh --drive=u itunes'
 
 EOF
 

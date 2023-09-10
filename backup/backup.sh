@@ -18,7 +18,7 @@ Usage: $0 [options] <entries>
  -a            : 백업 디렉토리 tar 생성하기
  -s            : 스토리지 복사하기
  --outdir      : 백업 디렉토리 지정
- --storage-drv : 스토리지 드라이브 지정
+ --drive : 스토리지 드라이브 지정
 
   ${0##*/} <entries>       : sync (source-> backup)
   ${0##*/} -a <entries>    : sync (source-> backup) + tar (backup)
@@ -32,11 +32,10 @@ EOF
 
 # options
 OPTIONS="l,a,s"
-LONGOPTIONS="outdir:,storage-drv:"
+LONGOPTIONS="outdir:,drive:"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
 ARCHIVE_MODE=0
-STORAGE_MODE=0
 function SetOptions {
   opts=$( getopt --options $_OPTIONS,$OPTIONS \
                  --longoptions $_LONGOPTIONS,$LONGOPTIONS \
@@ -56,12 +55,9 @@ function SetOptions {
       -l)
         LIST_MODE=1
         ;;
-      -a)
-        ARCHIVE_MODE=1
-        ;;
-      -s)
-        STORAGE_MODE=1
-        ;;
+      #-a)
+      #  ARCHIVE_MODE=1
+      #  ;;
       --outdir)
         OUTDIR=$2
         if [ ! -z $OUTDIR ]; then
@@ -75,14 +71,14 @@ function SetOptions {
           shift
         fi
         ;;
-      --storage-drv)
-        STORAGE_DRV=$2
-        if [ ! -z $STORAGE_DRV ]; then
-          if [[ $STORAGE_DRV != '/'* ]]; then
-            STORAGE_DRV="/$STORAGE_DRV"
+      --drive)
+        DRIVE=$2
+        if [ ! -z $DRIVE ]; then
+          if [[ $DRIVE != '/'* ]]; then
+            DRIVE="/$DRIVE"
           fi
-          if [ ! -e $STORAGE_DRV ]; then
-            LOG "\e[0;31merror\e[0m: \"STORAGE_DRV\" \"$STORAGE_DRV\" 가 존재하지 않습니다."
+          if [ ! -e $DRIVE ]; then
+            LOG "\e[0;31merror\e[0m: \"DRIVE\" \"$DRIVE\" 가 존재하지 않습니다."
             exit 1
           fi
           shift
@@ -100,17 +96,15 @@ function SetOptions {
   if [ -z $OUTDIR ]; then
     OUTDIR=$( GetProp "backup.outdir" )
   fi
-  if [ -z $STORAGE_DRV ]; then
-    STORAGE_DRV=$( GetProp "backup.storage" )
+  if [ -z $DRIVE ]; then
+    DRIVE=$( GetProp "backup.drive" )
   fi
   
   if [ $DEBUG_MODE == 1 ]; then
     cat << EOF
 - SetOptions
   OUTDIR = $OUTDIR
-  STORAGE_DRV = $STORAGE_DRV
-  ARCHIVE_MODE = $ARCHIVE_MODE
-  STORAGE_MODE = $STORAGE_MODE
+  DRIVE = $DRIVE
 
 EOF
   fi
@@ -176,31 +170,27 @@ EOF
     ### sync
     {
       ### sync (source-> backup)
-      if [ $storageOnly != 'true' ]; then
-        EXEC "bcomp @\"$FUNCDIR/$bcScript\" \"$source\" \"$OUTDIR/${source##*/}\""
-      fi
+      #if [ $storageOnly != 'true' ]; then
+      #  EXEC "bcomp @\"$FUNCDIR/$bcScript\" \"$source\" \"$OUTDIR/${source##*/}\""
+      #fi
       
-      if [ $STORAGE_MODE == 1 ]; then
-        ### sync (backup -> storage)
-        EXEC "bcomp @\"$FUNCDIR/$bcScript\" \"$source\" \"$STORAGE_DRV/@backup-sync/${source##*/}\""
-      fi
+      ### sync (backup -> storage)
+      EXEC "bcomp @\"$FUNCDIR/$bcScript\" \"$source\" \"$DRIVE/${source##*/}\""
     }
     
     ### tar
-    {
-      ### tar (backup)
-      if [ $ARCHIVE_MODE == 1 ]; then
-        EXEC "cd $OUTDIR; tar cf \"$OUTDIR/${source##*/}.tar\" \"${source##*/}\""
-      fi
-      
-      ### cp (storage)
-      #if [ $STORAGE_MODE == 1 ]; then
-      #  if [ -e $OUTDIR/${source##*/}.tar ]; then
-      #    EXEC "cp \"$OUTDIR/${source##*/}.tar\" \"$STORAGE_DRV/@backup-sync/${source##*/}.tar\""
-      #    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$OUTDIR/${source##*/}.tar\" \"$STORAGE_DRV/@backup-sync/${source##*/}.tar\""
-      #  fi
-      #fi
-    }
+    #{
+    #  ### tar (backup)
+    #  if [ $ARCHIVE_MODE == 1 ]; then
+    #    EXEC "cd $OUTDIR; tar cf \"$OUTDIR/${source##*/}.tar\" \"${source##*/}\""
+    #  fi
+    #  
+    #  ### cp (storage)
+    #  if [ -e $OUTDIR/${source##*/}.tar ]; then
+    #    EXEC "cp \"$OUTDIR/${source##*/}.tar\" \"$DRIVE/${source##*/}.tar\""
+    #    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$OUTDIR/${source##*/}.tar\" \"$DRIVE/${source##*/}.tar\""
+    #  fi
+    #}
     
     #((midx++))
     let "midx = midx + 1"
