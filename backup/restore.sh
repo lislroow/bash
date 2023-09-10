@@ -24,7 +24,7 @@ EOF
 
 # options
 OPTIONS="l"
-LONGOPTIONS=""
+LONGOPTIONS="drive:"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
 function SetOptions {
@@ -41,6 +41,19 @@ function SetOptions {
       -l)
         LIST_MODE=1
         ;;
+      --drive)
+        DRIVE=$2
+        if [ ! -z $DRIVE ]; then
+          if [[ $DRIVE != '/'* ]]; then
+            DRIVE="/$DRIVE"
+          fi
+          if [ ! -e $DRIVE ]; then
+            LOG "\e[0;31merror\e[0m: \"DRIVE\" \"$DRIVE\" 가 존재하지 않습니다."
+            exit 1
+          fi
+          shift
+        fi
+        ;;
       --)
         ;;
       *)
@@ -49,19 +62,20 @@ function SetOptions {
     esac
     shift
   done
-  
   if [ -z "${params[*]}" ]; then
     USAGE
   fi
   
   OUTDIR=$( GetProp "backup.outdir" )
-  STORAGE_DRV=$( GetProp "backup.storage" )
+  if [ -z $DRIVE ]; then
+    DRIVE=$( GetProp "backup.drive" )
+  fi
   
   if [ $DEBUG_MODE == 1 ]; then
     cat << EOF
 - SetOptions
   OUTDIR = $OUTDIR
-  STORAGE_DRV = $STORAGE_DRV
+  DRIVE = $DRIVE
 
 EOF
   fi
@@ -110,18 +124,22 @@ EOF
   ## process
   for entry in ${ENTRIES[*]}; do
     printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
-    row=$( jq -r '.backup.entries[] | select(.name == "'$entry'") | "\(.name)|\(.source)"' <<< $PROP | sed '' )
-    IFS='|'; read name source <<< $row; unset IFS
+    row=$( jq -r '.backup.entries[] | select(.name == "'$entry'") | "\(.name)|\(.source)|\(.storageOnly)"' <<< $PROP | sed '' )
+    IFS='|'; read name source storageOnly <<< $row; unset IFS
     
-    ### validation
-    if [ ! -e "$STORAGE_DRV/@backup-sync/${source##*/}" ]; then
-      LOG "\e[0;31merror\e[0m: \"$entry\" \"$STORAGE_DRV/@backup-sync/${source##*/}\" 가 존재하지 않습니다." 
+    if [ $storageOnly == 'true' ]; then
+      LOG "\e[0;32m\"$entry\": storageOnly == 'true'\e[0m" $source
       continue
     fi
     
-    ### sync (storage-> backup)
-    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$STORAGE_DRV/@backup-sync/${source##*/}\" \"$OUTDIR/${source##*/}\""
-    LOG "\e[0;32msource path:\e[0m" $source
+    ### validation
+    if [ ! -e "$DRIVE/${source##*/}" ]; then
+      LOG "\e[0;31merror\e[0m: \"$entry\" \"$DRIVE/${source##*/}\" 가 존재하지 않습니다." 
+      continue
+    fi
+    
+    ### sync (storage-> source)
+    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$DRIVE/${source##*/}\" \"$source\""
     
     let "midx = midx + 1"
   done

@@ -15,7 +15,7 @@ alias gobash="cd '$BASHDIR'"
 alias gospring="cd '/c/project/spring'"
 
 alias backup-s='backup.sh --drive=s itunes movie tv youtube'
-alias backup-t='backup.sh --drive=t itunes develop project util wallpaper editplus'
+alias backup-t='backup.sh --drive=t itunes plex develop project util wallpaper editplus'
 alias backup-u='backup.sh --drive=u itunes'
 
 EOF
