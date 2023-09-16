@@ -9,6 +9,7 @@ PATH="$BASHDIR:\$PATH"
 PATH="$BASHDIR/bin:\$PATH"
 PATH="$BASHDIR/bin/bcomp:\$PATH"
 PATH="$BASHDIR/backup:\$PATH"
+PATH="$BASHDIR/youtube:\$PATH"
 export PATH
 
 alias gobash="cd '$BASHDIR'"

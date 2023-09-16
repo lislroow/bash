@@ -138,7 +138,7 @@ EOF
   for entry in ${ENTRIES[*]}; do
     if [ $entry == 'all' ]; then
       ENTRIES=($( jq -r '.backup.entries[] | .name' <<< $PROP | sed '' ))
-      mtot=${#list[*]}
+      mtot=${#ENTRIES[*]}
       break
     fi
   done
