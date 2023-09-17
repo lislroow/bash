@@ -53,7 +53,7 @@ function SetOptions {
   done
   
   if [ -z $GCLOUD_DIR ]; then
-    GCLOUD_DIR='/g/내 드라이브/bash'
+    GCLOUD_DIR='/z/내 드라이브/bash'
   fi
   
   if [ $DEBUG_MODE == 1 ]; then
