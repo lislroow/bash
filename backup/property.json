@@ -34,30 +34,20 @@
         "source": "/c/Users/MYEONGGU.KIM/Music/iTunes"
       },
       {
-        "name": "dosbox",
-        "source": "/c/dosbox",
-        "storageOnly": true
-      },
-      {
-        "name": "util",
-        "source": "/d/유틸리티",
-        "storageOnly": true
-      },
-      {
         "name": "tv",
-        "source": "/d/티브이",
+        "source": "/c/티브이",
         "storageOnly": true,
         "bcScript": "sync-update.bc"
       },
       {
         "name": "movie",
-        "source": "/d/무비",
+        "source": "/c/무비",
         "storageOnly": true,
         "bcScript": "sync-update.bc"
       },
       {
         "name": "youtube",
-        "source": "/d/유튜브",
+        "source": "/c/유튜브",
         "storageOnly": true
       }
     ]
