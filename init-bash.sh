@@ -6,6 +6,7 @@ cat << EOF > ~/.bash_profile
 #!/bin/bash
 
 PATH="$BASHDIR:\$PATH"
+PATH="/c/.tools/mkvtoolnix:\$PATH"
 PATH="$BASHDIR/bin:\$PATH"
 PATH="$BASHDIR/bin/bcomp:\$PATH"
 PATH="$BASHDIR/backup:\$PATH"
