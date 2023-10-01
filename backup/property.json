@@ -34,6 +34,10 @@
         "source": "/c/Users/MYEONGGU.KIM/Music/iTunes"
       },
       {
+        "name": "유틸리티",
+        "source": "/c/유틸리티"
+      },
+      {
         "name": "tv",
         "source": "/c/티브이",
         "storageOnly": true,
