@@ -72,7 +72,7 @@ fi
 function main {
   ## prepare
   if [ $LIST_MODE == 1 ] || [ -z "${params[*]}" ]; then
-    ENTRIES=($( jq -r '.backup.entries[] | .name' <<< $PROP | sed '' ))
+    ENTRIES=($( jq -r '.clear.entries[] | .name' <<< $PROP | sed '' ))
     cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
