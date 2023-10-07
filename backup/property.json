@@ -10,8 +10,7 @@
     "entries": [
       {
         "name": "wallpaper",
-        "source": "/c/wallpaper",
-        "storageOnly": true
+        "source": "/c/wallpaper"
       },
       {
         "name": "editplus",
@@ -40,19 +39,16 @@
       {
         "name": "tv",
         "source": "/c/티브이",
-        "storageOnly": true,
-        "bcScript": "sync-update.bc"
+        "bcscript": "sync-update.bc"
       },
       {
         "name": "movie",
         "source": "/c/무비",
-        "storageOnly": true,
-        "bcScript": "sync-update.bc"
+        "bcscript": "sync-update.bc"
       },
       {
         "name": "youtube",
-        "source": "/c/유튜브",
-        "storageOnly": true
+        "source": "/c/유튜브"
       }
     ]
   }

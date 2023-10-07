@@ -154,8 +154,8 @@ EOF
   ## process
   for entry in ${ENTRIES[*]}; do
     printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
-    row=$( jq -r '.backup.entries[] | select(.name == "'$entry'") | "\(.name)|\(.source)|\(.storageOnly)|\(.bcScript)"' <<< $PROP | sed '' )
-    IFS='|'; read name source storageOnly bcScript <<< $row; unset IFS
+    row=$( jq -r '.backup.entries[] | select(.name == "'$entry'") | "\(.name)|\(.source)|\(.bcscript)"' <<< $PROP | sed '' )
+    IFS='|'; read name source bcscript <<< $row; unset IFS
     
     ### validation
     if [ ! -e "$source" ]; then
@@ -163,19 +163,19 @@ EOF
       continue
     fi
     
-    if [ $bcScript == "null" ]; then
-      bcScript="sync-mirror.bc"
+    if [ $bcscript == "null" ]; then
+      bcscript="sync-mirror.bc"
     fi
     
     ### sync
     {
       ### sync (source-> backup)
       #if [ $storageOnly != 'true' ]; then
-      #  EXEC "bcomp @\"$FUNCDIR/$bcScript\" \"$source\" \"$OUTDIR/${source##*/}\""
+      #  EXEC "bcomp @\"$FUNCDIR/$bcscript\" \"$source\" \"$OUTDIR/${source##*/}\""
       #fi
       
       ### sync (backup -> storage)
-      EXEC "bcomp @\"$FUNCDIR/$bcScript\" \"$source\" \"$DRIVE/${source##*/}\""
+      EXEC "bcomp @\"$FUNCDIR/$bcscript\" \"$source\" \"$DRIVE/${source##*/}\""
     }
     
     ### tar
