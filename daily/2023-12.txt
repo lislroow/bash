@@ -1,0 +1,78 @@
+@@2023-12-05
+
+
+wget https://raw.githubusercontent.com/gnif/mod_rpaf/stable/mod_rpaf.c
+yum list httpd*
+yum install -y httpd-devel
+ls -alrt /etc/httpd/modules/
+apxs -i -c -n mod_rpaf.so mod_rpaf.c
+ls -alrt /etc/httpd/modules/
+-rwxr-xr-x 1 root root  12096  8월 18 08:58 mod_access_compat.so
+drwxr-xr-x 4 root root     34 12월  5 23:59 ..
+drwxr-xr-x 2 root root      6 12월  6 00:02 .libs
+-rwxr-xr-x 1 root root  90644 12월  6 00:07 mod_rpaf.c
+-rwxr-xr-x 1 root root  57608 12월  6 00:11 mod_rpaf.so
+drwxr-xr-x 3 root root   4096 12월  6 00:11 .
+
+LoadModule rpaf_module        modules/mod_rpaf.so
+RPAF_Enable       On
+RPAF_ProxyIPs     172.28.200.1
+RPAF_Header       X-Forwarded-For
+RPAF_SetHostName  Off
+RPAF_SetHTTPS     Off
+RPAF_SetPort      Off
+
+---
+
+cat <<- EOF > /etc/systemd/system/scouter-server.service
+[Unit]
+Description=Scouter Server
+After=network.target syslog.target
+
+[Service]
+Type=forking
+User=root
+Group=root
+ExecStart=sh /engn/scouter/server/startup.sh
+ExecStop=sh /engn/scouter/server/stop.sh
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+
+cat <<- EOF > /etc/systemd/system/scouter-host.agent.service
+[Unit]
+Description=Scouter Agent Host
+After=network.target syslog.target
+
+[Service]
+Type=forking
+User=root
+Group=root
+ExecStart=sh /engn/scouter/agent.host/host.sh
+ExecStop=sh /engn/scouter/agent.host/stop.sh
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+BASE_DIR=$( cd $( dirname $0 ) && pwd -P )
+
+
+@@ 2023-12-03
+
+Some sites could not be found.  See the error log for more detail.
+No repository found at http://download.eclipse.org/technology/m2e/releases/.
+No repository found at http://dl.bintray.com/testng-team/testng-p2-release/.
+
+https://download.eclipse.org/justj/?file=technology/m2e/releases/latest
+
+https://download.eclipse.org/technology/m2e/releases/latest/
+
+
+
+
+Project  has no explicit encoding set

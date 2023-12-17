@@ -6,7 +6,7 @@
   },
   "backup": {
     "outdir": "/y/backup",
-    "drive": "/e",
+    "drive": "/x",
     "entries": [
       {
         "name": "wallpaper",

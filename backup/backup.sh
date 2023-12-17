@@ -16,14 +16,10 @@ function USAGE {
 Usage: $0 [options] <entries>
  -l            : <entries> 보기
  -a            : 백업 디렉토리 tar 생성하기
- -s            : 스토리지 복사하기
  --outdir      : 백업 디렉토리 지정
  --drive : 스토리지 드라이브 지정
 
   ${0##*/} <entries>       : sync (source-> backup)
-  ${0##*/} -a <entries>    : sync (source-> backup) + tar (backup)
-  ${0##*/} -s <entries>    : sync (source-> backup) + sync (backup-> storage)
-  ${0##*/} -s -a <entries> : sync (source-> backup) + sync (backup-> storage) + tar (backup) + cp (storage) 
 
 EOF
   exit 1
