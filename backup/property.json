@@ -21,6 +21,10 @@
         "source": "/c/develop"
       },
       {
+        "name": "vmware",
+        "source": "/c/vmware"
+      },
+      {
         "name": "project",
         "source": "/c/project"
       },
@@ -33,22 +37,22 @@
         "source": "/c/Users/MYEONGGU.KIM/Music/iTunes"
       },
       {
-        "name": "Ïú†Ìã∏Î¶¨Ìã∞",
-        "source": "/c/Ïú†Ìã∏Î¶¨Ìã∞"
+        "name": "¿Ø∆ø∏Æ∆º",
+        "source": "/c/¿Ø∆ø∏Æ∆º"
       },
       {
         "name": "tv",
-        "source": "/c/Ìã∞Î∏åÏù¥",
+        "source": "/c/∆º∫Í¿Ã",
         "bcscript": "sync-update.bc"
       },
       {
         "name": "movie",
-        "source": "/c/Î¨¥ÎπÑ",
+        "source": "/c/π´∫Ò",
         "bcscript": "sync-update.bc"
       },
       {
         "name": "youtube",
-        "source": "/c/Ïú†ÌäúÎ∏å"
+        "source": "/c/¿Ø∆©∫Í"
       }
     ]
   }
