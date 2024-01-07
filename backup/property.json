@@ -37,22 +37,22 @@
         "source": "/c/Users/MYEONGGU.KIM/Music/iTunes"
       },
       {
-        "name": "¿Ø∆ø∏Æ∆º",
-        "source": "/c/¿Ø∆ø∏Æ∆º"
+        "name": "util",
+        "source": "/c/Ïú†Ìã∏Î¶¨Ìã∞"
       },
       {
         "name": "tv",
-        "source": "/c/∆º∫Í¿Ã",
+        "source": "/c/Ìã∞Î∏åÏù¥",
         "bcscript": "sync-update.bc"
       },
       {
         "name": "movie",
-        "source": "/c/π´∫Ò",
+        "source": "/c/Î¨¥ÎπÑ",
         "bcscript": "sync-update.bc"
       },
       {
         "name": "youtube",
-        "source": "/c/¿Ø∆©∫Í"
+        "source": "/c/Ïú†ÌäúÎ∏å"
       }
     ]
   }
