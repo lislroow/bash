@@ -1,0 +1,73 @@
+http://jotm.objectweb.org/current/jotm/doc/howto-tomcat-jotm.html
+
+https://code-searching.blogspot.com/2016/03/how-to-use-jdbc-and-transactions-in.html
+
+
+--
+
+https://docs.oracle.com/database/121/JAJDB/constant-values.html#oracle_jdbc_OracleConnection_CONNECTION_PROPERTY_AUTO_COMMIT_SPEC_COMPLIANT
+
+ -Doracle.jdbc.autoCommitSpecCompliant=true
+
+
+Unlocked pool:
+StandardXAConnection:
+     commit on prepare =<false>
+     is closed =<false>
+     this autoCommit =<true>
+     listeners size =<1>
+     next timeOut =<0>
+     timeOut period =<60000>
+     timeOut secs =<0>
+     transaction manager=<org.objectweb.jotm.Current@69930714>
+
+oracle.jdbc.driver.T4CConnection@50f78af1StandardXAConnection:
+     commit on prepare =<false>
+     is closed =<false>
+     this autoCommit =<true>
+     listeners size =<1>
+     next timeOut =<0>
+     timeOut period =<60000>
+     timeOut secs =<0>
+     transaction manager=<org.objectweb.jotm.Current@69930714>
+
+
+ -Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.Jdk14Logger
+
+
+ ---
+
+scouter 설정
+
+-javaagent:C:\develop\workspace\linux\@origin\scouter-all-2.20.0\scouter\agent.java\scouter.agent.jar -Dscouter.config=C:\develop\workspace\linux\@origin\scouter-all-2.20.0\scouter\agent.java\conf\scouter.conf -Dobj_name=tomcat-8.5 
+
+---
+
+conn.close() 호출 
+
+java.rmi.StubNotFoundException: Stub class not found: org.objectweb.jotm.SubCoordinator_Stub; nested exception is: 
+	java.lang.ClassNotFoundException: org.objectweb.jotm.SubCoordinator_Stub
+	at sun.rmi.server.Util.createStub(Util.java:297)
+	at sun.rmi.server.Util.createProxy(Util.java:142)
+	at sun.rmi.server.UnicastServerRef.exportObject(UnicastServerRef.java:226)
+	at java.rmi.server.UnicastRemoteObject.exportObject(UnicastRemoteObject.java:383)
+	at java.rmi.server.UnicastRemoteObject.exportObject(UnicastRemoteObject.java:301)
+	at com.sun.corba.se.impl.javax.rmi.PortableRemoteObject.exportObject(PortableRemoteObject.java:119)
+	at javax.rmi.PortableRemoteObject.exportObject(PortableRemoteObject.java:100)
+	at javax.rmi.PortableRemoteObject.<init>(PortableRemoteObject.java:84)
+	at org.objectweb.jotm.SubCoordinator.<init>(SubCoordinator.java:201)
+	at org.objectweb.jotm.TransactionImpl.makeSubCoord(TransactionImpl.java:985)
+	at org.objectweb.jotm.TransactionImpl.timeoutExpired(TransactionImpl.java:788)
+	at org.objectweb.jotm.TimerEvent.process(TimerEvent.java:103)
+	at org.objectweb.jotm.TimerManager.batch(TimerManager.java:230)
+	at org.objectweb.jotm.Batch.run(TimerManager.java:87)
+Caused by: java.lang.ClassNotFoundException: org.objectweb.jotm.SubCoordinator_Stub
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:387)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:418)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:351)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:348)
+	at sun.rmi.server.Util.createStub(Util.java:292)
+	... 13 more
+
+

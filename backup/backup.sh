@@ -2,10 +2,9 @@
 
 # VAR
 CURRDIR=$( pwd -P )
-FUNCFILE=$0
-#FUNCDIR=$( cd $( dirname $0 ) && pwd -P )
-FUNCDIR=${FUNCFILE%/*}
-BASEDIR=${FUNCDIR%/*}
+#FUNCFILE=${FUNCFILE#*/}
+FUNCDIR=$( cd $( dirname $0 ) && pwd -P )
+BASEDIR=$( cd $( dirname $0 ) && cd .. && pwd -P )
 PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 # //VAR
 

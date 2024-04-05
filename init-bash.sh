@@ -13,8 +13,8 @@ PATH="$BASHDIR/backup:\$PATH"
 PATH="$BASHDIR/youtube:\$PATH"
 export PATH
 
-alias gobash="cd '$BASHDIR'"
-alias gospring="cd '/c/project/spring'"
+alias cdbash="cd '$BASHDIR'"
+alias cdbackend="cd '/c/project/backend'"
 
 alias backup='backup.sh --drive=d itunes 유틸리티 develop project wallpaper editplus;\
               backup.sh --drive=y itunes 유틸리티 develop project'
@@ -26,12 +26,12 @@ echo "generated '~/.bash_profile'"
 cat << EOF
 [ git clone ]
 
-  $ git clone https://github.com/lislroow/spring
+  $ git clone https://github.com/lislroow/backend
 
 [ alias ]
 
-  alias gobash="cd '$BASHDIR'"
-  alias gospring="cd '/c/project/spring'"
+  alias cdbash="cd '$BASHDIR'"
+  alias cdbackend="cd '/c/project/backend'"
   
   alias backup='backup.sh --drive=d itunes 유틸리티 develop project wallpaper editplus;\
                 backup.sh --drive=y itunes 유틸리티 develop project'

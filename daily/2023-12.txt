@@ -1,4 +1,53 @@
-@@2023-12-05
+@@ 2024-01-01
+
+토큰은 서버측에서 생성한 쿠키에 저장할 수 있습니다. 쿠키는 "반드시" HttpOnly 라는 속성값을 부여하여 저장해야 합니다. 이 속성을 주면 자바스크립트가 이 쿠키를 읽을 수 없게 할 수 있습니다. 이 말은 크로스 사이트 스크립팅(XSS) 역시 막을 수 있습니다.
+
+쿠키는 Secure 라는 속성도 있습니다. 이 쿠키는 HTTPS 통신에서만 사용할 수 있도록 설정하는 것입니다. 이렇게 사용하면 "중간자 공격" (Man-in-the-middle Attack)으로 부터도 보호받을 수 있습니다. 중간자 공격은 통신 중간에 정보를 도청/위조 하는 공격입니다.
+
+여기서 다시 SameSite 라는 속성에  Strict나 Lax 속성을 준다면 오직 서버만이 토큰을 저장할 수 있게 합니다. 이렇게 하면, "크로스 사이트 요청 위변조 공격" 에서 자유로울 수 있습니다. Django는 Cross-site Request Forgery 공격을 막기위해 CSRF 토큰을 추가로 부여하는데, CSRF를 사용하지 않을 예정이라면 SameSite 속성을 변경하는 것도 좋은 방법입니다.
+
+여기서 또 다시 Domain 속성을 준다면 해당 쿠키는 지정된 도메인 서버로만 가는 요청에만 사용됩니다. 
+
+
+
+@@ 2023-12-31
+
+Downloading external resources is disabled
+
+com.nimbusds.jose.JOSEException: The RS256 algorithm is not allowed or supported by the JWS signer: Supported algorithms: [HS256]
+
+
+---
+
+jdbc:mysql://localhost:3306/test?allowMultiQueries=true
+
+<foreach collection="list" item="student" separator=";">
+INSERT INTO TB_USER (name, id, password)
+VALUES (#{student.name}, #{student.id}, #{student.password})
+</foreach>
+
+INSERT INTO TB_USER(name, id, password) VALUES ('abc', 'abc', '1234');INSERT INTO TB_USER(name, id, password) VALUES ('abc', 'abc', '1234');INSERT INTO TB_USER(name, id, password) VALUES ('abc', 'abc', '1234');INSERT INTO TB_USER(name, id, password) VALUES ('abc', 'abc', '1234');INSERT INTO TB_USER(name, id, password) VALUES ('abc', 'abc', '1234');INSERT INTO TB_USER(name, id, password) VALUES ('abc', 'abc', '1234');INSERT INTO TB_USER(name, id, password) VALUES ('abc', 'abc', '1234');
+
+MyBatis ExecutorType=BATCH
+BATCH가 아닌ExecutorType의 트랜잭션과 혼용될 수 없고 만약 섞이게 된다면 Exception이 발생하기 때문에 해당 메서드를 별도의 트랜잭션으로 구분해야한다.
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+protected void batchUpdate(String sqlId, List<?> paramList) {
+  for (Object param : paramList) {
+    sqlSessionTemplateBatch.update(sqlId, param);
+  }
+}
+
+
+@@ 2023-12-29
+
+mvn dependency:copy -Dartifact=com.h2database:h2:2.2.224:jar -DoutputDirectory=.
+
+RUNSCRIPT FROM 'test.sql'
+java -cp h2*.jar org.h2.tools.RunScript -url jdbc:h2:~/test -script test.sql
+RunScript.execute(conn, new FileReader("test.sql"));
+
+
+@@ 2023-12-05
 
 
 wget https://raw.githubusercontent.com/gnif/mod_rpaf/stable/mod_rpaf.c

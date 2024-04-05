@@ -1,0 +1,22 @@
+API Gateway
+- 인증(Authentication), 인가(Authorization)
+- API 라우팅(Routing)
+- QoS(Quality of Service): 안정적인 서비스 제공 및 네트워크 품질 관리를 위하여 사용자 / 클라이언트 / API 단위로 접속 제어 기능
+- 로깅(Logging) 및 모니터링(Monitoring)
+- 입력 유효성 검사: API 요청이 적절한 형식과 필수 데이터를 포함하는지 식별 및 관리 기능 제공
+
+요구 사항
+- 웹 콘솔에서 OAuth2를 이용한 사용자 인증과 HMAC 해시 인증키를 사용한 사용자 인증을 지원한다.
+- 개발 비용이 많이 필요한 GUI 기반의 관리 화면을 배제, Spring Yaml 파일 설정과 API Meta 정보 DB를 이용하여 유연한 설정 변경 지원
+- 사용자 인증 Session 관리를 위해 Redis를 사용
+- K8S 기반의 DevOps 운영 환경을 구성하여 원활한 Scale Out 지원
+- 인증 방식 및 지원 API에 따라 독립적인 서비스 제공 필요
+
+내부 구성
+- API Validate - Predicate
+  - 요청 API에 URL 패턴을 식별하여 해당 API가 서비스 가능 여부를 식별
+  - 미 지원 API 또는 Deprecated 된 API인 경우 404 응답 리턴
+- 라우팅 (Routing) - Predicate
+  - 요청 API URL 식별하여 적절한 서비스로의 연결하는 Routing 설정 구현
+  - 초기 Route Rule은 Context와 일치하는 API 요청에 대해 서비스로 전달하도록 구현
+
