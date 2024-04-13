@@ -22,7 +22,7 @@ export PATH
 
 alias cdbash="cd '$BASHDIR'"
 alias cdbackend="cd '/c/project/backend'"
-alias cdfront="cd '/c/project/front'"
+alias cdfrontend="cd '/c/project/frontend'"
 alias cddocker="cd '/c/project/docker'"
 
 alias backup='backup.sh --drive=d itunes 유틸리티 develop project wallpaper editplus;\
@@ -46,7 +46,7 @@ cat << EOF
   alias cdbash="cd '$BASHDIR'"
   alias cdbackend="cd '/c/project/backend'"
   alias cdbackend="cd '/c/project/backend'"
-  alias cdfront="cd '/c/project/front'"
+  alias cdfrontend="cd '/c/project/frontend'"
   alias cddocker="cd '/c/project/docker'"
   
   alias backup='backup.sh --drive=d itunes 유틸리티 develop project wallpaper editplus;\
