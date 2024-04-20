@@ -6,7 +6,7 @@
   },
   "backup": {
     "outdir": "/y/backup",
-    "drive": "/x",
+    "drive": "/d",
     "entries": [
       {
         "name": "wallpaper",
@@ -14,7 +14,7 @@
       },
       {
         "name": "editplus",
-        "source": "/c/Users/MYEONGGU.KIM/AppData/Roaming/EditPlus"
+        "source": "/c/Users/myeonggu.kim/AppData/Roaming/EditPlus"
       },
       {
         "name": "develop",
@@ -30,11 +30,11 @@
       },
       {
         "name": "plex",
-        "source": "/c/Users/MYEONGGU.KIM/AppData/Local/Plex Media Server"
+        "source": "/c/Users/myeonggu.kim/AppData/Local/Plex Media Server"
       },
       {
         "name": "itunes",
-        "source": "/c/Users/MYEONGGU.KIM/Music/iTunes"
+        "source": "/c/Users/myeonggu.kim/Music/iTunes"
       },
       {
         "name": "util",
