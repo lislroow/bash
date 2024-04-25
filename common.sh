@@ -72,19 +72,41 @@ function EXEC {
   local lineNo=${BASH_LINENO[0]}
   local TS=`date "+%Y-%m-%d %H:%M:%S"`
   
-  printf "%s %s \e[1;37m%s %s\e[0m " "$TS" "[$func:$lineNo]" "\$" "$cmd" 1>&2
+  printf "%s %s \e[1;37m%s %s\e[0m %s" "$TS" "[$func:$lineNo]" "\$" "$cmd" $'\n' 1>&2
   local start=$( date +%s%N )
-  if [ $DEBUG_MODE == 1 ]; then
-    bash -c "$cmd"
-  else
-    bash -c "$cmd" > /dev/null 2>&1
-  fi
+  # local rslt=$(bash -c "$cmd") # @see EXEC_R
+  bash -c "$cmd" 1>&2
   local exitCode=$?
   local end=$( date +%s%N )
   if [ $exitCode -eq 0 ]; then
-    printf "(\e[0;32msuccess:%d\e[0m, %'d ms)\n" $exitCode $(($(($end - $start))/1000000))
+    printf "%s(\e[0;32msuccess:%d\e[0m, %'d ms)\n" $'\n' $exitCode $(($(($end - $start))/1000000)) 1>&2
   else
-    printf "(\e[0;31merror:%d\e[0m, %'d ms)\n" $exitCode $(($(($end - $start))/1000000))
+    printf "%s(\e[0;31merror:%d\e[0m, %'d ms)\n" $'\n' $exitCode $(($(($end - $start))/1000000)) 1>&2
+  fi
+  echo $exitCode
+  # if [ ! -z "${rslt[*]}" ]; then   # @see EXEC_R
+  #   printf "${rslt[*]}"
+  # fi
+}
+
+function EXEC_R {
+  local cmd=$*
+  local func=${FUNCNAME[1]}
+  local lineNo=${BASH_LINENO[0]}
+  local TS=`date "+%Y-%m-%d %H:%M:%S"`
+  
+  printf "%s %s \e[1;37m%s %s\e[0m %s" "$TS" "[$func:$lineNo]" "\$" "$cmd" $'\n' 1>&2
+  local start=$( date +%s%N )
+  local rslt=$(bash -c "$cmd")
+  local exitCode=$?
+  local end=$( date +%s%N )
+  if [ $exitCode -eq 0 ]; then
+    printf "%s(\e[0;32msuccess:%d\e[0m, %'d ms)\n" $'\n' $exitCode $(($(($end - $start))/1000000)) 1>&2
+  else
+    printf "%s(\e[0;31merror:%d\e[0m, %'d ms)\n" $'\n' $exitCode $(($(($end - $start))/1000000)) 1>&2
+  fi
+  if [ ! -z "${rslt[*]}" ]; then
+    printf "${rslt[*]}"
   fi
 }
 

@@ -19,7 +19,7 @@
         "container_name": "prod.nexus"
       },
       {
-        "container_name": "prod.scouter"
+        "container_name": "prod.scouter-server"
       },
       {
         "container_name": "prod.mariadb"
