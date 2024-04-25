@@ -122,7 +122,7 @@ EOF
     rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
     if [ -z "${rslt}" ]; then
       LOG "'${CONTAINER_NAME}' not running. attempting to start ..."
-      exitCode=$(EXEC "docker-compose -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' -d")
+      exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' -d")
       if [ ${exitCode} -ne 0 ]; then
         LOG "fail to start '${CONTAINER_NAME}'"
         exit
@@ -135,7 +135,7 @@ EOF
     # 실행중인 컨테이너의 이미지에서 commit
     exitCode=$(EXEC "docker commit -a 'hi@mgkim.net' -m 'backup:${IMAGE_NAME}:${CURR_TIME}' '${CID}' '${IMAGE_NAME}:${CURR_TIME}'")
     # 실행중인 컨테이너 중지 및 제거
-    exitCode=$(EXEC "docker-compose -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' down '${CONTAINER_NAME}'")
+    exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' down '${CONTAINER_NAME}'")
     # latest 태그의 이미지 삭제 (컨테이너는 항상 latest 태그 이미지로 실행함)
     exitCode=$(EXEC "docker rmi docker.io/lislroow/${IMAGE_NAME}:latest")
     # commit 으로 생성된 이미지를 latest 태그의 이미지로 만듬
@@ -156,7 +156,7 @@ EOF
     exitCode=$(EXEC "docker image prune -f")
     
     # latest 태그 이미지로 컨테이너 실행
-    exitCode=$(EXEC "docker-compose -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' -d")
+    exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' -d")
     
     let "midx = midx + 1"
   done
