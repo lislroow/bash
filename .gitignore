@@ -3,3 +3,5 @@ test
 build
 reference
 **/docker/*.tar
+**/docker/*.7z
+**/docker/*.zip
