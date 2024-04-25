@@ -44,6 +44,7 @@ function SetOptions {
       -p)
         shift 2
         PROJECT_NAME=$1
+        ;;
       --)
         ;;
       *)
