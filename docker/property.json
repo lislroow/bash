@@ -2,7 +2,9 @@
   "config": {
     "precmd": [],
     "env": [],
-    "path": []
+    "path": [],
+    "PROJECT_NAME": "prod",
+    "DOCKER_COMPOSE_BASE": "/c/project/docker/prod"
   },
   "backup": {
     "entries": [
