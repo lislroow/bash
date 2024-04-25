@@ -116,8 +116,6 @@ function main {
   ENTRIES = [ ${ENTRIES[*]} ]
 
 EOF
-    #exit 0
-  fi
   
   ## entries
   if [ ${#params[*]} -gt 0 ]; then
