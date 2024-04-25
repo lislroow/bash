@@ -23,7 +23,6 @@ OPTIONS="l"
 LONGOPTIONS="create,up,down"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
-ARCHIVE_MODE=0
 function SetOptions {
   opts=$( getopt --options $_OPTIONS,$OPTIONS \
                  --longoptions $_LONGOPTIONS,$LONGOPTIONS \
@@ -92,7 +91,9 @@ EOF
   fi
   
   ## entries
-  #IFS=","; read -a ENTRIES <<< ${params[*]}; unset IFS
+  if [ ${#params[*]} -gt 0 ]; then
+    IFS=","; read -a ENTRIES <<< ${params[*]}; unset IFS
+  fi
   mtot=${#ENTRIES[*]}
   midx=1
   for entry in ${ENTRIES[*]}; do
@@ -111,7 +112,7 @@ EOF
 
 EOF
   
-  if [ ${CREATE_MODE} == 1 ]; then
+  if [ "${CREATE_MODE}" == "1" ]; then
     
     ## process
     for entry in ${ENTRIES[*]}; do
@@ -131,7 +132,7 @@ EOF
       let "midx = midx + 1"
     done
     
-  elif [ ${UP_MODE} == 1 ]; then
+  elif [ "${UP_MODE}" == "1" ]; then
     
     ## process
     for entry in ${ENTRIES[*]}; do
@@ -151,7 +152,7 @@ EOF
       let "midx = midx + 1"
     done
     
-  elif [ ${DOWN_MODE} == 1 ]; then
+  elif [ "${DOWN_MODE}" == "1" ]; then
     
     ## process
     for entry in ${ENTRIES[*]}; do
