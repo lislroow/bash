@@ -2,3 +2,4 @@ test
 .settings
 build
 reference
+**/docker/*.tar
