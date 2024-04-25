@@ -61,6 +61,7 @@ function SetOptions {
     exit 1
   fi
   DOCKER_COMPOSE_BASE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .DOCKER_COMPOSE_BASE'")
+  DOCKER_COMPOSE_BASE="${DOCKER_COMPOSE_BASE}/${PROJECT_NAME}"
   
   cat << EOF
 - SetOptions

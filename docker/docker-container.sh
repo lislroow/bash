@@ -20,7 +20,7 @@ EOF
 
 # options
 OPTIONS="l,p"
-LONGOPTIONS="create,up,down"
+LONGOPTIONS="create,up,down,stop"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
 function SetOptions {
@@ -55,6 +55,9 @@ function SetOptions {
       --down)
         DOWN_MODE=1
         ;;
+      --stop)
+        STOP_MODE=1
+        ;;
       --)
         ;;
       *)
@@ -70,6 +73,7 @@ function SetOptions {
     exit 1
   fi
   DOCKER_COMPOSE_BASE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .DOCKER_COMPOSE_BASE'")
+  DOCKER_COMPOSE_BASE="${DOCKER_COMPOSE_BASE}/${PROJECT_NAME}"
   
   cat << EOF
 - SetOptions
@@ -169,6 +173,26 @@ EOF
       rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
       if [ ! -z "${rslt}" ]; then
         exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' down '${CONTAINER_NAME}'")
+      else
+        LOG "'${CONTAINER_NAME}' is not running"
+        continue
+      fi
+      
+      let "midx = midx + 1"
+    done
+    
+  elif [ "${STOP_MODE}" == "1" ]; then
+    
+    ## process
+    for entry in ${ENTRIES[*]}; do
+      printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
+      
+      CONTAINER_NAME="${PROJECT_NAME}.${entry}"
+      IMAGE_NAME="${CONTAINER_NAME}"
+      
+      rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
+      if [ ! -z "${rslt}" ]; then
+        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' stop '${CONTAINER_NAME}'")
       else
         LOG "'${CONTAINER_NAME}' is not running"
         continue
