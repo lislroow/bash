@@ -117,18 +117,20 @@ EOF
         continue
       fi
       
-      # 백업 전, 실행중인 컨테이너를 중지
+      # 복원 전, 실행중인 컨테이너를 중지
       exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' stop '${CONTAINER_NAME}'")
+      
+      # 복원 전, 현재 volume 을 백업하지 않으므로 주의가 필요함
       
       # docker volume create 로 생성된 volume 에 대해서 백업을 실시
       # 백업 방식:
       #   alpine os 의 이미지로 컨테이너를 실행하면서
-      #   백업 대상 volume 을 /from 으로 mount 하고
-      #   현재 디렉토리를 /to 로 mount 함  
+      #   복구 대상 volume 을 /to 로 mount 하고
+      #   복구 파일(tar파일) 디렉토리(현재 디렉토리)를 /from 으로 mount 함
       #   컨테이너가 실행되면,
       #     ash 라는 shell 로 -c 다음 문자열을 실행함
-      #     -c 다음 문자열은 /from 디렉토리의 모든 파일을 /to/압축파일.tar 로 생성 
-      exitCode=$(EXEC "docker run --rm -v ${VOLUME_NAME}:/from -v /${CURRDIR}:/to alpine ash -c 'cd /from && tar cf /to/${VOLUME_NAME}.tar *'")
+      #     -c 다음 문자열은 /from 디렉토리로 이동 후 기존 파일을 삭제 후 tar 파일을 압축 해제
+      exitCode=$(EXEC "docker run --rm -v ${VOLUME_NAME}:/to -v /${CURRDIR}:/from alpine ash -c 'cd /to && du -h * && rm -rf * && tar xf /from/${VOLUME_NAME}.tar'")
       
       # 백업 후, 중지된 컨테이너를 실행
       exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' -d")
