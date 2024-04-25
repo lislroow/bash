@@ -1,0 +1,32 @@
+{
+  "config": {
+    "precmd": [],
+    "env": [],
+    "path": []
+  },
+  "backup": {
+    "entries": [
+      {
+        "container_name": "prod.apache"
+      },
+      {
+        "container_name": "prod.gitlab"
+      },
+      {
+        "container_name": "prod.gitlab-runner"
+      },
+      {
+        "container_name": "prod.nexus"
+      },
+      {
+        "container_name": "prod.scouter"
+      },
+      {
+        "container_name": "prod.mariadb"
+      },
+      {
+        "container_name": "prod.redis"
+      }
+    ]
+  }
+}
