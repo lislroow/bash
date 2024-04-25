@@ -13,7 +13,7 @@ PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 function USAGE {
   cat << EOF
 - USAGE
-Usage: $0 [options] <entries>
+Usage: ${0##*/} [options] <entries>
 
   ${0##*/} <entries>       : sync (storage-> backup)
 

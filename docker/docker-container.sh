@@ -11,7 +11,7 @@ PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 function USAGE {
   cat << EOF
 - USAGE
-Usage: $0 [options] <entries>
+Usage: ${0##*/} [options] <entries>
 
 EOF
   exit 1
@@ -19,7 +19,7 @@ EOF
 # //usage
 
 # options
-OPTIONS="l"
+OPTIONS="l,p"
 LONGOPTIONS="create,up,down"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
@@ -42,6 +42,10 @@ function SetOptions {
       -l)
         LIST_MODE=1
         ;;
+      -p)
+        shift
+        PROJECT_NAME=$2
+        ;;
       --create)
         CREATE_MODE=1
         ;;
@@ -60,7 +64,11 @@ function SetOptions {
     shift
   done
   
-  PROJECT_NAME=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .PROJECT_NAME'")
+  if [ -z "${PROJECT_NAME}" ]; then
+    LOG "'project name' is required."
+    USAGE
+    exit 1
+  fi
   DOCKER_COMPOSE_BASE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .DOCKER_COMPOSE_BASE'")
   
   cat << EOF
@@ -80,15 +88,12 @@ fi
 # main
 function main {
   ## prepare
-  if [ $LIST_MODE == 1 ] || [ -z "${params[*]}" ]; then
-    ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .container_name' | sed ''"))
-    cat << EOF
+  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .container_name' | sed ''"))
+  cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
 
 EOF
-    #exit 0
-  fi
   
   ## entries
   if [ ${#params[*]} -gt 0 ]; then
@@ -118,7 +123,7 @@ EOF
     for entry in ${ENTRIES[*]}; do
       printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
       
-      CONTAINER_NAME="${entry}"
+      CONTAINER_NAME="${PROJECT_NAME}.${entry}"
       IMAGE_NAME="${CONTAINER_NAME}"
       
       rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
@@ -138,7 +143,7 @@ EOF
     for entry in ${ENTRIES[*]}; do
       printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
       
-      CONTAINER_NAME="${entry}"
+      CONTAINER_NAME="${PROJECT_NAME}.${entry}"
       IMAGE_NAME="${CONTAINER_NAME}"
       
       rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
@@ -158,7 +163,7 @@ EOF
     for entry in ${ENTRIES[*]}; do
       printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
       
-      CONTAINER_NAME="${entry}"
+      CONTAINER_NAME="${PROJECT_NAME}.${entry}"
       IMAGE_NAME="${CONTAINER_NAME}"
       
       rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")

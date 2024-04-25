@@ -12,7 +12,7 @@ PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 function USAGE {
   cat << EOF
 - USAGE
-Usage: $0 [options] <entries>
+Usage: ${0##*/} [options] <entries>
  -l            : <entries> 보기
  -a            : 백업 디렉토리 tar 생성하기
  --outdir      : 백업 디렉토리 지정

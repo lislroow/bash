@@ -11,7 +11,7 @@ PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 function USAGE {
   cat << EOF
 - USAGE
-Usage: $0 [options] <entries>
+Usage: ${0##*/} [options] <entries>
 
 EOF
   exit 1
@@ -19,11 +19,10 @@ EOF
 # //usage
 
 # options
-OPTIONS="l"
+OPTIONS="l,p"
 LONGOPTIONS="network,volume"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
-ARCHIVE_MODE=0
 function SetOptions {
   opts=$( getopt --options $_OPTIONS,$OPTIONS \
                  --longoptions $_LONGOPTIONS,$LONGOPTIONS \
@@ -49,6 +48,10 @@ function SetOptions {
       --volume)
         VOLUME_MODE=1
         ;;
+      -p)
+        shift
+        PROJECT_NAME=$2
+        ;;
       --)
         ;;
       *)
@@ -58,7 +61,11 @@ function SetOptions {
     shift
   done
   
-  PROJECT_NAME=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .PROJECT_NAME'")
+  if [ -z "${PROJECT_NAME}" && "${VOLUME_MODE}" == "1" ]; then
+    LOG "'project name' is required."
+    USAGE
+    exit 1
+  fi
   DOCKER_COMPOSE_BASE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .DOCKER_COMPOSE_BASE'")
   
   cat << EOF
@@ -102,9 +109,8 @@ function main {
   
   
   ## prepare
-  if [ $LIST_MODE == 1 ] || [ -z "${params[*]}" ]; then
-    ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .container_name' | sed ''"))
-    cat << EOF
+  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .container_name' | sed ''"))
+  cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
 
@@ -113,7 +119,9 @@ EOF
   fi
   
   ## entries
-  #IFS=","; read -a ENTRIES <<< ${params[*]}; unset IFS
+  if [ ${#params[*]} -gt 0 ]; then
+    IFS=","; read -a ENTRIES <<< ${params[*]}; unset IFS
+  fi
   mtot=${#ENTRIES[*]}
   midx=1
   for entry in ${ENTRIES[*]}; do
@@ -136,7 +144,7 @@ EOF
   for entry in ${ENTRIES[*]}; do
     printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
     
-    CONTAINER_NAME="${entry}"
+    CONTAINER_NAME="${PROJECT_NAME}.${entry}"
     
     local list=($(EXEC_R "docker inspect --format '{{ json .Mounts }}' ${CONTAINER_NAME} | jq -r '.[] | \"\(.Name)|\(.Destination)\"'"))
     
