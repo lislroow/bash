@@ -44,6 +44,10 @@ function SetOptions {
       -p)
         shift 2
         PROJECT_NAME=$1
+        if [[ ! " prod dev local " =~ " ${PROJECT_NAME} " ]]; then
+          LOG "'-p <project name>' requires value of [prod | dev | local]. (${PROJECT_NAME} is wrong)"
+          USAGE
+        fi
         ;;
       --)
         ;;
