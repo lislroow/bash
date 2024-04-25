@@ -30,5 +30,6 @@
         "container_name": "prod.redis"
       }
     ]
-  }
+  },
+  "network": ["local-default", "dev-default", "prod-default"]
 }
