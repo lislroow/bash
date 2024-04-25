@@ -49,8 +49,8 @@ function SetOptions {
         VOLUME_MODE=1
         ;;
       -p)
-        shift
-        PROJECT_NAME=$2
+        shift 2
+        PROJECT_NAME=$1
         ;;
       --)
         ;;
