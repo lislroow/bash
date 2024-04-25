@@ -123,7 +123,7 @@ EOF
       
       rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
       if [ -z "${rslt}" ]; then
-        exitCode=$(EXEC "docker-compose -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' --no-start")
+        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' --no-start")
       else
         LOG "'${CONTAINER_NAME}' is running"
         continue
@@ -143,7 +143,7 @@ EOF
       
       rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
       if [ -z "${rslt}" ]; then
-        exitCode=$(EXEC "docker-compose -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' -d")
+        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' -d")
       else
         LOG "'${CONTAINER_NAME}' is running"
         continue
@@ -163,7 +163,7 @@ EOF
       
       rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
       if [ ! -z "${rslt}" ]; then
-        exitCode=$(EXEC "docker-compose -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' down '${CONTAINER_NAME}'")
+        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' down '${CONTAINER_NAME}'")
       else
         LOG "'${CONTAINER_NAME}' is not running"
         continue
