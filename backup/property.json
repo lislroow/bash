@@ -5,7 +5,6 @@
     "path": []
   },
   "backup": {
-    "outdir": "/y/backup",
     "drive": "/d",
     "entries": [
       {

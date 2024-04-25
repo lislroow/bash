@@ -116,7 +116,7 @@ fi
 function main {
   ## prepare
   if [ $LIST_MODE == 1 ] || [ -z "${params[*]}" ]; then
-    ENTRIES=($( jq -r '.backup.entries[] | .name' <<< $PROP | sed '' ))
+    ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .name' | sed ''"))
     cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -132,7 +132,7 @@ EOF
   midx=1
   for entry in ${ENTRIES[*]}; do
     if [ $entry == 'all' ]; then
-      ENTRIES=($( jq -r '.backup.entries[] | .name' <<< $PROP | sed '' ))
+      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .name' | sed ''"))
       mtot=${#ENTRIES[*]}
       break
     fi
@@ -149,7 +149,8 @@ EOF
   ## process
   for entry in ${ENTRIES[*]}; do
     printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
-    row=$( jq -r '.backup.entries[] | select(.name == "'$entry'") | "\(.name)|\(.source)|\(.bcscript)"' <<< $PROP | sed '' )
+    row=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | select(.name == \"$entry\") | \"\(.name)|\(.source)|\(.bcscript)\"' | sed ''")
+    
     IFS='|'; read name source bcscript <<< $row; unset IFS
     
     ### validation
@@ -164,28 +165,9 @@ EOF
     
     ### sync
     {
-      ### sync (source-> backup)
-      #if [ $storageOnly != 'true' ]; then
-      #  EXEC "bcomp @\"$FUNCDIR/$bcscript\" \"$source\" \"$OUTDIR/${source##*/}\""
-      #fi
-      
       ### sync (backup -> storage)
       EXEC "bcomp @\"$FUNCDIR/$bcscript\" \"$source\" \"$DRIVE/${source##*/}\""
     }
-    
-    ### tar
-    #{
-    #  ### tar (backup)
-    #  if [ $ARCHIVE_MODE == 1 ]; then
-    #    EXEC "cd $OUTDIR; tar cf \"$OUTDIR/${source##*/}.tar\" \"${source##*/}\""
-    #  fi
-    #  
-    #  ### cp (storage)
-    #  if [ -e $OUTDIR/${source##*/}.tar ]; then
-    #    EXEC "cp \"$OUTDIR/${source##*/}.tar\" \"$DRIVE/${source##*/}.tar\""
-    #    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$OUTDIR/${source##*/}.tar\" \"$DRIVE/${source##*/}.tar\""
-    #  fi
-    #}
     
     #((midx++))
     let "midx = midx + 1"

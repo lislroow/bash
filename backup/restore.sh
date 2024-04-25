@@ -92,7 +92,7 @@ fi
 function main {
   ## prepare
   if [ $LIST_MODE == 1 ] || [ -z "${params[*]}" ]; then
-    ENTRIES=($( jq -r '.backup.entries[] | .name' <<< $PROP | sed '' ))
+    ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .name' | sed ''"))
     cat << EOF
   - main
     ENTRIES = [ ${ENTRIES[*]} ]
@@ -107,7 +107,7 @@ EOF
   midx=1
   for entry in ${ENTRIES[*]}; do
     if [ $entry == 'all' ]; then
-      ENTRIES=($( jq -r '.backup.entries[] | .name' <<< $PROP | sed '' ))
+      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .name' | sed ''"))
       mtot=${#list[*]}
       break
     fi
@@ -124,7 +124,7 @@ EOF
   ## process
   for entry in ${ENTRIES[*]}; do
     printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
-    row=$( jq -r '.backup.entries[] | select(.name == "'$entry'") | "\(.name)|\(.source)|\(.storageOnly)"' <<< $PROP | sed '' )
+    row=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | select(.name == \"$entry\") | \"\(.name)|\(.source)|\(.storageOnly)\"' | sed ''")
     IFS='|'; read name source storageOnly <<< $row; unset IFS
     
     if [ $storageOnly == 'true' ]; then

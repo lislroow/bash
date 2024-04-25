@@ -82,7 +82,7 @@ fi
 function main {
   ## prepare
   if [ $LIST_MODE == 1 ] || [ -z "${params[*]}" ]; then
-    ENTRIES=($( jq -r '.backup.entries[] | .container_name' <<< $PROP | sed '' ))
+    ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .container_name' | sed ''"))
     cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -97,7 +97,7 @@ EOF
   midx=1
   for entry in ${ENTRIES[*]}; do
     if [ $entry == 'all' ]; then
-      ENTRIES=($( jq -r '.backup.entries[] | .name' <<< $PROP | sed '' ))
+      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .name' | sed ''"))
       mtot=${#ENTRIES[*]}
       break
     fi
@@ -125,10 +125,10 @@ EOF
     DOCKER_COMPOSE_BASE="/c/project/docker/prod"
     ##
     
-    rslt=$(EXEC_R docker ps --filter "Name=^${CONTAINER_NAME}$" --format "{{.Names}}")
+    rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
     if [ -z "${rslt}" ]; then
       LOG "'${CONTAINER_NAME}' not running. attempting to start ..."
-      exitCode=$(EXEC docker-compose -f "${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml" up "${CONTAINER_NAME}" -d)
+      exitCode=$(EXEC "docker-compose -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' -d")
       if [ ${exitCode} -ne 0 ]; then
         LOG "fail to start '${CONTAINER_NAME}'"
         exit
@@ -137,32 +137,32 @@ EOF
     
     local CURR_TIME=`date +%Y%m%d_%H%M%S`
     # 실행중인 컨테이너ID 확인
-    CID=$(docker ps --filter "Name=^${CONTAINER_NAME}$" --format '{{.ID}}')
+    CID=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.ID}}'")
     # 실행중인 컨테이너의 이미지에서 commit
-    exitCode=$(EXEC docker commit -a 'hi@mgkim.net' -m "backup:${IMAGE_NAME}:${CURR_TIME}" "${CID}" "${IMAGE_NAME}:${CURR_TIME}")
+    exitCode=$(EXEC "docker commit -a 'hi@mgkim.net' -m 'backup:${IMAGE_NAME}:${CURR_TIME}' '${CID}' '${IMAGE_NAME}:${CURR_TIME}'")
     # 실행중인 컨테이너 중지 및 제거
-    exitCode=$(EXEC docker-compose -f "${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml" down "${CONTAINER_NAME}")
+    exitCode=$(EXEC "docker-compose -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' down '${CONTAINER_NAME}'")
     # latest 태그의 이미지 삭제 (컨테이너는 항상 latest 태그 이미지로 실행함)
-    exitCode=$(EXEC docker rmi docker.io/lislroow/${IMAGE_NAME}:latest)
+    exitCode=$(EXEC "docker rmi docker.io/lislroow/${IMAGE_NAME}:latest")
     # commit 으로 생성된 이미지를 latest 태그의 이미지로 만듬
-    exitCode=$(EXEC docker tag "${IMAGE_NAME}:${CURR_TIME}" "lislroow/${IMAGE_NAME}:latest")
+    exitCode=$(EXEC "docker tag '${IMAGE_NAME}:${CURR_TIME}' 'lislroow/${IMAGE_NAME}:latest'")
     # latest 태그 이미지를 docker hub 에 push
-    exitCode=$(EXEC docker image push lislroow/${IMAGE_NAME}:latest)
+    exitCode=$(EXEC "docker image push 'lislroow/${IMAGE_NAME}:latest'")
     
     # 오래된 백업 이미지 대상 +3 조회
     # rslt=($(EXEC_R docker image ls ${CONTAINER_NAME} -q | tail -n +3))
     # ID로 삭제할 수 없음(https://stackoverflow.com/questions/38118791/can-t-delete-docker-image-with-dependent-child-images)
     # 태그로 지워야함
     # Error response from daemon: conflict: unable to delete 2e3651b1bda7 (cannot be forced) - image has dependent child images
-    rslt=($(EXEC_R docker image ls ${CONTAINER_NAME} --format '{{.Repository}}:{{.Tag}}' | tail -n +3))
+    rslt=($(EXEC_R "docker image ls '${CONTAINER_NAME}' --format '{{.Repository}}:{{.Tag}}' | tail -n +3"))
     if [ -n "${rslt[*]}" ]; then
       # 있으면 삭제
-      exitCode=$(EXEC docker rmi -f ${rslt[*]})
+      exitCode=$(EXEC "docker rmi -f ${rslt[*]}")
     fi
-    exitCode=$(EXEC docker image prune -f)
+    exitCode=$(EXEC "docker image prune -f")
     
     # latest 태그 이미지로 컨테이너 실행
-    exitCode=$(EXEC docker-compose -f "${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml" up "${CONTAINER_NAME}" -d)
+    exitCode=$(EXEC "docker-compose -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' -d")
     
     let "midx = midx + 1"
   done
