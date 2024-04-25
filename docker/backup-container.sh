@@ -58,15 +58,13 @@ function SetOptions {
     shift
   done
   
-  if [ -z $OUTDIR ]; then
-    OUTDIR=$( GetProp "backup.outdir" )
-  fi
+  PROJECT_NAME=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .PROJECT_NAME'")
+  DOCKER_COMPOSE_BASE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .DOCKER_COMPOSE_BASE'")
   
-  if [ $DEBUG_MODE == 1 ]; then
-    cat << EOF
+  cat << EOF
 - SetOptions
-  OUTDIR = $OUTDIR
-  DRIVE = $DRIVE
+  PROJECT_NAME = $PROJECT_NAME
+  DOCKER_COMPOSE_BASE = $DOCKER_COMPOSE_BASE
 
 EOF
   fi
@@ -115,15 +113,8 @@ EOF
   for entry in ${ENTRIES[*]}; do
     printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
     
-    #EXEC "docker ps | grep prod.apache | awk '{print $1}'"
-    PROJECT_NAME="prod"
     CONTAINER_NAME="${entry}"
     IMAGE_NAME="${CONTAINER_NAME}"
-    
-    ##
-    #CONTAINER_NAME="prod.apache"
-    DOCKER_COMPOSE_BASE="/c/project/docker/prod"
-    ##
     
     rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
     if [ -z "${rslt}" ]; then

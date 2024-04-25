@@ -55,15 +55,13 @@ function SetOptions {
     shift
   done
   
-  if [ -z $OUTDIR ]; then
-    OUTDIR=$( GetProp "backup.outdir" )
-  fi
+  PROJECT_NAME=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .PROJECT_NAME'")
+  DOCKER_COMPOSE_BASE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .DOCKER_COMPOSE_BASE'")
   
-  if [ $DEBUG_MODE == 1 ]; then
-    cat << EOF
+  cat << EOF
 - SetOptions
-  OUTDIR = $OUTDIR
-  DRIVE = $DRIVE
+  PROJECT_NAME = $PROJECT_NAME
+  DOCKER_COMPOSE_BASE = $DOCKER_COMPOSE_BASE
 
 EOF
   fi
@@ -111,10 +109,8 @@ EOF
   for entry in ${ENTRIES[*]}; do
     printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
     
-    PROJECT_NAME="prod"
     CONTAINER_NAME="${entry}"
     IMAGE_NAME="${CONTAINER_NAME}"
-    DOCKER_COMPOSE_BASE="/c/project/docker/prod"
     
     # 컨테이너에 mount 된 volume 목록 조회 
     local list=$(EXEC_R "docker inspect --format '{{ json .Mounts }}' ${CONTAINER_NAME} | jq -r '.[] | \"\(.Name)|\(.Destination)\"'")
