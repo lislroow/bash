@@ -75,11 +75,6 @@ function SetOptions {
     USAGE
     exit 1
   fi
-  if [ "${FROM_PROJECT}" == "${TO_PROJECT}" ]; then
-    LOG "From and to cannot be the same."
-    USAGE
-    exit 1
-  fi
   
   DOCKER_COMPOSE_BASE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .DOCKER_COMPOSE_BASE'")
   
