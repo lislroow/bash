@@ -9,14 +9,14 @@ services:
       - gitlab-runner_conf:/etc/gitlab-runner
       - gitlab-runner_java:/usr/lib/jvm
       - gitlab-runner_cache:/home/gitlab-runner
-#    networks:
-#      - prod-default
+    networks:
+      - prod-default
 
 volumes:
   gitlab-runner_conf:
   gitlab-runner_java:
   gitlab-runner_cache:
 
-#networks:
-#  prod-default:
-#    external: true
+networks:
+  prod-default:
+    external: true
