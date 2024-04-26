@@ -19,7 +19,7 @@ EOF
 # //usage
 
 # options
-OPTIONS="l,p"
+OPTIONS="l,p:"
 LONGOPTIONS="create,up,down,stop"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
@@ -37,16 +37,16 @@ function SetOptions {
     if [ -z $1 ]; then
       break
     fi
+    echo ">> $1 $2 $3 $4"
     case $1 in
       -h | -v | --help | --verbose) ;;
       -l)
         LIST_MODE=1
         ;;
       -p)
-        shift 2
-        PROJECT_NAME=$1
+        shift; PROJECT_NAME=$1
         if [[ ! " prod dev local " =~ " ${PROJECT_NAME} " ]]; then
-          LOG "'-p <project name>' requires value of [prod | dev | local]. (${PROJECT_NAME} is wrong)"
+          LOG "'-p <project name>' requires value of [prod | local]. (${PROJECT_NAME} is wrong)"
           USAGE
         fi
         ;;
@@ -77,7 +77,6 @@ function SetOptions {
     exit 1
   fi
   DOCKER_COMPOSE_BASE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .DOCKER_COMPOSE_BASE'")
-  DOCKER_COMPOSE_BASE="${DOCKER_COMPOSE_BASE}/${PROJECT_NAME}"
   
   cat << EOF
 - SetOptions
@@ -96,7 +95,7 @@ fi
 # main
 function main {
   ## prepare
-  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .container_name' | sed ''"))
+  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.${PROJECT_NAME}[]' | sed ''"))
   cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -111,7 +110,7 @@ EOF
   midx=1
   for entry in ${ENTRIES[*]}; do
     if [ $entry == 'all' ]; then
-      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .name' | sed ''"))
+      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.${PROJECT_NAME}[]' | sed ''"))
       mtot=${#ENTRIES[*]}
       break
     fi
@@ -131,12 +130,13 @@ EOF
     for entry in ${ENTRIES[*]}; do
       printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
       
+      COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/compose.${entry}.yml"
       CONTAINER_NAME="${PROJECT_NAME}.${entry}"
       IMAGE_NAME="${CONTAINER_NAME}"
       
       rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
       if [ -z "${rslt}" ]; then
-        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' --no-start")
+        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' --no-start")
       else
         LOG "'${CONTAINER_NAME}' is running"
         continue
@@ -151,12 +151,13 @@ EOF
     for entry in ${ENTRIES[*]}; do
       printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
       
+      COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/compose.${entry}.yml"
       CONTAINER_NAME="${PROJECT_NAME}.${entry}"
       IMAGE_NAME="${CONTAINER_NAME}"
       
       rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
       if [ -z "${rslt}" ]; then
-        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' -d")
+        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
       else
         LOG "'${CONTAINER_NAME}' is running"
         continue
@@ -171,12 +172,13 @@ EOF
     for entry in ${ENTRIES[*]}; do
       printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
       
+      COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/compose.${entry}.yml"
       CONTAINER_NAME="${PROJECT_NAME}.${entry}"
       IMAGE_NAME="${CONTAINER_NAME}"
       
       rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
       if [ ! -z "${rslt}" ]; then
-        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' down '${CONTAINER_NAME}'")
+        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' down '${CONTAINER_NAME}'")
       else
         LOG "'${CONTAINER_NAME}' is not running"
         continue
@@ -191,12 +193,13 @@ EOF
     for entry in ${ENTRIES[*]}; do
       printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
       
+      COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/compose.${entry}.yml"
       CONTAINER_NAME="${PROJECT_NAME}.${entry}"
       IMAGE_NAME="${CONTAINER_NAME}"
       
       rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
       if [ ! -z "${rslt}" ]; then
-        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' stop '${CONTAINER_NAME}'")
+        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' stop '${CONTAINER_NAME}'")
       else
         LOG "'${CONTAINER_NAME}' is not running"
         continue

@@ -21,7 +21,7 @@ EOF
 # //usage
 
 # options
-OPTIONS="l,p"
+OPTIONS="l,p:"
 LONGOPTIONS=""
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
@@ -46,10 +46,9 @@ function SetOptions {
         LIST_MODE=1
         ;;
       -p)
-        shift 2
-        PROJECT_NAME=$1
+        shift; PROJECT_NAME=$1
         if [[ ! " prod dev local " =~ " ${PROJECT_NAME} " ]]; then
-          LOG "'-p <project name>' requires value of [prod | dev | local]. (${PROJECT_NAME} is wrong)"
+          LOG "'-p <project name>' requires value of [prod | local]. (${PROJECT_NAME} is wrong)"
           USAGE
         fi
         ;;
@@ -68,14 +67,13 @@ function SetOptions {
     exit 1
   fi
   DOCKER_COMPOSE_BASE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .DOCKER_COMPOSE_BASE'")
-  DOCKER_COMPOSE_BASE="${DOCKER_COMPOSE_BASE}/${PROJECT_NAME}"
+  
   cat << EOF
 - SetOptions
   PROJECT_NAME = $PROJECT_NAME
   DOCKER_COMPOSE_BASE = $DOCKER_COMPOSE_BASE
 
 EOF
-  fi
 }
 SetOptions $*
 if [ $? -ne 0 ]; then
@@ -87,7 +85,7 @@ fi
 # main
 function main {
   ## prepare
-  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .container_name' | sed ''"))
+  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.containers[]' | sed ''"))
   cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -102,7 +100,7 @@ EOF
   midx=1
   for entry in ${ENTRIES[*]}; do
     if [ $entry == 'all' ]; then
-      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .name' | sed ''"))
+      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.containers[]' | sed ''"))
       mtot=${#ENTRIES[*]}
       break
     fi
@@ -120,13 +118,15 @@ EOF
   for entry in ${ENTRIES[*]}; do
     printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
     
+    COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/compose.${entry}.yml"
     CONTAINER_NAME="${PROJECT_NAME}.${entry}"
-    IMAGE_NAME="${CONTAINER_NAME}"
+    #IMAGE_NAME="${CONTAINER_NAME}"
+    IMAGE_NAME="${entry}"
     
     rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
     if [ -z "${rslt}" ]; then
       LOG "'${CONTAINER_NAME}' not running. attempting to start ..."
-      exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' -d")
+      exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
       if [ ${exitCode} -ne 0 ]; then
         LOG "fail to start '${CONTAINER_NAME}'"
         exit
@@ -139,7 +139,7 @@ EOF
     # 실행중인 컨테이너의 이미지에서 commit
     exitCode=$(EXEC "docker commit -a 'hi@mgkim.net' -m 'backup:${IMAGE_NAME}:${CURR_TIME}' '${CID}' '${IMAGE_NAME}:${CURR_TIME}'")
     # 실행중인 컨테이너 중지 및 제거
-    exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' down '${CONTAINER_NAME}'")
+    exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' down '${CONTAINER_NAME}'")
     # latest 태그의 이미지 삭제 (컨테이너는 항상 latest 태그 이미지로 실행함)
     exitCode=$(EXEC "docker rmi docker.io/lislroow/${IMAGE_NAME}:latest")
     # commit 으로 생성된 이미지를 latest 태그의 이미지로 만듬
@@ -160,7 +160,7 @@ EOF
     exitCode=$(EXEC "docker image prune -f")
     
     # latest 태그 이미지로 컨테이너 실행
-    exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${DOCKER_COMPOSE_BASE}/${CONTAINER_NAME}.yml' up '${CONTAINER_NAME}' -d")
+    exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
     
     let "midx = midx + 1"
   done

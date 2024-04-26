@@ -5,30 +5,34 @@
     "path": [],
     "DOCKER_COMPOSE_BASE": "/c/project/docker"
   },
-  "backup": {
-    "entries": [
-      {
-        "container_name": "apache"
-      },
-      {
-        "container_name": "gitlab"
-      },
-      {
-        "container_name": "gitlab-runner"
-      },
-      {
-        "container_name": "nexus"
-      },
-      {
-        "container_name": "scouter-server"
-      },
-      {
-        "container_name": "mariadb"
-      },
-      {
-        "container_name": "redis"
-      }
+  "entries": {
+    "prod": [
+      "apache",
+      "gitlab",
+      "gitlab-runner",
+      "nexus",
+      "scouter-server",
+      "mariadb",
+      "redis"
+    ],
+    "local": [
+      "apache",
+      "scouter-server",
+      "mariadb",
+      "redis"
     ]
   },
-  "network": ["local-default", "dev-default", "prod-default"]
+  "backup": {
+    "containers": [
+      "scouter-server"
+    ],
+    "volumes": [
+      "gitlab",
+      "nexus",
+      "scouter-server",
+      "mariadb",
+      "redis"
+    ]
+  },
+  "network": ["local-default", "prod-default"]
 }
