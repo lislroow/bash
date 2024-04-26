@@ -51,8 +51,9 @@ function SetOptions {
         ;;
       -r | --run)
         shift; RUN_TYPE=$1
-        if [[ ! " create up down stop " =~ " ${RUN_TYPE} " ]]; then
-          LOG "'-r <run type>' requires value of [create up down stop]. (${RUN_TYPE} is wrong)"
+        allows="build create up down stop"
+        if [[ ! " ${allows} " =~ " ${RUN_TYPE} " ]]; then
+          LOG "'-r <run type>' requires value of [${allows}]. (${RUN_TYPE} is wrong)"
           USAGE
         fi
         ;;
@@ -95,7 +96,7 @@ fi
 # main
 function main {
   ## prepare
-  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.${PROJECT_NAME}[]' | sed ''"))
+  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | .name' | sed ''"))
   cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -110,7 +111,7 @@ EOF
   midx=1
   for entry in ${ENTRIES[*]}; do
     if [ $entry == 'all' ]; then
-      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.${PROJECT_NAME}[]' | sed ''"))
+      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | .name' | sed ''"))
       mtot=${#ENTRIES[*]}
       break
     fi
@@ -132,7 +133,22 @@ EOF
     CONTAINER_NAME="${PROJECT_NAME}.${entry}"
     IMAGE_NAME="${CONTAINER_NAME}"
     
-    case ${RUN_TYPE} in
+    case "${RUN_TYPE}" in
+      build)
+        SOURCE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | select(.name == \"${entry}\") | .source' | sed ''")
+        cd ${SOURCE}
+        TYPE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | select(.name == \"${entry}\") | .type' | sed ''")
+        case "${TYPE}" in
+          java)
+            exitCode=$(EXEC "./mvnw package -s ./.mvn/wrapper/settings.xml")
+            exitCode=$(EXEC "mkdir -p target/scouter.agent")
+            exitCode=$(EXEC "cp /c/develop/tools/scouter-agent/* target/scouter.agent")
+            ;;
+        esac
+        exitCode=$(EXEC "docker build -t ${entry}:latest .")
+        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' down '${CONTAINER_NAME}'")
+        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
+        ;;
       create)
         exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' --no-start")
         ;;

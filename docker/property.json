@@ -22,6 +22,33 @@
       "redis",
       "gitlab",
       "nexus"
+    ],
+    "app": [
+      {
+        "name": "admin-sample-api",
+        "source": "/c/project/spring-application/app-admin/admin-sample-api",
+        "type": "java"
+      },
+      {
+        "name": "admin-user-api",
+        "source": "/c/project/spring-application/app-admin/admin-user-api",
+        "type": "java"
+      },
+      {
+        "name": "common-auth",
+        "source": "/c/project/spring-application/app-common/common-auth",
+        "type": "java"
+      },
+      {
+        "name": "common-gateway",
+        "source": "/c/project/spring-application/app-common/common-gateway",
+        "type": "java"
+      },
+      {
+        "name": "web-admin",
+        "source": "/c/project/spring-application/web-admin",
+        "type": "nodejs"
+      }
     ]
   },
   "backup": {
