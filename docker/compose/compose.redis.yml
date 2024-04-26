@@ -1,0 +1,42 @@
+services:
+  prod.redis:
+    image: redis:latest
+    container_name: prod.redis
+    ports:
+      - 16379:6379
+    restart: always
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - prod-default
+
+  local.redis:
+    image: redis:latest
+    container_name: local.redis
+    ports:
+      - 6379:6379
+    restart: always
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - local-default
+
+volumes:
+  redis_data:
+
+
+networks:
+  prod-default:
+    external: true
+  dev-default:
+    external: true
+  local-default:
+    external: true

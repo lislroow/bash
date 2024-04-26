@@ -1,0 +1,35 @@
+services:
+  prod.apache:
+    image: httpd:2.4
+    container_name: prod.apache
+    ports: 
+      - 880:80
+      - 8443:443
+    restart: always
+    volumes:
+      - ./apache/prod.httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+      # certbot certonly --standalone -d admin.mgkim.net -d gitlab.mgkim.net -d nexus.mgkim.net
+      # This certificate expires on 2024-07-22.
+      - ./apache/prod.fullchain.pem:/usr/local/apache2/conf/fullchain.pem:ro
+      - ./apache/prod.privkey.pem:/usr/local/apache2/conf/privkey.pem:ro
+    networks:
+      - prod-default
+
+  local.apache:
+    image: httpd:2.4
+    container_name: local.apache
+    ports: 
+      - 88:80
+    restart: always
+    volumes:
+      - ./apache/local.httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+    networks:
+      - local-default
+
+networks:
+  prod-default:
+    external: true
+  dev-default:
+    external: true
+  local-default:
+    external: true

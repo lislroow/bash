@@ -1,0 +1,33 @@
+services:
+  prod.nexus:
+    image: sonatype/nexus3:latest
+    container_name: prod.nexus
+    ports:
+      - 9100:8081
+    restart: always
+    volumes:
+      - nexus_data:/nexus-data
+    networks:
+      - prod-default
+
+  local.nexus:
+    image: sonatype/nexus3:latest
+    container_name: local.nexus
+    ports:
+      - 7100:8081
+    restart: always
+    volumes:
+      - nexus_data:/nexus-data
+    networks:
+      - local-default
+
+volumes:
+  nexus_data:
+
+networks:
+  prod-default:
+    external: true
+  dev-default:
+    external: true
+  local-default:
+    external: true

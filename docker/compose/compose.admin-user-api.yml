@@ -1,0 +1,24 @@
+services:
+  prod.admin-user-api:
+    image: admin-user-api:latest
+    restart: always
+    environment:
+      APP_NAME: admin-user-api
+      SPRING_PROFILE: prod
+    networks:
+      - prod-default
+
+  local.admin-user-api:
+    image: admin-user-api:latest
+    restart: always
+    environment:
+      APP_NAME: admin-user-api
+      SPRING_PROFILE: local
+    networks:
+      - local-default
+
+networks:
+  prod-default:
+    external: true
+  local-default:
+    external: true

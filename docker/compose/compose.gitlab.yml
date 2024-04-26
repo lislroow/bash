@@ -1,0 +1,51 @@
+services:
+  prod.gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: prod.gitlab
+    restart: always
+    hostname: gitlab.mgkim.net
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.mgkim.net'
+    ports:
+      - 9000:80
+      - 22:22
+    volumes:
+      - gitlab_data:/var/opt/gitlab
+      - gitlab_conf:/etc/gitlab
+      - gitlab_logs:/var/log/gitlab
+    shm_size: '256m'
+    networks:
+      - prod-default
+
+  local.gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: local.gitlab
+    restart: always
+    hostname: local.gitlab
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://local.gitlab'
+    ports:
+      - 7000:80
+      #- 22:22
+    volumes:
+      - gitlab_data:/var/opt/gitlab
+      - gitlab_conf:/etc/gitlab
+      - gitlab_logs:/var/log/gitlab
+    shm_size: '256m'
+    networks:
+      - local-default
+
+volumes:
+  gitlab_data:
+  gitlab_logs:
+  gitlab_conf:
+
+networks:
+  prod-default:
+    external: true
+  dev-default:
+    external: true
+  local-default:
+    external: true

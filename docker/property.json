@@ -3,7 +3,7 @@
     "precmd": [],
     "env": [],
     "path": [],
-    "DOCKER_COMPOSE_BASE": "/c/project/docker"
+    "DOCKER_COMPOSE_BASE": "/c/project/bash/docker/compose"
   },
   "entries": {
     "prod": [
