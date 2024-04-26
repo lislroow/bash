@@ -11,8 +11,9 @@ PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 function USAGE {
   cat << EOF
 - USAGE
-Usage: ${0##*/} -p, --project <project name>
-                <entries>
+Usage: ${0##*/} 
+          -p, --project <project name>
+                        <entries>
 
 EOF
   exit 1
