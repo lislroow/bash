@@ -6,9 +6,10 @@ services:
     hostname: gitlab.mgkim.net
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://gitlab.mgkim.net'
+        external_url 'https://gitlab.mgkim.net'
     ports:
       - 9000:80
+      - 443:443
       - 22:22
     volumes:
       - gitlab_data:/var/opt/gitlab
