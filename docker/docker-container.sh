@@ -132,7 +132,7 @@ EOF
   for entry in ${ENTRIES[*]}; do
     printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
     
-    COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/compose.${entry}.yml"
+    COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/${entry}.yml"
     CONTAINER_NAME="${PROJECT_NAME}.${entry}"
     IMAGE_NAME="${CONTAINER_NAME}"
     
