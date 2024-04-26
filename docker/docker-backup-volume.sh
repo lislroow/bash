@@ -11,7 +11,9 @@ PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 function USAGE {
   cat << EOF
 - USAGE
-Usage: ${0##*/} [options] <entries>
+Usage: ${0##*/} -p, --project <project name>
+                <entries>
+
 EOF
   exit 1
 }
@@ -43,8 +45,9 @@ function SetOptions {
         ;;
       -p | --project)
         shift; PROJECT_NAME=$1
-        if [[ ! " prod local " =~ " ${PROJECT_NAME} " ]]; then
-          LOG "'-p <project name>' requires value of [prod local]. (${PROJECT_NAME} is wrong)"
+        allows="prod local"
+        if [[ ! " ${allows} " =~ " ${PROJECT_NAME} " ]]; then
+          LOG "'-p, --project <project name>' requires value of [ ${allows} ]. (${PROJECT_NAME} is wrong)"
           USAGE
         fi
         ;;
@@ -58,9 +61,8 @@ function SetOptions {
   done
   
   if [ -z "${PROJECT_NAME}" ]; then
-    LOG "'-p <project name>' is required."
-    USAGE
-    exit 1
+    LOG "'-p <project name>' is required. (default: local)"
+    PROJECT_NAME="local"
   fi
   DOCKER_COMPOSE_BASE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .DOCKER_COMPOSE_BASE'")
   

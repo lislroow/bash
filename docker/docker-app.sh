@@ -11,7 +11,9 @@ PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 function USAGE {
   cat << EOF
 - USAGE
-Usage: ${0##*/} [options] <entries>
+Usage: ${0##*/} -p, --project <project name> 
+                -r, --run <run type>
+                <entries>
 
 EOF
   exit 1
@@ -44,16 +46,17 @@ function SetOptions {
         ;;
       -p | --project)
         shift; PROJECT_NAME=$1
-        if [[ ! " prod local " =~ " ${PROJECT_NAME} " ]]; then
-          LOG "'-p <project name>' requires value of [prod local]. (${PROJECT_NAME} is wrong)"
+        allows="prod local"
+        if [[ ! " ${allows} " =~ " ${PROJECT_NAME} " ]]; then
+          LOG "'-p, --project <project name>' requires value of [ ${allows} ]. (${PROJECT_NAME} is wrong)"
           USAGE
         fi
         ;;
       -r | --run)
         shift; RUN_TYPE=$1
-        allows="build create up down stop"
+        allows="build create up down stop restart"
         if [[ ! " ${allows} " =~ " ${RUN_TYPE} " ]]; then
-          LOG "'-r <run type>' requires value of [${allows}]. (${RUN_TYPE} is wrong)"
+          LOG "'-r, --run <run type>' requires value of [ ${allows} ]. (${RUN_TYPE} is wrong)"
           USAGE
         fi
         ;;
@@ -67,14 +70,11 @@ function SetOptions {
   done
   
   if [ -z "${PROJECT_NAME}" ]; then
-    LOG "'-p <project name>' is required."
-    USAGE
-    exit 1
+    LOG "'-p, --project <project name>' is required. (default: local)"
+    PROJECT_NAME="local"
   fi
   if [ -z "${RUN_TYPE}" ]; then
-    LOG "'-r <run type>' is required."
-    USAGE
-    exit 1
+    LOG "'-r, --run <run type>' is required."
   fi
   DOCKER_COMPOSE_BASE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .DOCKER_COMPOSE_BASE'")
   
@@ -160,6 +160,10 @@ EOF
         ;;
       stop)
         exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' stop '${CONTAINER_NAME}'")
+        ;;
+      restart)
+        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' stop '${CONTAINER_NAME}'")
+        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
         ;;
     esac
     let "midx = midx + 1"

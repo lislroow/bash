@@ -11,8 +11,10 @@ PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 function USAGE {
   cat << EOF
 - USAGE
-Usage: ${0##*/} [options] <entries>
-  ${0##*/} -p <project name> <entries>
+Usage: ${0##*/} --from <from project>
+                --to <to project>
+                <entries>
+
 EOF
   exit 1
 }
@@ -44,15 +46,17 @@ function SetOptions {
         ;;
       --from)
         shift; FROM_PROJECT=$1
-        if [[ ! " prod local " =~ " ${FROM_PROJECT} " ]]; then
-          LOG "'--from <from>' requires value of [prod local]. (${FROM_PROJECT} is wrong)"
+        allows="prod local"
+        if [[ ! " ${allows} " =~ " ${FROM_PROJECT} " ]]; then
+          LOG "'--from <from>' requires value of [ ${allows} ]. (${FROM_PROJECT} is wrong)"
           USAGE
         fi
         ;;
       --to)
         shift; TO_PROJECT=$1
-        if [[ ! " prod local " =~ " ${TO_PROJECT} " ]]; then
-          LOG "'--to <to>' requires value of [prod local]. (${TO_PROJECT} is wrong)"
+        allows="prod local"
+        if [[ ! " ${allows} " =~ " ${TO_PROJECT} " ]]; then
+          LOG "'--to <to>' requires value of [ ${allows} ]. (${TO_PROJECT} is wrong)"
           USAGE
         fi
         ;;
