@@ -8,18 +8,20 @@
   "entries": {
     "prod": [
       "apache",
-      "gitlab",
-      "gitlab-runner",
-      "nexus",
       "scouter-server",
       "mariadb",
-      "redis"
+      "redis",
+      "gitlab",
+      "gitlab-runner",
+      "nexus"
     ],
     "local": [
       "apache",
       "scouter-server",
       "mariadb",
-      "redis"
+      "redis",
+      "gitlab",
+      "nexus"
     ]
   },
   "backup": {

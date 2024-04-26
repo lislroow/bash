@@ -22,7 +22,7 @@ EOF
 
 # options
 OPTIONS="l,p:"
-LONGOPTIONS=""
+LONGOPTIONS="project:"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
 ARCHIVE_MODE=0
@@ -45,10 +45,10 @@ function SetOptions {
       -l)
         LIST_MODE=1
         ;;
-      -p)
+      -p | --project)
         shift; PROJECT_NAME=$1
-        if [[ ! " prod dev local " =~ " ${PROJECT_NAME} " ]]; then
-          LOG "'-p <project name>' requires value of [prod | local]. (${PROJECT_NAME} is wrong)"
+        if [[ ! " prod local " =~ " ${PROJECT_NAME} " ]]; then
+          LOG "'-p <project name>' requires value of [prod local]. (${PROJECT_NAME} is wrong)"
           USAGE
         fi
         ;;
@@ -62,7 +62,7 @@ function SetOptions {
   done
   
   if [ -z "${PROJECT_NAME}" ]; then
-    LOG "'project name' is required."
+    LOG "'-p <project name>' is required."
     USAGE
     exit 1
   fi

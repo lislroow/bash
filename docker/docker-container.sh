@@ -19,8 +19,8 @@ EOF
 # //usage
 
 # options
-OPTIONS="l,p:"
-LONGOPTIONS="create,up,down,stop"
+OPTIONS="l,p:,r:"
+LONGOPTIONS="project:,run:"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
 function SetOptions {
@@ -43,24 +43,19 @@ function SetOptions {
       -l)
         LIST_MODE=1
         ;;
-      -p)
+      -p | --project)
         shift; PROJECT_NAME=$1
-        if [[ ! " prod dev local " =~ " ${PROJECT_NAME} " ]]; then
-          LOG "'-p <project name>' requires value of [prod | local]. (${PROJECT_NAME} is wrong)"
+        if [[ ! " prod local " =~ " ${PROJECT_NAME} " ]]; then
+          LOG "'-p <project name>' requires value of [prod local]. (${PROJECT_NAME} is wrong)"
           USAGE
         fi
         ;;
-      --create)
-        CREATE_MODE=1
-        ;;
-      --up)
-        UP_MODE=1
-        ;;
-      --down)
-        DOWN_MODE=1
-        ;;
-      --stop)
-        STOP_MODE=1
+      -r | --run)
+        shift; RUN_TYPE=$1
+        if [[ ! " create up down stop " =~ " ${RUN_TYPE} " ]]; then
+          LOG "'-r <run type>' requires value of [create up down stop]. (${RUN_TYPE} is wrong)"
+          USAGE
+        fi
         ;;
       --)
         ;;
@@ -72,7 +67,12 @@ function SetOptions {
   done
   
   if [ -z "${PROJECT_NAME}" ]; then
-    LOG "'project name' is required."
+    LOG "'-p <project name>' is required."
+    USAGE
+    exit 1
+  fi
+  if [ -z "${RUN_TYPE}" ]; then
+    LOG "'-r <run type>' is required."
     USAGE
     exit 1
   fi
@@ -82,6 +82,7 @@ function SetOptions {
 - SetOptions
   PROJECT_NAME = $PROJECT_NAME
   DOCKER_COMPOSE_BASE = $DOCKER_COMPOSE_BASE
+  RUN_TYPE = $RUN_TYPE
 
 EOF
 }
@@ -124,93 +125,30 @@ EOF
 
 EOF
   
-  if [ "${CREATE_MODE}" == "1" ]; then
+  ## process
+  for entry in ${ENTRIES[*]}; do
+    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
     
-    ## process
-    for entry in ${ENTRIES[*]}; do
-      printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
-      
-      COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/compose.${entry}.yml"
-      CONTAINER_NAME="${PROJECT_NAME}.${entry}"
-      IMAGE_NAME="${CONTAINER_NAME}"
-      
-      rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
-      if [ -z "${rslt}" ]; then
+    COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/compose.${entry}.yml"
+    CONTAINER_NAME="${PROJECT_NAME}.${entry}"
+    IMAGE_NAME="${CONTAINER_NAME}"
+    
+    case ${RUN_TYPE} in
+      create)
         exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' --no-start")
-      else
-        LOG "'${CONTAINER_NAME}' is running"
-        continue
-      fi
-      
-      let "midx = midx + 1"
-    done
-    
-  elif [ "${UP_MODE}" == "1" ]; then
-    
-    ## process
-    for entry in ${ENTRIES[*]}; do
-      printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
-      
-      COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/compose.${entry}.yml"
-      CONTAINER_NAME="${PROJECT_NAME}.${entry}"
-      IMAGE_NAME="${CONTAINER_NAME}"
-      
-      rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
-      if [ -z "${rslt}" ]; then
+        ;;
+      up)
         exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
-      else
-        LOG "'${CONTAINER_NAME}' is running"
-        continue
-      fi
-      
-      let "midx = midx + 1"
-    done
-    
-  elif [ "${DOWN_MODE}" == "1" ]; then
-    
-    ## process
-    for entry in ${ENTRIES[*]}; do
-      printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
-      
-      COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/compose.${entry}.yml"
-      CONTAINER_NAME="${PROJECT_NAME}.${entry}"
-      IMAGE_NAME="${CONTAINER_NAME}"
-      
-      rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
-      if [ ! -z "${rslt}" ]; then
+        ;;
+      down)
         exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' down '${CONTAINER_NAME}'")
-      else
-        LOG "'${CONTAINER_NAME}' is not running"
-        continue
-      fi
-      
-      let "midx = midx + 1"
-    done
-    
-  elif [ "${STOP_MODE}" == "1" ]; then
-    
-    ## process
-    for entry in ${ENTRIES[*]}; do
-      printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
-      
-      COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/compose.${entry}.yml"
-      CONTAINER_NAME="${PROJECT_NAME}.${entry}"
-      IMAGE_NAME="${CONTAINER_NAME}"
-      
-      rslt=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.Names}}'")
-      if [ ! -z "${rslt}" ]; then
+        ;;
+      stop)
         exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' stop '${CONTAINER_NAME}'")
-      else
-        LOG "'${CONTAINER_NAME}' is not running"
-        continue
-      fi
-      
-      let "midx = midx + 1"
-    done
-  else
-    LOG "requires value of [--create | --up | --down | --stop] "
-    USAGE
-  fi
+        ;;
+    esac
+    let "midx = midx + 1"
+  done
 }
 main
 # //main
