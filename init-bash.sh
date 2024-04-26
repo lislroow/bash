@@ -18,6 +18,7 @@ PATH="$BASHDIR/bin:\$PATH"
 PATH="$BASHDIR/bin/bcomp:\$PATH"
 PATH="$BASHDIR/backup:\$PATH"
 PATH="$BASHDIR/docker:\$PATH"
+PATH="$BASHDIR/build:\$PATH"
 PATH="$BASHDIR/youtube:\$PATH"
 export PATH
 
