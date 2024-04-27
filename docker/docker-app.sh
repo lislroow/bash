@@ -11,10 +11,9 @@ PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 function USAGE {
   cat << EOF
 - USAGE
-Usage: ${0##*/} 
-          -p, --project <project name>
-          -r, --run     <run type>
-                        <entries>
+Usage: ${0##*/} <entries> 
+          -p, --project [prod,local]: --prod, --local
+          -r, --run     [build,create,up,down,stop,restart]: --build, ...
 
 EOF
   exit 1
@@ -23,7 +22,7 @@ EOF
 
 # options
 OPTIONS="l,p:,r:"
-LONGOPTIONS="project:,run:"
+LONGOPTIONS="project:,run:,prod,local,build,create,up,down,stop,restart"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
 function SetOptions {
@@ -47,19 +46,43 @@ function SetOptions {
         ;;
       -p | --project)
         shift; PROJECT_NAME=$1
-        allows="prod local"
+        allows="prod,local"
         if [[ ! " ${allows} " =~ " ${PROJECT_NAME} " ]]; then
-          LOG "'-p, --project <project name>' requires value of [ ${allows} ]. (${PROJECT_NAME} is wrong)"
+          LOG "'-p, --project' requires value of [ ${allows} ]. (${PROJECT_NAME} is wrong)"
           USAGE
         fi
         ;;
+      --prod)
+        PROJECT_NAME="prod"
+        ;;
+      --local)
+        PROJECT_NAME="local"
+        ;;
       -r | --run)
         shift; RUN_TYPE=$1
-        allows="build create up down stop restart"
+        allows="build,create,up,down,stop,restart"
         if [[ ! " ${allows} " =~ " ${RUN_TYPE} " ]]; then
-          LOG "'-r, --run <run type>' requires value of [ ${allows} ]. (${RUN_TYPE} is wrong)"
+          LOG "'-r, --run' requires value of [ ${allows} ]. (${RUN_TYPE} is wrong)"
           USAGE
         fi
+        ;;
+      --build)
+        RUN_TYPE="build"
+        ;;
+      --create)
+        RUN_TYPE="create"
+        ;;
+      --up)
+        RUN_TYPE="up"
+        ;;
+      --down)
+        RUN_TYPE="down"
+        ;;
+      --stop)
+        RUN_TYPE="stop"
+        ;;
+      --restart)
+        RUN_TYPE="restart"
         ;;
       --)
         ;;
@@ -71,11 +94,12 @@ function SetOptions {
   done
   
   if [ -z "${PROJECT_NAME}" ]; then
-    LOG "'-p, --project <project name>' is required. (default: local)"
-    PROJECT_NAME="local"
+    LOG "'-p, --project <project name>' is required."
+    USAGE
   fi
   if [ -z "${RUN_TYPE}" ]; then
     LOG "'-r, --run <run type>' is required."
+    USAGE
   fi
   DOCKER_COMPOSE_BASE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .DOCKER_COMPOSE_BASE'")
   

@@ -11,10 +11,9 @@ PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 function USAGE {
   cat << EOF
 - USAGE
-Usage: ${0##*/}
-          --from        <from project>
-          --to          <to project>
-                        <entries>
+Usage: ${0##*/} <entries> 
+          --from   [prod,local]: --from-prod, --from-local
+          --to     [prod,local]: --to-prod, --to-local
 
 EOF
   exit 1
@@ -47,19 +46,33 @@ function SetOptions {
         ;;
       --from)
         shift; FROM_PROJECT=$1
-        allows="prod local"
+        allows="prod,local"
         if [[ ! " ${allows} " =~ " ${FROM_PROJECT} " ]]; then
-          LOG "'--from <from>' requires value of [ ${allows} ]. (${FROM_PROJECT} is wrong)"
+          LOG "'--from' requires value of [ ${allows} ]. (${FROM_PROJECT} is wrong)"
           USAGE
         fi
         ;;
+      --from-prod)
+        FROM_PROJECT="prod"
+        ;;
+      --from-local)
+        FROM_PROJECT="local"
+        ;;
+      --)
+        ;;
       --to)
         shift; TO_PROJECT=$1
-        allows="prod local"
+        allows="prod,local"
         if [[ ! " ${allows} " =~ " ${TO_PROJECT} " ]]; then
-          LOG "'--to <to>' requires value of [ ${allows} ]. (${TO_PROJECT} is wrong)"
+          LOG "'--to' requires value of [ ${allows} ]. (${TO_PROJECT} is wrong)"
           USAGE
         fi
+        ;;
+      --to-prod)
+        TO_PROJECT="prod"
+        ;;
+      --to-local)
+        TO_PROJECT="local"
         ;;
       --)
         ;;
@@ -73,12 +86,10 @@ function SetOptions {
   if [ -z "${FROM_PROJECT}" ]; then
     LOG "'--from <from project>' is required."
     USAGE
-    exit 1
   fi
   if [ -z "${TO_PROJECT}" ]; then
     LOG "'--to <to project>' is required."
     USAGE
-    exit 1
   fi
   
   DOCKER_COMPOSE_BASE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.config .DOCKER_COMPOSE_BASE'")
