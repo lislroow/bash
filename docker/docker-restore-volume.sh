@@ -163,7 +163,9 @@ EOF
         continue
       fi
       TO_VOLUME=${VOLUME_NAME}
-      FROM_FILE=${VOLUME_NAME/$TO_PROJECT/$FROM_PROJECT}.tar
+      # prod 에서 local 로 옮길때처럼 from / to 가 다른 경우,
+      # "prod_mariadb_data.tar" 파일을 "local_mariadb_data" volume 에 restore 할 때 아래 문자열 치환이 필요함
+      FROM_FILE=${VOLUME_NAME/${TO_PROJECT}/${FROM_PROJECT}}.tar
       
       # 복원 전, 실행중인 컨테이너를 중지
       exitCode=$(EXEC "docker-compose -p ${TO_PROJECT} -f '${COMPOSE_FILE}' stop '${CONTAINER_NAME}'")
