@@ -1,7 +1,7 @@
 #!/bin/sh
 
 LOG_BASE="/app"
-SCOUTER_AGENT_DIR=/app/scouter.agent
+SCOUTER_AGENT_DIR=/app/scouter-agent
 
 JAVA_OPTS="-server"
 JAVA_OPTS="${JAVA_OPTS} -Xms512m -Xmx512m"
@@ -18,7 +18,7 @@ JAVA_OPTS="${JAVA_OPTS} -Xms512m -Xmx512m"
 JAVA_OPTS="${JAVA_OPTS} -Dspring.profiles.active=${SPRING_PROFILE}"
 JAVA_OPTS="${JAVA_OPTS} -Dfile.encoding=utf-8"
 JAVA_OPTS="${JAVA_OPTS} -Djava.net.preferIPv4Stack=true"
-JAVA_OPTS="${JAVA_OPTS} -javaagent:${SCOUTER_AGENT_DIR}/scouter.agent.jar"
+JAVA_OPTS="${JAVA_OPTS} -javaagent:${SCOUTER_AGENT_DIR}/scouter-agent.jar"
 JAVA_OPTS="${JAVA_OPTS} -Dscuter.config=${SCOUTER_AGENT_DIR}/${SPRING_PROFILE}.scouter.conf"
 JAVA_OPTS="${JAVA_OPTS} -Dobj_name=${APP_NAME}"
 
