@@ -22,4 +22,8 @@ JAVA_OPTS="${JAVA_OPTS} -javaagent:${SCOUTER_AGENT_DIR}/scouter-agent.jar"
 JAVA_OPTS="${JAVA_OPTS} -Dscuter.config=${SCOUTER_AGENT_DIR}/${SPRING_PROFILE}.scouter.conf"
 JAVA_OPTS="${JAVA_OPTS} -Dobj_name=${APP_NAME}"
 
-java ${JAVA_OPTS} -jar /app/${APP_NAME}.jar
+CLASSPATH="-cp"
+CLASSPATH="${CLASSPATH} .:"
+CLASSPATH="${SCOUTER_AGENT_DIR}/scouter-agent.jar"
+
+java ${JAVA_OPTS} ${CLASSPATH} -jar /app/${APP_NAME}.jar
