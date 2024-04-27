@@ -8,7 +8,7 @@ services:
       - 16180:6180
     restart: always
     volumes:
-      - scouter_data:/apps/data
+      - scouter_data:/app/data
     environment:
       - SC_SERVER_ID=SCCOUTER-COLLECTOR 
       - NET_HTTP_SERVER_ENABLED=true
@@ -30,7 +30,7 @@ services:
       - 6180:6180
     restart: always
     volumes:
-      - scouter_data:/apps/data
+      - scouter_data:/app/data
     environment:
       - SC_SERVER_ID=SCCOUTER-COLLECTOR 
       - NET_HTTP_SERVER_ENABLED=true

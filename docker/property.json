@@ -53,7 +53,8 @@
   },
   "backup": {
     "containers": [
-      "scouter-server"
+      "scouter-server",
+      "gitlab-runner"
     ],
     "volumes": [
       "gitlab",
