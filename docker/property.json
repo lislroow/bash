@@ -58,6 +58,7 @@
     ],
     "volumes": [
       "gitlab",
+      "gitlab-runner",
       "nexus",
       "scouter-server",
       "mariadb",
