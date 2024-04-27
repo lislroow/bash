@@ -1,3 +1,4 @@
 FROM amazoncorretto:17-alpine-jdk
-COPY ./app /app
-CMD chmod +x /app/startup-app.sh
+WORKDIR /app
+COPY ./app .
+RUN find /app

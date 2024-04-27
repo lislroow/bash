@@ -139,13 +139,13 @@ EOF
         SOURCE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | select(.name == \"${entry}\") | .source' | sed ''")
         cd ${SOURCE}
         TYPE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | select(.name == \"${entry}\") | .type' | sed ''")
-        case "${TYPE}" in
-          java)
-            exitCode=$(EXEC "./mvnw package -s ./.mvn/wrapper/settings.xml")
-            exitCode=$(EXEC "mkdir -p target/scouter.agent")
-            exitCode=$(EXEC "cp /c/develop/tools/scouter-agent/* target/scouter.agent")
-            ;;
-        esac
+        #case "${TYPE}" in
+        #  java)
+        #    exitCode=$(EXEC "./mvnw package -s ./.mvn/wrapper/settings.xml")
+        #    #exitCode=$(EXEC "mkdir -p target/scouter.agent")
+        #    #exitCode=$(EXEC "cp /c/develop/tools/scouter-agent/* target/scouter.agent")
+        #    ;;
+        #esac
         exitCode=$(EXEC "docker build -t ${entry}:latest .")
         exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' down '${CONTAINER_NAME}'")
         exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
