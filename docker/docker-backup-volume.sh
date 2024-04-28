@@ -21,9 +21,8 @@ EOF
 
 # options
 OPTIONS="l,p:"
-LONGOPTIONS="project:,prod,local"
+LONGOPTIONS="list,project:,prod,local"
 eval "source \"$BASEDIR/common.sh\""
-LIST_MODE=0
 function SetOptions {
   opts=$( getopt --options $_OPTIONS,$OPTIONS \
                  --longoptions $_LONGOPTIONS,$LONGOPTIONS \
@@ -40,8 +39,9 @@ function SetOptions {
     fi
     case $1 in
       -h | -v | --help | --verbose) ;;
-      -l)
-        LIST_MODE=1
+      -l | --list)
+        EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.volumes[]'"
+        exit
         ;;
       -p | --project)
         shift; PROJECT_NAME=$1
@@ -89,7 +89,7 @@ fi
 # main
 function main {
   ## prepare
-  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.volumes[]' | sed ''"))
+  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.volumes[]'"))
   cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -102,13 +102,6 @@ EOF
   fi
   mtot=${#ENTRIES[*]}
   midx=1
-  for entry in ${ENTRIES[*]}; do
-    if [ $entry == 'all' ]; then
-      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.volumes[]' | sed ''"))
-      mtot=${#ENTRIES[*]}
-      break
-    fi
-  done
   
   cat << EOF
 - main
@@ -122,9 +115,11 @@ EOF
   for entry in ${ENTRIES[*]}; do
     printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
     
-    COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/${entry}.yml"
+    compose=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries[\"${PROJECT_NAME}\"] | .[] | select(.service == \"${entry}\") | \"\(.compose)\"'")
+    
+    COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/${compose}.yml"
     CONTAINER_NAME="${PROJECT_NAME}.${entry}"
-    IMAGE_NAME="${CONTAINER_NAME}"
+    IMAGE_NAME="${entry}"
     
     # 컨테이너에 mount 된 volume 목록 조회 
     local list=$(EXEC_R "docker inspect --format '{{ json .Mounts }}' ${CONTAINER_NAME} | jq -r '.[] | \"\(.Name)|\(.Destination)\"'")

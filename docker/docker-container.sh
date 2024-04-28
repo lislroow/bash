@@ -22,9 +22,8 @@ EOF
 
 # options
 OPTIONS="l,p:,r:"
-LONGOPTIONS="project:,run:,prod,local,build,create,up,down,stop,restart"
+LONGOPTIONS="list,project:,run:,prod,local,build,create,up,down,stop,restart"
 eval "source \"$BASEDIR/common.sh\""
-LIST_MODE=0
 function SetOptions {
   opts=$( getopt --options $_OPTIONS,$OPTIONS \
                  --longoptions $_LONGOPTIONS,$LONGOPTIONS \
@@ -41,8 +40,11 @@ function SetOptions {
     fi
     case $1 in
       -h | -v | --help | --verbose) ;;
-      -l)
-        LIST_MODE=1
+      -l | --list)
+        EXEC_R "cat $FUNCDIR/property.json | jq -r \
+          '.entries | to_entries[] | select(.key == \"prod\" or .key == \"local\") | .key as \$project | .value[] | \"\(.compose) \(\$project) \(.service)\r\"' | \
+          awk '{printf \"%-20s --- %s.%s\n\", \$1, \$2, \$3}'"
+        exit
         ;;
       -p | --project)
         shift; PROJECT_NAME=$1
@@ -121,7 +123,7 @@ fi
 # main
 function main {
   ## prepare
-  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.${PROJECT_NAME}[]' | sed ''"))
+  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries[\"${PROJECT_NAME}\"] | .[] | \"\(.service)\"'"))
   cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -134,13 +136,6 @@ EOF
   fi
   mtot=${#ENTRIES[*]}
   midx=1
-  for entry in ${ENTRIES[*]}; do
-    if [ $entry == 'all' ]; then
-      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.${PROJECT_NAME}[]' | sed ''"))
-      mtot=${#ENTRIES[*]}
-      break
-    fi
-  done
   
   cat << EOF
 - main
@@ -154,9 +149,11 @@ EOF
   for entry in ${ENTRIES[*]}; do
     printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
     
-    COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/${entry}.yml"
+    compose=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries[\"${PROJECT_NAME}\"] | .[] | select(.service == \"${entry}\") | \"\(.compose)\"'")
+    
+    COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/${compose}"
     CONTAINER_NAME="${PROJECT_NAME}.${entry}"
-    IMAGE_NAME="${CONTAINER_NAME}"
+    IMAGE_NAME="${entry}"
     
     case ${RUN_TYPE} in
       create)

@@ -38,15 +38,37 @@ services:
     networks:
       - local-default
 
+
+  prod.gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: prod.gitlab-runner
+    restart: always
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - gitlab-runner_conf:/etc/gitlab-runner
+    networks:
+      - prod-default
+
+  local.gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: local.gitlab-runner
+    restart: always
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - gitlab-runner_conf:/etc/gitlab-runner
+    networks:
+      - local-default
+
 volumes:
   gitlab_data:
   gitlab_logs:
   gitlab_conf:
+  gitlab-runner_conf:
 
 networks:
   prod-default:
-    external: true
-  dev-default:
     external: true
   local-default:
     external: true

@@ -7,21 +7,24 @@
   },
   "entries": {
     "prod": [
-      "apache",
-      "scouter-server",
-      "mariadb",
-      "redis",
-      "gitlab",
-      "gitlab-runner",
-      "nexus"
+      {"compose": "apache.yml", "service": "apache"},
+      {"compose": "scouter-server.yml", "service": "scouter-server"},
+      {"compose": "mariadb.yml", "service": "mariadb"},
+      {"compose": "redis.yml", "service": "redis"},
+      {"compose": "gitlab.yml", "service": "gitlab"},
+      {"compose": "gitlab.yml", "service": "gitlab-runner"},
+      {"compose": "nexus.yml", "service": "nexus"},
+      {"compose": "kafka.yml", "service": "kafka"},
+      {"compose": "kafka.yml", "service": "zookeeper"}
     ],
     "local": [
-      "apache",
-      "scouter-server",
-      "mariadb",
-      "redis",
-      "gitlab",
-      "nexus"
+      {"compose": "apache.yml", "service": "apache"},
+      {"compose": "scouter-server.yml", "service": "scouter-server"},
+      {"compose": "mariadb.yml", "service": "mariadb"},
+      {"compose": "redis.yml", "service": "redis"},
+      {"compose": "nexus.yml", "service": "nexus"},
+      {"compose": "kafka.yml", "service": "kafka"},
+      {"compose": "kafka.yml", "service": "zookeeper"}
     ],
     "app": [
       {

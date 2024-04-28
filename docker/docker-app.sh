@@ -22,9 +22,8 @@ EOF
 
 # options
 OPTIONS="l,p:,r:"
-LONGOPTIONS="project:,run:,prod,local,build,create,up,down,stop,restart"
+LONGOPTIONS="list,project:,run:,prod,local,build,create,up,down,stop,restart"
 eval "source \"$BASEDIR/common.sh\""
-LIST_MODE=0
 function SetOptions {
   opts=$( getopt --options $_OPTIONS,$OPTIONS \
                  --longoptions $_LONGOPTIONS,$LONGOPTIONS \
@@ -41,8 +40,9 @@ function SetOptions {
     fi
     case $1 in
       -h | -v | --help | --verbose) ;;
-      -l)
-        LIST_MODE=1
+      -l | --list)
+        EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | .name'"
+        exit
         ;;
       -p | --project)
         shift; PROJECT_NAME=$1
@@ -121,7 +121,7 @@ fi
 # main
 function main {
   ## prepare
-  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | .name' | sed ''"))
+  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | .name'"))
   cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -134,13 +134,6 @@ EOF
   fi
   mtot=${#ENTRIES[*]}
   midx=1
-  for entry in ${ENTRIES[*]}; do
-    if [ $entry == 'all' ]; then
-      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | .name' | sed ''"))
-      mtot=${#ENTRIES[*]}
-      break
-    fi
-  done
   
   cat << EOF
 - main
@@ -160,17 +153,15 @@ EOF
     
     case "${RUN_TYPE}" in
       build)
-        SOURCE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | select(.name == \"${entry}\") | .source' | sed ''")
+        SOURCE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | select(.name == \"${entry}\") | .source'")
         cd ${SOURCE}
-        TYPE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | select(.name == \"${entry}\") | .type' | sed ''")
+        TYPE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | select(.name == \"${entry}\") | .type'")
         case "${TYPE}" in
           java)
             exitCode=$(EXEC "./mvnw package -s ./.mvn/wrapper/settings.xml")
             ;;
         esac
         exitCode=$(EXEC "docker build -t ${entry}:latest .")
-        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' down '${CONTAINER_NAME}'")
-        exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
         ;;
       create)
         exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' --no-start")
