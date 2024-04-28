@@ -1,0 +1,19 @@
+{
+  "config": {
+    "precmd": [],
+    "env": [],
+    "path": []
+  },
+  "entries": {
+    "spring": [
+      {
+        "name": "archetype-bom",
+        "source": "/c/project/spring-framework/archetype-bom"
+      },
+      {
+        "name": "modules-bom",
+        "source": "/c/project/spring-framework/modules-bom"
+      }
+    ]
+  }
+}

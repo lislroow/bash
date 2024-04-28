@@ -1,6 +1,5 @@
 test
 .settings
-build
 reference
 **/docker/*.tar
 **/docker/*.7z
