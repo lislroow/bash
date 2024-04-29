@@ -118,8 +118,9 @@ EOF
     SOURCE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.spring[] | select(.name == \"${entry}\") | .source'")
     cd ${SOURCE}
     
-    #exitCode=$(EXEC "./mvnw ${GOAL} -s ./.mvn/wrapper/settings.xml")
-    exitCode=$(EXEC "./mvnw ${GOAL}")
+    #exitCode=$(EXEC "./mvnw ${GOAL} -e -s ./.mvn/wrapper/settings.xml")
+    #exitCode=$(EXEC "./mvnw ${GOAL} -e -s /c/develop/tools/maven/conf/settings.xml")
+    exitCode=$(EXEC "mvn ${GOAL}")
     
     let "midx = midx + 1"
   done
