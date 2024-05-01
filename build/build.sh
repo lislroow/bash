@@ -46,7 +46,7 @@ function SetOptions {
         ;;
       --goal)
         shift; GOAL=$1
-        allows="clean package install deploy"
+        allows="clean compile package install deploy"
         if [[ ! " ${allows} " =~ " ${GOAL} " ]]; then
           LOG "'--goal <goal>' requires value of [ ${allows} ]. (${GOAL} is wrong)"
           USAGE
@@ -120,7 +120,7 @@ EOF
     
     #exitCode=$(EXEC "./mvnw ${GOAL} -e -s ./.mvn/wrapper/settings.xml")
     #exitCode=$(EXEC "./mvnw ${GOAL} -e -s /c/develop/tools/maven/conf/settings.xml")
-    exitCode=$(EXEC "mvn -U ${GOAL}")
+    exitCode=$(EXEC "./mvnw -U ${GOAL}")
     
     let "midx = midx + 1"
   done
