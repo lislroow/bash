@@ -140,7 +140,7 @@ EOF
     
     compose=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries[\"${PROJECT_NAME}\"] | .[] | select(.service == \"${entry}\") | \"\(.compose)\"'")
     
-    COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/${compose}.yml"
+    COMPOSE_FILE="${DOCKER_COMPOSE_BASE}/${compose}"
     CONTAINER_NAME="${TO_PROJECT}.${entry}"
     IMAGE_NAME="${entry}"
     
