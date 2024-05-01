@@ -115,12 +115,12 @@ EOF
   for entry in ${ENTRIES[*]}; do
     printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
     
-    SOURCE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.spring[] | select(.name == \"${entry}\") | .source'")
+    SOURCE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | select(.name == \"${entry}\") | .source'")
     cd ${SOURCE}
     
     #exitCode=$(EXEC "./mvnw ${GOAL} -e -s ./.mvn/wrapper/settings.xml")
     #exitCode=$(EXEC "./mvnw ${GOAL} -e -s /c/develop/tools/maven/conf/settings.xml")
-    exitCode=$(EXEC "mvn ${GOAL}")
+    exitCode=$(EXEC "mvn -U ${GOAL}")
     
     let "midx = midx + 1"
   done

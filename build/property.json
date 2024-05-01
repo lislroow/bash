@@ -5,7 +5,23 @@
     "path": []
   },
   "entries": {
-    "spring": [
+    "app": [
+      {
+        "name": "admin-sample-api",
+        "source": "/c/project/spring-application/app-admin/admin-sample-api"
+      },
+      {
+        "name": "admin-user-api",
+        "source": "/c/project/spring-application/app-admin/admin-user-api"
+      },
+      {
+        "name": "common-auth",
+        "source": "/c/project/spring-application/app-common/common-auth"
+      },
+      {
+        "name": "common-gateway",
+        "source": "/c/project/spring-application/app-common/common-gateway"
+      },
       {
         "name": "archetype-bom",
         "source": "/c/project/spring-framework/archetype-bom"
