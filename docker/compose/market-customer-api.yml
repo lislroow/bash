@@ -1,0 +1,24 @@
+services:
+  prod.market-customer-api:
+    image: market-customer-api:latest
+    restart: always
+    environment:
+      APP_NAME: market-customer-api
+      SPRING_PROFILE: prod
+    networks:
+      - prod-default
+
+  local.market-customer-api:
+    image: market-customer-api:latest
+    restart: always
+    environment:
+      APP_NAME: market-customer-api
+      SPRING_PROFILE: local
+    networks:
+      - local-default
+
+networks:
+  prod-default:
+    external: true
+  local-default:
+    external: true
