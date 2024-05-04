@@ -143,9 +143,6 @@ EOF
       project)
         EXEC "tar cfz - --exclude 'node_modules' --exclude 'target' /d/${entry} | tar zxvf - --strip-components=1 -C /c/"
         ;;
-      develop)
-        EXEC "tar cfz - /d/${entry} | tar zxvf - --strip-components=1 -C /c/"
-        ;;
       *)
         EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$DRIVE/${source##*/}\" \"$source\""
         ;;

@@ -168,10 +168,9 @@ EOF
       ### sync (backup -> storage)
       case "${entry}" in
         project)
+          EXEC "mv /d/project /d/project_tmp"
           EXEC "tar cfz - --exclude 'node_modules' --exclude 'target' /c/${entry} | tar zxvf - --strip-components=1 -C /d/"
-          ;;
-        develop)
-          EXEC "tar cfz - /c/${entry} | tar zxvf - --strip-components=1 -C /d/"
+          EXEC "rm -rf /d/project_tmp"
           ;;
         *)
           EXEC "bcomp @\"$FUNCDIR/$bcscript\" \"$source\" \"$DRIVE/${source##*/}\""
