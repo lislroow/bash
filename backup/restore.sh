@@ -139,7 +139,17 @@ EOF
     fi
     
     ### sync (storage-> source)
-    EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$DRIVE/${source##*/}\" \"$source\""
+    case "${entry}" in
+      project)
+        EXEC "tar cfz - --exclude 'node_modules' --exclude 'target' /d/${entry} | tar zxvf - --strip-components=1 -C /c/"
+        ;;
+      develop)
+        EXEC "tar cfz - /d/${entry} | tar zxvf - --strip-components=1 -C /c/"
+        ;;
+      *)
+        EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$DRIVE/${source##*/}\" \"$source\""
+        ;;
+    esac
     
     let "midx = midx + 1"
   done

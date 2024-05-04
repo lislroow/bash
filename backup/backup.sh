@@ -166,7 +166,17 @@ EOF
     ### sync
     {
       ### sync (backup -> storage)
-      EXEC "bcomp @\"$FUNCDIR/$bcscript\" \"$source\" \"$DRIVE/${source##*/}\""
+      case "${entry}" in
+        project)
+          EXEC "tar cfz - --exclude 'node_modules' --exclude 'target' /c/${entry} | tar zxvf - --strip-components=1 -C /d/"
+          ;;
+        develop)
+          EXEC "tar cfz - /c/${entry} | tar zxvf - --strip-components=1 -C /d/"
+          ;;
+        *)
+          EXEC "bcomp @\"$FUNCDIR/$bcscript\" \"$source\" \"$DRIVE/${source##*/}\""
+          ;;
+      esac
     }
     
     #((midx++))
