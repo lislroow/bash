@@ -1,0 +1,45 @@
+services:
+  prod.mariadb-market-order:
+    image: mariadb:latest
+    container_name: prod.mariadb-market-order
+    ports:
+      - 13404:3404
+    restart: always
+    volumes:
+      - mariadb-market-order_data:/var/lib/mysql
+    env_file: mariadb/market-order.env
+    environment:
+      TZ: Asia/Seoul
+    command:
+      - --log-bin
+      - --log-basename=log_mariadb
+      - --binlog_format=ROW
+    networks:
+      - prod-default
+
+  local.mariadb-market-order:
+    image: mariadb:latest
+    container_name: local.mariadb-market-order
+    ports:
+      - 3404:3404
+    restart: always
+    volumes:
+      - mariadb-market-order_data:/var/lib/mysql
+    env_file: mariadb/market-order.env
+    environment:
+      TZ: Asia/Seoul
+    command:
+      - --log-bin
+      - --log-basename=log_mariadb
+      - --binlog_format=ROW
+    networks:
+      - local-default
+
+volumes:
+  mariadb-market-order_data:
+
+networks:
+  prod-default:
+    external: true
+  local-default:
+    external: true

@@ -1,39 +1,37 @@
 services:
-  prod.mariadb:
+  prod.mariadb-develop:
     image: mariadb:latest
-    container_name: prod.mariadb
+    container_name: prod.mariadb-develop
     ports:
       - 13306:3306
     restart: always
     volumes:
-      - mariadb_data:/var/lib/mysql
-    env_file: mariadb/prod.env
+      - mariadb-develop_data:/var/lib/mysql
+    env_file: mariadb/develop.env
     environment:
       TZ: Asia/Seoul
     networks:
       - prod-default
 
-  local.mariadb:
+  local.mariadb-develop:
     image: mariadb:latest
-    container_name: local.mariadb
+    container_name: local.mariadb-develop
     ports:
       - 3306:3306
     restart: always
     volumes:
-      - mariadb_data:/var/lib/mysql
-    env_file: mariadb/local.env
+      - mariadb-develop_data:/var/lib/mysql
+    env_file: mariadb/develop.env
     environment:
       TZ: Asia/Seoul
     networks:
       - local-default
 
 volumes:
-  mariadb_data:
+  mariadb-develop_data:
 
 networks:
   prod-default:
-    external: true
-  dev-default:
     external: true
   local-default:
     external: true

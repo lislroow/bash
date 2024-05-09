@@ -1,0 +1,45 @@
+services:
+  prod.mariadb-market-customer:
+    image: mariadb:latest
+    container_name: prod.mariadb-market-customer
+    ports:
+      - 13401:3401
+    restart: always
+    volumes:
+      - mariadb-market-customer_data:/var/lib/mysql
+    env_file: mariadb/market-customer.env
+    environment:
+      TZ: Asia/Seoul
+    command:
+      - --log-bin
+      - --log-basename=log_mariadb
+      - --binlog_format=ROW
+    networks:
+      - prod-default
+
+  local.mariadb-market-customer:
+    image: mariadb:latest
+    container_name: local.mariadb-market-customer
+    ports:
+      - 3401:3401
+    restart: always
+    volumes:
+    - mariadb-market-customer_data:/var/lib/mysql
+    env_file: mariadb/market-customer.env
+    environment:
+      TZ: Asia/Seoul
+    command:
+      - --log-bin
+      - --log-basename=log_mariadb
+      - --binlog_format=ROW
+    networks:
+      - local-default
+
+volumes:
+  mariadb-market-customer_data:
+
+networks:
+  prod-default:
+    external: true
+  local-default:
+    external: true

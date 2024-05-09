@@ -20,6 +20,7 @@ PATH="$BASHDIR/backup:\$PATH"
 PATH="$BASHDIR/docker:\$PATH"
 PATH="$BASHDIR/build:\$PATH"
 PATH="$BASHDIR/youtube:\$PATH"
+PATH="$BASHDIR/docker/kafka-connector:\$PATH"
 export PATH
 
 alias cdbash="cd '$BASHDIR'"

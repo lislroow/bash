@@ -1,0 +1,33 @@
+services:
+
+  # https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration
+  local.cp-kafka-connect:
+    image: lislroow/cp-kafka-connect:7.6.1
+    restart: always
+    ports:
+      - 8083:8083
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: local.kafka:9092
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: "market-"
+      CONNECT_CONFIG_STORAGE_TOPIC: "market-config"
+      CONNECT_OFFSET_STORAGE_TOPIC: "market-offsets"
+      CONNECT_STATUS_STORAGE_TOPIC: "market-status"
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_REST_ADVERTISED_HOST_NAME: "localhost"
+      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+      CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components/confluentinc-kafka-connect-jdbc/lib,/etc/kafka-connect/jars"
+    networks:
+      - local-default
+
+networks:
+  prod-default:
+    external: true
+  local-default:
+    external: true

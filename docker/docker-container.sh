@@ -41,9 +41,13 @@ function SetOptions {
     case $1 in
       -h | -v | --help | --verbose) ;;
       -l | --list)
+        echo "SERVICES: "
         EXEC_R "cat $FUNCDIR/property.json | jq -r \
           '.entries | to_entries[] | select(.key == \"prod\" or .key == \"local\") | .key as \$project | .value[] | \"\(.compose) \(\$project) \(.service)\r\"' | \
-          awk '{printf \"%-20s --- %s.%s\n\", \$1, \$2, \$3}'"
+          awk '{printf \"%-30s --- (%s) %s\n\", \$1, \$2, \$3}'"
+        echo ""; printf "%.0s-" {1..30}; echo ""
+        echo "PROJECT: --local, --prod"
+        echo "RUN: --build, --create, --up, --down, --stop, --restart"
         exit
         ;;
       -p | --project)
