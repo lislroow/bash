@@ -24,6 +24,10 @@
         "source": "/c/vmware"
       },
       {
+        "name": "bash",
+        "source": "/c/bash"
+      },
+      {
         "name": "project",
         "source": "/c/project"
       },

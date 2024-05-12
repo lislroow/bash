@@ -26,7 +26,7 @@ alias cdapp="cd '/c/project/spring-application'"
 alias cddocker="cd '/c/project/bash/docker'"
 alias cdweb="cd '/c/react/web-admin'"
 
-alias backup='backup.sh develop project editplus'
+alias backup='backup.sh develop project editplus bash'
 
 EOF
 
@@ -45,7 +45,7 @@ cat << EOF
   alias cddocker="cd '/c/project/bash/docker'"
   alias cdweb="cd '/c/react/web-admin'"
   
-  alias backup='backup.sh develop project editplus'
+  alias backup='backup.sh develop project editplus bash'
 
 EOF
 
