@@ -23,7 +23,7 @@ export PATH
 
 alias cdbash="cd '$BASHDIR'"
 alias cdapp="cd '/c/project/spring-application'"
-alias cddocker="cd '/c/project/bash/docker'"
+alias cddocker="cd '$BASHDIR'/docker"
 alias cdweb="cd '/c/react/web-admin'"
 
 alias backup='backup.sh develop project editplus bash'
@@ -43,7 +43,7 @@ cat << EOF
   alias cdbash="cd '$BASHDIR'"
   alias cdapp="cd '/c/project/spring-application'"
   alias cdfra="cd '/c/project/spring-framework'"
-  alias cddocker="cd '/c/project/bash/docker'"
+  alias cddocker="cd '$BASHDIR'/docker"
   alias cdweb="cd '/c/react/web-admin'"
   
   alias backup='backup.sh develop project editplus bash'
