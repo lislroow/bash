@@ -27,6 +27,7 @@ alias cddocker="cd '/c/project/bash/docker'"
 alias cdweb="cd '/c/react/web-admin'"
 
 alias backup='backup.sh develop project editplus bash'
+alias restore='restore.sh develop project editplus bash'
 
 EOF
 
@@ -46,6 +47,7 @@ cat << EOF
   alias cdweb="cd '/c/react/web-admin'"
   
   alias backup='backup.sh develop project editplus bash'
+  alias restore='restore.sh develop project editplus bash'
 
 EOF
 
