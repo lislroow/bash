@@ -3,7 +3,7 @@
     "precmd": [],
     "env": [],
     "path": [],
-    "DOCKER_COMPOSE_BASE": "/c/project/bash/docker/compose"
+    "DOCKER_COMPOSE_BASE": "/c/bash/docker/compose"
   },
   "entries": {
     "prod": [
@@ -54,7 +54,7 @@
       },
       {
         "name": "web-admin",
-        "source": "/c/project/spring-application/web-admin",
+        "source": "/c/react/web-admin",
         "type": "nodejs"
       }
     ]
