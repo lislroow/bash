@@ -15,7 +15,6 @@ function USAGE {
 Usage: ${0##*/} [options] <entries>
  -l            : <entries> 보기
  -a            : 백업 디렉토리 tar 생성하기
- --outdir      : 백업 디렉토리 지정
  --drive : 스토리지 드라이브 지정
 
   ${0##*/} <entries>       : sync (source-> backup)
@@ -27,10 +26,10 @@ EOF
 
 # options
 OPTIONS="l,a,s"
-LONGOPTIONS="outdir:,drive:"
+LONGOPTIONS="drive:,tar"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
-ARCHIVE_MODE=0
+TAR_MODE=0
 function SetOptions {
   opts=$( getopt --options $_OPTIONS,$OPTIONS \
                  --longoptions $_LONGOPTIONS,$LONGOPTIONS \
@@ -50,9 +49,9 @@ function SetOptions {
       -l)
         LIST_MODE=1
         ;;
-      #-a)
-      #  ARCHIVE_MODE=1
-      #  ;;
+      --tar)
+        TAR_MODE=1
+        ;;
       --outdir)
         OUTDIR=$2
         if [ ! -z $OUTDIR ]; then
@@ -168,9 +167,13 @@ EOF
       ### sync (backup -> storage)
       case "${entry}" in
         project)
-          EXEC "mv /d/project /d/project_tmp"
-          EXEC "tar cfz - --exclude 'node_modules' --exclude 'target' /c/${entry} | tar zxvf - --strip-components=1 -C /d/"
-          EXEC "rm -rf /d/project_tmp"
+          if [ $TAR_MODE == 1 ]; then
+            EXEC "mv /d/project /d/project_tmp"
+            EXEC "tar cfz - --exclude 'node_modules' --exclude 'target' /c/${entry} | tar zxvf - --strip-components=1 -C /d/"
+            EXEC "rm -rf /d/project_tmp"
+          else
+            EXEC "bcomp @\"$FUNCDIR/$bcscript\" \"$source\" \"$DRIVE/${source##*/}\""
+          fi
           ;;
         *)
           EXEC "bcomp @\"$FUNCDIR/$bcscript\" \"$source\" \"$DRIVE/${source##*/}\""

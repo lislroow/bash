@@ -24,9 +24,10 @@ EOF
 
 # options
 OPTIONS="l"
-LONGOPTIONS="drive:"
+LONGOPTIONS="drive:,tar"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
+TAR_MODE=0
 function SetOptions {
   opts=$( getopt --options $_OPTIONS,$OPTIONS \
                  --longoptions $_LONGOPTIONS,$LONGOPTIONS \
@@ -40,6 +41,9 @@ function SetOptions {
       -h | -v | --help | --verbose) ;;
       -l)
         LIST_MODE=1
+        ;;
+      --tar)
+        TAR_MODE=1
         ;;
       --drive)
         DRIVE=$2
@@ -141,7 +145,11 @@ EOF
     ### sync (storage-> source)
     case "${entry}" in
       project)
-        EXEC "tar cfz - --exclude 'node_modules' --exclude 'target' /d/${entry} | tar zxvf - --strip-components=1 -C /c/"
+        if [ $TAR_MODE == 1 ]; then
+          EXEC "tar cfz - --exclude 'node_modules' --exclude 'target' /d/${entry} | tar zxvf - --strip-components=1 -C /c/"
+        else
+          EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$DRIVE/${source##*/}\" \"$source\""
+        fi
         ;;
       *)
         EXEC "bcomp @\"$FUNCDIR/sync-mirror.bc\" \"$DRIVE/${source##*/}\" \"$source\""
