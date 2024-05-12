@@ -13,23 +13,20 @@ export MAVEN_HOME="/c/develop/tools/maven"
 PATH="\$MAVEN_HOME/bin:\$PATH"
 
 PATH="$BASHDIR:\$PATH"
-PATH="/c/.tools/mkvtoolnix:\$PATH"
 PATH="$BASHDIR/bin:\$PATH"
 PATH="$BASHDIR/bin/bcomp:\$PATH"
 PATH="$BASHDIR/backup:\$PATH"
 PATH="$BASHDIR/docker:\$PATH"
 PATH="$BASHDIR/build:\$PATH"
-PATH="$BASHDIR/youtube:\$PATH"
 PATH="$BASHDIR/docker/kafka-connector:\$PATH"
 export PATH
 
 alias cdbash="cd '$BASHDIR'"
 alias cdapp="cd '/c/project/spring-application'"
-alias cdfram="cd '/c/project/spring-framework'"
 alias cddocker="cd '/c/project/bash/docker'"
+alias cdweb="cd '/c/react/web-admin'"
 
-alias backup='backup.sh --drive=d itunes 유틸리티 develop project wallpaper editplus;\
-              backup.sh --drive=y itunes 유틸리티 develop project'
+alias backup='backup.sh develop project editplus'
 
 EOF
 
@@ -44,11 +41,11 @@ cat << EOF
 
   alias cdbash="cd '$BASHDIR'"
   alias cdapp="cd '/c/project/spring-application'"
-  alias cdfram="cd '/c/project/spring-framework'"
+  alias cdfra="cd '/c/project/spring-framework'"
   alias cddocker="cd '/c/project/bash/docker'"
+  alias cdweb="cd '/c/react/web-admin'"
   
-  alias backup='backup.sh --drive=d itunes 유틸리티 develop project wallpaper editplus;\
-                backup.sh --drive=y itunes 유틸리티 develop project'
+  alias backup='backup.sh develop project editplus'
 
 EOF
 
