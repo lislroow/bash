@@ -161,9 +161,11 @@ EOF
     
     case ${RUN_TYPE} in
       create)
+        docker login
         exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' --no-start")
         ;;
       up)
+        docker login
         exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
         ;;
       down)
