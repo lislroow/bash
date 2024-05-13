@@ -14,8 +14,14 @@
       {"compose": "gitlab.yml", "service": "gitlab"},
       {"compose": "gitlab.yml", "service": "gitlab-runner"},
       {"compose": "nexus.yml", "service": "nexus"},
-      {"compose": "kafka.yml", "service": "kafka"},
-      {"compose": "kafka.yml", "service": "zookeeper"}
+      {"compose": "cp-kafka.yml", "service": "cp-zookeeper"},
+      {"compose": "cp-kafka.yml", "service": "cp-kafka"},
+      {"compose": "cp-kafka.yml", "service": "cp-kafka-connect"},
+      {"compose": "mariadb-market-customer.yml", "service": "mariadb-market-customer"},
+      {"compose": "mariadb-market-delivery.yml", "service": "mariadb-market-delivery"},
+      {"compose": "mariadb-market-inventory.yml", "service": "mariadb-market-inventory"},
+      {"compose": "mariadb-market-order.yml", "service": "mariadb-market-order"},
+      {"compose": "mariadb-market-product.yml", "service": "mariadb-market-product"}
     ],
     "local": [
       {"compose": "apache.yml", "service": "apache"},
@@ -23,8 +29,9 @@
       {"compose": "mariadb-develop.yml", "service": "mariadb-develop"},
       {"compose": "redis.yml", "service": "redis"},
       {"compose": "nexus.yml", "service": "nexus"},
-      {"compose": "kafka.yml", "service": "kafka"},
-      {"compose": "cp-kafka-connect.yml", "service": "cp-kafka-connect"},
+      {"compose": "cp-kafka.yml", "service": "cp-zookeeper"},
+      {"compose": "cp-kafka.yml", "service": "cp-kafka"},
+      {"compose": "cp-kafka.yml", "service": "cp-kafka-connect"},
       {"compose": "mariadb-market-customer.yml", "service": "mariadb-market-customer"},
       {"compose": "mariadb-market-delivery.yml", "service": "mariadb-market-delivery"},
       {"compose": "mariadb-market-inventory.yml", "service": "mariadb-market-inventory"},
