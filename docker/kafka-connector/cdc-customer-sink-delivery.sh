@@ -7,10 +7,10 @@ opts=$( getopt --options "" --longoptions "save,delete,status" -- $* )
 eval set -- $opts
 
 
-CONNECTOR="cdc-sink-product-delivery"
+CONNECTOR="cdc-customer-sink-delivery"
 PORT="3402"
 DATABASE="market-delivery"
-TARGET_TABLE="product"
+TARGET_TABLE="customer"
 CONNECTION_URL="jdbc:mariadb://local.mariadb-$DATABASE:$PORT/$DATABASE"
 PK_FIELDS="id"
 
