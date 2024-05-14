@@ -27,7 +27,5 @@ volumes:
 networks:
   prod-default:
     external: true
-  dev-default:
-    external: true
   local-default:
     external: true
