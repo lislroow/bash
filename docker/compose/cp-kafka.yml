@@ -19,6 +19,7 @@ services:
     container_name: prod.cp-kafka
     ports:
       - 9092:9092
+    restart: always
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: prod.cp-zookeeper:2181
