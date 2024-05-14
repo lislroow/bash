@@ -28,11 +28,10 @@ while true; do
           "connection.url": "'$CONNECTION_URL'",
           "connection.user": "root",
           "connection.password": "1",
-          "incrementing.column.name": "'$INCREMENTING_COLUMN_NAME'",
           "timestamp.column.name": "modify_date",
           "table.whitelist": "'$TARGET_TABLE'",
           "schema.pattern": "'$TARGET_TABLE'",
-          "mode": "timestamp+incrementing",
+          "mode": "timestamp",
           "topic.prefix": "cdc_",
           "tasks.max": "3"
       }' | jq -C
