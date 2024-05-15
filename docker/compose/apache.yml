@@ -12,6 +12,7 @@ services:
       # This certificate expires on 2024-07-22.
       - ./apache/prod.fullchain.pem:/usr/local/apache2/conf/fullchain.pem:ro
       - ./apache/prod.privkey.pem:/usr/local/apache2/conf/privkey.pem:ro
+      - market_upload:/upload
     networks:
       - prod-default
 
@@ -23,8 +24,12 @@ services:
     restart: always
     volumes:
       - ./apache/local.httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+      - market_upload:/upload
     networks:
       - local-default
+
+volumes:
+  market_upload:
 
 networks:
   prod-default:

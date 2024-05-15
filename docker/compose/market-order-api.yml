@@ -5,6 +5,8 @@ services:
     environment:
       APP_NAME: market-order-api
       SPRING_PROFILE: prod
+    volumes:
+      - market_upload:/upload
     networks:
       - prod-default
 
@@ -14,8 +16,13 @@ services:
     environment:
       APP_NAME: market-order-api
       SPRING_PROFILE: local
+    volumes:
+      - market_upload:/upload
     networks:
       - local-default
+
+volumes:
+  market_upload:
 
 networks:
   prod-default:
