@@ -2,7 +2,7 @@ services:
   prod.gitlab:
     image: gitlab/gitlab-ce:latest
     container_name: prod.gitlab
-    restart: always
+    restart: no
     hostname: gitlab.mgkim.net
     environment:
       GITLAB_OMNIBUS_CONFIG: |
@@ -22,7 +22,7 @@ services:
   local.gitlab:
     image: gitlab/gitlab-ce:latest
     container_name: local.gitlab
-    restart: always
+    restart: no
     hostname: local.gitlab
     environment:
       GITLAB_OMNIBUS_CONFIG: |
