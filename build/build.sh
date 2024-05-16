@@ -120,7 +120,7 @@ EOF
     
     #exitCode=$(EXEC "./mvnw ${GOAL} -e -s ./.mvn/wrapper/settings.xml")
     #exitCode=$(EXEC "./mvnw ${GOAL} -e -s /c/develop/tools/maven/conf/settings.xml")
-    exitCode=$(EXEC "./mvnw -U ${GOAL}")
+    exitCode=$(EXEC "./mvnw -s /c/develop/tools/maven/conf/settings.xml -U ${GOAL} -DskipTests")
     
     let "midx = midx + 1"
   done

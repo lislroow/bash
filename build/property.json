@@ -29,6 +29,10 @@
       {
         "name": "modules-bom",
         "source": "/c/project/spring-framework/modules-bom"
+      },
+      {
+        "name": "encrypt",
+        "source": "/c/project/spring-framework/modules-bom/encrypt"
       }
     ]
   }
