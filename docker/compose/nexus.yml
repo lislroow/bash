@@ -15,7 +15,7 @@ services:
     container_name: local.nexus
     ports:
       - 7100:8081
-    restart: always
+    restart: no
     volumes:
       - nexus_data:/nexus-data
     networks:
