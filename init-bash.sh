@@ -11,6 +11,8 @@ export JAVA_HOME="/c/develop/tools/java/openjdk-17.0.3.0.6-1"
 PATH="\$JAVA_HOME/bin:\$PATH"
 export MAVEN_HOME="/c/develop/tools/maven"
 PATH="\$MAVEN_HOME/bin:\$PATH"
+export GRADLE_HOME="/c/develop/tools/gradle"
+PATH="\$GRADLE_HOME/bin:\$PATH"
 
 PATH="$BASHDIR:\$PATH"
 PATH="$BASHDIR/bin:\$PATH"
@@ -37,6 +39,7 @@ cat << EOF
 [ env ]
   JAVA_HOME: $JAVA_HOME
   MAVEN_HOME: $MAVEN_HOME
+  GRADLE_HOME: $GRADLE_HOME
 
 [ alias ]
 
