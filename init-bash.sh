@@ -7,6 +7,10 @@ cat << EOF > ~/.bash_profile
 
 set -o vi
 
+export JAVA8="/c/develop/tools/java/corretto-1.8.0_382"
+export JAVA11="/c/develop/tools/java/openjdk-11.0.13.8-temurin"
+export JAVA17="/c/develop/tools/java/corretto-17.0.10.7.1"
+export JAVA21="/c/develop/tools/java/openjdk-21"
 export JAVA_HOME="/c/develop/tools/java/openjdk-17.0.3.0.6-1"
 PATH="\$JAVA_HOME/bin:\$PATH"
 export MAVEN_HOME="/c/develop/tools/maven"
@@ -38,6 +42,10 @@ echo "generated '~/.bash_profile'"
 cat << EOF
 [ env ]
   JAVA_HOME: $JAVA_HOME
+  JAVA8: $JAVA8
+  JAVA11: $JAVA11
+  JAVA17: $JAVA17
+  JAVA21: $JAVA21
   MAVEN_HOME: $MAVEN_HOME
   GRADLE_HOME: $GRADLE_HOME
 
