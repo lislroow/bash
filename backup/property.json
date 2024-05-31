@@ -24,6 +24,18 @@
         "source": "/c/vmware"
       },
       {
+        "name": "hyper-v",
+        "source": "/c/hyper-v"
+      },
+      {
+        "name": "python",
+        "source": "/c/python"
+      },
+      {
+        "name": "linux",
+        "source": "/c/linux"
+      },
+      {
         "name": "bash",
         "source": "/c/bash"
       },
