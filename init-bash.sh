@@ -32,8 +32,8 @@ alias cdapp="cd '/c/project/spring-application'"
 alias cddocker="cd '$BASHDIR'/docker"
 alias cdweb="cd '/c/react/web-admin'"
 
-alias backup='backup.sh develop project editplus bash'
-alias restore='restore.sh develop project editplus bash'
+alias backup='backup.sh develop project editplus react hyper-v python linux'
+alias restore='restore.sh develop project editplus react hyper-v python linux'
 
 EOF
 
@@ -57,8 +57,8 @@ cat << EOF
   alias cddocker="cd '$BASHDIR'/docker"
   alias cdweb="cd '/c/react/web-admin'"
   
-  alias backup='backup.sh develop project editplus bash react hyper-v python linux'
-  alias restore='restore.sh develop project editplus bash react hyper-v python linux'
+  alias backup='backup.sh develop project editplus react hyper-v python linux'
+  alias restore='restore.sh develop project editplus react hyper-v python linux'
 
 EOF
 
