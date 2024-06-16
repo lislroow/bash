@@ -25,12 +25,15 @@ PATH="$BASHDIR/backup:\$PATH"
 PATH="$BASHDIR/docker:\$PATH"
 PATH="$BASHDIR/build:\$PATH"
 PATH="$BASHDIR/docker/kafka-connector:\$PATH"
+PATH="/c/develop/tools/nginx:\$PATH"
 export PATH
 
 alias cdbash="cd '$BASHDIR'"
 alias cdapp="cd '/c/project/spring-application'"
 alias cddocker="cd '$BASHDIR'/docker"
 alias cdweb="cd '/c/react/web-admin'"
+alias cdnginx="cd '/c/develop/tools/nginx'"
+alias gitlog="git log --oneline"
 
 alias backup='backup.sh develop project editplus react hyper-v python linux'
 alias restore='restore.sh develop project editplus react hyper-v python linux'
@@ -56,6 +59,8 @@ cat << EOF
   alias cdfra="cd '/c/project/spring-framework'"
   alias cddocker="cd '$BASHDIR'/docker"
   alias cdweb="cd '/c/react/web-admin'"
+  alias cdnginx="cd '/c/develop/tools/nginx'"
+  alias gitlog="git log --oneline"
   
   alias backup='backup.sh develop project editplus react hyper-v python linux'
   alias restore='restore.sh develop project editplus react hyper-v python linux'
