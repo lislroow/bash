@@ -28,6 +28,10 @@
         "source": "/c/hyper-v"
       },
       {
+        "name": "react",
+        "source": "/c/react"
+      },
+      {
         "name": "python",
         "source": "/c/python"
       },
