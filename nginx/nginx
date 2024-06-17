@@ -1,0 +1,18 @@
+#!/bin/bash
+
+NGINX_BASE='/c/bash/nginx'
+
+case $1 in 
+  start)
+    #nohup nginx.exe -c $NGINX_BASE/nginx.conf 2>&1 > /dev/null &
+    nginx.exe -c $NGINX_BASE/conf/nginx.conf
+  ;;
+  reload)
+    nginx.exe -c $NGINX_BASE/conf/nginx.conf -s reload
+  ;;
+  stop)
+    nginx.exe -s stop
+  ;;
+  *)
+  ;;
+esac
