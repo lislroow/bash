@@ -4,7 +4,7 @@ services:
     container_name: prod.nexus
     ports:
       - 9100:8081
-    restart: always
+    restart: no
     volumes:
       - nexus_data:/nexus-data
     networks:

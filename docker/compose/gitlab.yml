@@ -42,7 +42,7 @@ services:
   prod.gitlab-runner:
     image: gitlab/gitlab-runner:latest
     container_name: prod.gitlab-runner
-    restart: always
+    restart: no
     privileged: true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -53,7 +53,7 @@ services:
   local.gitlab-runner:
     image: gitlab/gitlab-runner:latest
     container_name: local.gitlab-runner
-    restart: always
+    restart: no
     privileged: true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
