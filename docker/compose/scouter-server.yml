@@ -6,7 +6,7 @@ services:
       - 16100:6100
       - 16100:6100/udp
       - 16180:6180
-    restart: always
+    restart: no
     volumes:
       - scouter_data:/app/data
     environment:

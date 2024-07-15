@@ -4,7 +4,7 @@ services:
     container_name: prod.redis
     ports:
       - 16379:6379
-    restart: always
+    restart: no
     labels:
       - "name=redis"
       - "mode=standalone"
@@ -19,7 +19,7 @@ services:
     container_name: local.redis
     ports:
       - 6379:6379
-    restart: always
+    restart: no
     labels:
       - "name=redis"
       - "mode=standalone"

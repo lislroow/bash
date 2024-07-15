@@ -3,8 +3,8 @@ services:
     image: httpd:2.4
     container_name: prod.apache
     ports: 
-      - 880:80
-      - 8443:443
+      - 80:80
+      - 443:443
     restart: no
     volumes:
       - ./apache/prod.httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
@@ -16,17 +16,17 @@ services:
     networks:
       - prod-default
 
-  local.apache:
-    image: httpd:2.4
-    container_name: local.apache
-    ports: 
-      - 88:80
-    restart: no
-    volumes:
-      - ./apache/local.httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
-      - market_upload:/upload
-    networks:
-      - local-default
+  #local.apache:
+  #  image: httpd:2.4
+  #  container_name: local.apache
+  #  ports: 
+  #    - 88:80
+  #  restart: no
+  #  volumes:
+  #    - ./apache/local.httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+  #    - market_upload:/upload
+  #  networks:
+  #    - local-default
 
 volumes:
   market_upload:
@@ -34,5 +34,5 @@ volumes:
 networks:
   prod-default:
     external: true
-  local-default:
-    external: true
+  #local-default:
+  #  external: true

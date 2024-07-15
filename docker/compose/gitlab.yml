@@ -9,7 +9,7 @@ services:
         external_url 'https://gitlab.mgkim.net'
     ports:
       - 9000:80
-      - 443:443
+      - 9443:443
       - 22:22
     volumes:
       - gitlab_data:/var/opt/gitlab
@@ -19,24 +19,24 @@ services:
     networks:
       - prod-default
 
-  local.gitlab:
-    image: gitlab/gitlab-ce:latest
-    container_name: local.gitlab
-    restart: no
-    hostname: local.gitlab
-    environment:
-      GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://local.gitlab'
-    ports:
-      - 7000:80
-      #- 22:22
-    volumes:
-      - gitlab_data:/var/opt/gitlab
-      - gitlab_conf:/etc/gitlab
-      - gitlab_logs:/var/log/gitlab
-    shm_size: '256m'
-    networks:
-      - local-default
+  #local.gitlab:
+  #  image: gitlab/gitlab-ce:latest
+  #  container_name: local.gitlab
+  #  restart: no
+  #  hostname: local.gitlab
+  #  environment:
+  #    GITLAB_OMNIBUS_CONFIG: |
+  #      external_url 'http://local.gitlab'
+  #  ports:
+  #    - 7000:80
+  #    #- 22:22
+  #  volumes:
+  #    - gitlab_data:/var/opt/gitlab
+  #    - gitlab_conf:/etc/gitlab
+  #    - gitlab_logs:/var/log/gitlab
+  #  shm_size: '256m'
+  #  networks:
+  #    - local-default
 
 
   prod.gitlab-runner:
@@ -50,16 +50,16 @@ services:
     networks:
       - prod-default
 
-  local.gitlab-runner:
-    image: gitlab/gitlab-runner:latest
-    container_name: local.gitlab-runner
-    restart: no
-    privileged: true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - gitlab-runner_conf:/etc/gitlab-runner
-    networks:
-      - local-default
+  #local.gitlab-runner:
+  #  image: gitlab/gitlab-runner:latest
+  #  container_name: local.gitlab-runner
+  #  restart: no
+  #  privileged: true
+  #  volumes:
+  #    - /var/run/docker.sock:/var/run/docker.sock
+  #    - gitlab-runner_conf:/etc/gitlab-runner
+  #  networks:
+  #    - local-default
 
 volumes:
   gitlab_data:
@@ -70,5 +70,5 @@ volumes:
 networks:
   prod-default:
     external: true
-  local-default:
-    external: true
+  #local-default:
+  #  external: true
