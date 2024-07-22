@@ -21,11 +21,13 @@
       },
       {
         "name": "vmware",
-        "source": "/c/vmware"
+        "source": "/c/vmware",
+        "bcscript": "sync-update.bc"
       },
       {
-        "name": "hyper-v",
-        "source": "/c/hyper-v"
+        "name": "hyperv",
+        "source": "/c/hyper-v",
+        "bcscript": "sync-update.bc"
       },
       {
         "name": "react",
