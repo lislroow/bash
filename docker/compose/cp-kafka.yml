@@ -10,7 +10,7 @@ services:
       ZOOKEEPER_SYNC_LIMIT: 2
     ports:
       - 2181:2181
-    restart: always
+    restart: no
     networks:
       - prod-default
 
@@ -19,7 +19,7 @@ services:
     container_name: prod.cp-kafka
     ports:
       - 9092:9092
-    restart: always
+    restart: no
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: prod.cp-zookeeper:2181
@@ -39,7 +39,7 @@ services:
     container_name: prod.cp-kafka-connect
     ports:
       - 8083:8083
-    restart: always
+    restart: no
     environment:
       CONNECT_BOOTSTRAP_SERVERS: prod.cp-kafka:9092
       CONNECT_REST_PORT: 8083
@@ -75,7 +75,7 @@ services:
       ZOOKEEPER_SYNC_LIMIT: 2
     ports:
       - 2181:2181
-    restart: always
+    restart: no
     networks:
       - local-default
 
@@ -84,7 +84,7 @@ services:
     container_name: local.cp-kafka
     ports:
       - 9092:9092
-    restart: always
+    restart: no
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: local.cp-zookeeper:2181
@@ -103,7 +103,7 @@ services:
     container_name: local.cp-kafka-connect
     ports:
       - 8083:8083
-    restart: always
+    restart: no
     environment:
       CONNECT_BOOTSTRAP_SERVERS: local.cp-kafka:9092
       CONNECT_REST_PORT: 8083

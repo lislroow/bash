@@ -4,7 +4,7 @@ services:
     container_name: prod.mariadb-market-product
     ports:
       - 13405:3405
-    restart: always
+    restart: no
     volumes:
       - mariadb-market-product_data:/var/lib/mysql
     env_file: mariadb/market-product.env
@@ -22,7 +22,7 @@ services:
     container_name: local.mariadb-market-product
     ports:
       - 3405:3405
-    restart: always
+    restart: no
     volumes:
       - mariadb-market-product_data:/var/lib/mysql
     env_file: mariadb/market-product.env

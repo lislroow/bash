@@ -1,7 +1,7 @@
 services:
   prod.common-gateway:
     image: common-gateway:latest
-    restart: always
+    restart: no
     environment:
       APP_NAME: common-gateway
       SPRING_PROFILE: prod
@@ -10,7 +10,7 @@ services:
 
   local.common-gateway:
     image: common-gateway:latest
-    restart: always
+    restart: no
     environment:
       APP_NAME: common-gateway
       SPRING_PROFILE: local

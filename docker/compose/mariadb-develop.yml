@@ -4,7 +4,7 @@ services:
     container_name: prod.mariadb-develop
     ports:
       - 13306:3306
-    restart: always
+    restart: no
     volumes:
       - mariadb-develop_data:/var/lib/mysql
     env_file: mariadb/develop.env
@@ -18,7 +18,7 @@ services:
     container_name: local.mariadb-develop
     ports:
       - 3306:3306
-    restart: always
+    restart: no
     volumes:
       - mariadb-develop_data:/var/lib/mysql
     env_file: mariadb/develop.env

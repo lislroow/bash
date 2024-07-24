@@ -1,13 +1,13 @@
 services:
   prod.web-admin:
     image: web-admin:latest
-    restart: always
+    restart: no
     networks:
       - prod-default
 
   local.web-admin:
     image: web-admin:latest
-    restart: always
+    restart: no
     networks:
       - local-default
 

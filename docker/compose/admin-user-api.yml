@@ -1,7 +1,7 @@
 services:
   prod.admin-user-api:
     image: admin-user-api:latest
-    restart: always
+    restart: no
     environment:
       APP_NAME: admin-user-api
       SPRING_PROFILE: prod
@@ -10,7 +10,7 @@ services:
 
   local.admin-user-api:
     image: admin-user-api:latest
-    restart: always
+    restart: no
     environment:
       APP_NAME: admin-user-api
       SPRING_PROFILE: local
