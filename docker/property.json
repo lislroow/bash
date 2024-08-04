@@ -21,7 +21,8 @@
       {"compose": "mariadb-market-delivery.yml", "service": "mariadb-market-delivery"},
       {"compose": "mariadb-market-inventory.yml", "service": "mariadb-market-inventory"},
       {"compose": "mariadb-market-order.yml", "service": "mariadb-market-order"},
-      {"compose": "mariadb-market-product.yml", "service": "mariadb-market-product"}
+      {"compose": "mariadb-market-product.yml", "service": "mariadb-market-product"},
+      {"compose": "zipkin.yml", "service": "zipkin"}
     ],
     "local": [
       {"compose": "apache.yml", "service": "apache"},
@@ -36,7 +37,8 @@
       {"compose": "mariadb-market-delivery.yml", "service": "mariadb-market-delivery"},
       {"compose": "mariadb-market-inventory.yml", "service": "mariadb-market-inventory"},
       {"compose": "mariadb-market-order.yml", "service": "mariadb-market-order"},
-      {"compose": "mariadb-market-product.yml", "service": "mariadb-market-product"}
+      {"compose": "mariadb-market-product.yml", "service": "mariadb-market-product"},
+      {"compose": "zipkin.yml", "service": "zipkin"}
     ],
     "app": [
       {

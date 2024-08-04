@@ -1,0 +1,29 @@
+services:
+  prod.zipkin:
+    image: ghcr.io/openzipkin/zipkin-slim:${TAG:-latest}
+    container_name: prod.zipkin
+    ports:
+      - 19411:9411
+    restart: no
+    environment:
+      - STORAGE_TYPE=mem
+    networks:
+      - prod-default
+
+  local.zipkin:
+    image: ghcr.io/openzipkin/zipkin-slim:${TAG:-latest}
+    container_name: local.zipkin
+    ports:
+      - 9411:9411
+    restart: no
+    environment:
+      - STORAGE_TYPE=mem
+    networks:
+      - local-default
+
+
+networks:
+  prod-default:
+    external: true
+  local-default:
+    external: true
