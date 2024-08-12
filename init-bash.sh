@@ -32,6 +32,7 @@ alias cdbash="cd '$BASHDIR'"
 alias cdapp="cd '/c/project/spring-application'"
 alias cddocker="cd '$BASHDIR'/docker"
 alias cdweb="cd '/c/react/web-admin'"
+alias cdhugo="cd '/c/linux/hugo/memo'"
 alias gitlog="git log --oneline"
 
 alias backup='backup.sh develop project editplus react hyper-v python linux'
@@ -58,6 +59,7 @@ cat << EOF
   alias cdfra="cd '/c/project/spring-framework'"
   alias cddocker="cd '$BASHDIR'/docker"
   alias cdweb="cd '/c/react/web-admin'"
+  alias cdhugo="cd '/c/linux/hugo/memo'"
   alias gitlog="git log --oneline"
   
   alias backup='backup.sh develop project editplus react hyper-v python linux'
