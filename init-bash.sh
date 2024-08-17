@@ -7,6 +7,8 @@ cat << EOF > ~/.bash_profile
 
 set -o vi
 
+export LANG=ko_KR.utf8
+
 export JAVA8="/c/develop/tools/java/corretto-1.8.0_382"
 export JAVA11="/c/develop/tools/java/openjdk-11.0.13.8-temurin"
 export JAVA17="/c/develop/tools/java/corretto-17.0.10.7.1"
@@ -34,6 +36,7 @@ alias cdapp="cd '/c/project/spring-application'"
 alias cddocker="cd '$BASHDIR'/docker"
 alias cdweb="cd '/c/react/web-admin'"
 alias cdhugo="cd '/c/linux/hugo/memo'"
+alias cdnginx="cd '/c/develop/tools/nginx'"
 alias gitlog="git log --oneline"
 
 alias backup='backup.sh develop project editplus react hyper-v python linux'
@@ -45,6 +48,7 @@ echo "generated '~/.bash_profile'"
 
 cat << EOF
 [ env ]
+  LANG: $LANG
   JAVA_HOME: $JAVA_HOME
   JAVA8: $JAVA8
   JAVA11: $JAVA11
@@ -61,6 +65,7 @@ cat << EOF
   alias cddocker="cd '$BASHDIR'/docker"
   alias cdweb="cd '/c/react/web-admin'"
   alias cdhugo="cd '/c/linux/hugo/memo'"
+  alias cdnginx="cd '/c/develop/tools/nginx'"
   alias gitlog="git log --oneline"
   
   alias backup='backup.sh develop project editplus react hyper-v python linux'
