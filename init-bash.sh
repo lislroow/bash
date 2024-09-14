@@ -36,10 +36,9 @@ export PATH
 
 alias curl="curl -s"
 alias cdbash="cd '$BASHDIR'"
-alias cdapp="cd '/c/project/spring-application'"
 alias cddocker="cd '$BASHDIR'/docker"
-alias cdweb="cd '/c/react/web-admin'"
-alias cdhugo="cd '/c/linux/hugo/memo'"
+alias cdweb="cd '/c/project/react'"
+alias cdhugo="cd '/c/bash/hugo/memo'"
 alias cdnginx="cd '/c/develop/tools/nginx'"
 alias gitlog="git log --oneline"
 
@@ -64,10 +63,8 @@ cat << EOF
 [ alias ]
 
   alias cdbash="cd '$BASHDIR'"
-  alias cdapp="cd '/c/project/spring-application'"
-  alias cdfra="cd '/c/project/spring-framework'"
   alias cddocker="cd '$BASHDIR'/docker"
-  alias cdweb="cd '/c/react/web-admin'"
+  alias cdweb="cd '/c/project/react'"
   alias cdhugo="cd '/c/linux/hugo/memo'"
   alias cdnginx="cd '/c/develop/tools/nginx'"
   alias gitlog="git log --oneline"

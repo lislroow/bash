@@ -38,10 +38,6 @@
         "source": "/c/python"
       },
       {
-        "name": "linux",
-        "source": "/c/linux"
-      },
-      {
         "name": "bash",
         "source": "/c/bash"
       },
