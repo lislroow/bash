@@ -1,0 +1,62 @@
+baseURL = 'https://lislroow.github.io/'
+languageCode = 'ko-kr'
+title = 'MEMO'
+theme = 'simple'
+
+[Params]
+  author = "lislroow@daum.net"
+  description = "KIM MYEONGGU's MEMO site"
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.highlight]
+    guessSyntax = true
+    codeFences = true
+  [markup.tableOfContents]
+    startLevel = 1
+    endLevel = 5
+
+[blackfriday]
+  plainIDAnchors = true
+  hrefTargetBlank = true
+  angledQuotes = false
+  latexDashes = true
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+
+[menu]
+  [[menu.main]]
+    identifier = 'archive'
+    name = '+ archive'
+    weight = 1
+  [[menu.main]]
+    parent = 'archive'
+    identifier = 'apache'
+    name = 'apache'
+    url = '/archive/apache/'
+    weight = 1
+  [[menu.main]]
+    parent = 'archive'
+    identifier = 'nginx'
+    name = 'nginx'
+    url = '/archive/nginx/'
+    weight = 2
+  [[menu.main]]
+    parent = 'archive'
+    identifier = 'others'
+    name = 'others'
+    url = '/archive/others/'
+    weight = 99
+  [[menu.main]]
+    identifier = 'docker'
+    name = '+ docker'
+    weight = 1
+  [[menu.main]]
+    parent = 'docker'
+    identifier = 'ubuntu22-docker'
+    name = 'ubuntu22-docker'
+    url = '/system/ubuntu22-docker/'
+    weight = 1
