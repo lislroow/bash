@@ -1,8 +1,46 @@
-test
+# [eclipse]
+.project
 .settings
-reference
-**/docker/*.tar
-**/docker/*.7z
-**/docker/*.zip
+.classpath
+.factorypath
+.externalToolBuilders
 
-format.json
+*/.project
+*/.settings
+*/.classpath
+*/.factorypath
+*/.externalToolBuilders
+
+
+# [vscode]
+.vscode
+
+*/.vscode
+
+
+# [idea]
+.idea
+
+*/.idea
+
+
+# [maven]
+target
+.mvn
+
+*/target
+*/.mvn
+
+
+# [gradle]
+.gradle
+build
+bin
+
+*/.gradle
+*/build
+*/bin
+
+# [etc]
+bash.iml
+reference
