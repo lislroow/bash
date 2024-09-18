@@ -288,7 +288,23 @@ $ hostnamectl set-hostname develop
 #!/bin/bash
 
 # BASE_DIR: script 파일의 디렉토리 경로
-BASE_DIR=$( cd $( dirname $0 ) && pwd -P )
+#BASE_DIR=$( cd $( dirname $0 ) && pwd -P ) # word splitting 문제를 방지하기 위해 변수나 명령어 확장 부분을 인용부호(")로 감싸야 함. 공백이 문제를 일으킬 수 있음.
+BASEDIR=$( cd "$( dirname "$0" )" && pwd -P )
+```
+
+#### - mapfile
+```shell
+mapfile -t LIST <<- EOF
+.project
+.settings
+EOF
+```
+
+#### - rm
+```shell
+# ${BASEDIR} 과 ${item} 사이에 공백이 있거나 의도하지 않은 globbing(파일명 확장)이 발생하지 않도록 방지
+# :?를 추가하여 변수가 정의되지 않았을 경우 스크립트를 중단하도록 하고, 에러 메시지를 출력
+rm -rf "${BASEDIR:?}/${item:?}"
 ```
 
 #### - 파일명, 확장자
