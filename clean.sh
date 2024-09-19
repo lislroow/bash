@@ -1,5 +1,9 @@
 #!/bin/bash
-BASEDIR=$( cd "$( dirname . )" && pwd -P )
+if [ -z "$1" ]; then
+  BASEDIR=$( cd "$( dirname . )" && pwd -P )
+else
+  BASEDIR="$1"
+fi
 
 if [ "${BASEDIR}" == '/usr/bin' ]; then
   echo "error. BASEDIR is /usr/bin"
