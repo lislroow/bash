@@ -12,6 +12,10 @@
         "source": "/c/wallpaper"
       },
       {
+        "name": "rainmeter",
+        "source": "/c/Users/myeonggu.kim/AppData/Roaming/Rainmeter"
+      },
+      {
         "name": "editplus",
         "source": "/c/Users/myeonggu.kim/AppData/Roaming/EditPlus"
       },
