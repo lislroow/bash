@@ -33,7 +33,7 @@ function deploy {
   echo -e "\e[0;32m${CMD}\e[0m"
   eval ${CMD}
   
-  CMD="cd lislroow.github.io/ && git add . && git commit -m 'update' && git push origin master"
+  CMD="cd lislroow.github.io/ && git add . && git commit -m 'update' && git push"
   echo -e "\e[0;32m${CMD}\e[0m"
   eval ${CMD}
 }
