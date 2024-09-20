@@ -1,3 +1,48 @@
+#### 4. pdb 삭제
+
+```
+SQL> SHOW PDBS
+
+    CON_ID CON_NAME       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+   2 PDB$SEED       READ ONLY  NO
+   3 ORCLPDB1       READ WRITE NO
+   4 MARKET         READ WRITE NO
+   
+# pdb close 상태로 전환
+SQL> ALTER PLUGGABLE DATABASE market CLOSE IMMEDIATE;
+
+Pluggable database altered.
+
+# pdb unplug
+SQL> ALTER PLUGGABLE DATABASE market UNPLUG INTO '/home/oracle/market.xml';
+
+Pluggable database altered.
+
+# pdb 상태 확인
+SQL> SHOW PDBS;
+
+    CON_ID CON_NAME       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+   2 PDB$SEED       READ ONLY  NO
+   3 ORCLPDB1       READ WRITE NO
+   4 MARKET         MOUNTED
+
+# pdb 삭제
+SQL> DROP PLUGGABLE DATABASE market INCLUDING DATAFILES;
+
+Pluggable database dropped.
+
+# pdb 상태 확인
+SQL> SHOW PDBS;
+
+    CON_ID CON_NAME       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+   2 PDB$SEED       READ ONLY  NO
+   3 ORCLPDB1       READ WRITE NO
+```
+
+
 #### 3. 새로운 pdb 생성 및 계정 생성
 
 ##### 3.1 pdb 생성
