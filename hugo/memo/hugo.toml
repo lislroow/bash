@@ -46,6 +46,12 @@ theme = 'simple'
     weight = 2
   [[menu.main]]
     parent = 'archive'
+    identifier = 'oracle19c'
+    name = 'oracle19c'
+    url = '/archive/oracle19c/'
+    weight = 3
+  [[menu.main]]
+    parent = 'archive'
     identifier = 'others'
     name = 'others'
     url = '/archive/others/'
