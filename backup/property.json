@@ -8,10 +8,6 @@
     "drive": "/d",
     "entries": [
       {
-        "name": "wallpaper",
-        "source": "/c/wallpaper"
-      },
-      {
         "name": "rainmeter",
         "source": "/c/Users/myeonggu.kim/AppData/Roaming/Rainmeter"
       },
@@ -24,22 +20,9 @@
         "source": "/c/develop"
       },
       {
-        "name": "vmware",
-        "source": "/c/vmware",
-        "bcscript": "sync-update.bc"
-      },
-      {
         "name": "vm-disk",
         "source": "/c/vm-disk",
         "bcscript": "sync-update.bc"
-      },
-      {
-        "name": "react",
-        "source": "/c/react"
-      },
-      {
-        "name": "python",
-        "source": "/c/python"
       },
       {
         "name": "bash",
