@@ -1,3 +1,25 @@
+#### 6. expdp 명령(pump)으로 dump 생성하기
+
+```
+# backup 디렉토리 설정
+SQL> CREATE DIRECTORY backup_dir AS '/home/oracle/dump';
+SQL> GRANT READ, WRITE ON DIRECTORY backup_dir TO mkuser;
+
+# expdp 명령 dump 생성
+$ expdp mkuser/passwd@develop DIRECTORY=backup_dir DUMPFILE=develop.dmp LOGFILE=develop_backup.log
+
+---
+
+# impdp 명령 dump 적재 (for test)
+# REMAP_SCHEMA=mkuser:testuser: 덤프 파일에 있는 데이터를 mkuser라는 원래 사용자로부터 testuser로 매핑하여 적재
+$ impdp testuser/passwd@testdb DIRECTORY=backup_dir DUMPFILE=develop.dmp REMAP_SCHEMA=mkuser:testuser LOGFILE=import_log.log
+
+# impdp 실행 전 디렉토리 생성
+SQL> CREATE DIRECTORY backup_dir AS '/home/oracle/dump';
+SQL> GRANT READ, WRITE ON DIRECTORY backup_dir TO testuser;
+```
+
+
 #### 5. dump 파일 import 하기
 
 imp 명령어와 impdp 명령어가 있으며, exp 로 생성한 dump 는 imp 로 import 해야 함
