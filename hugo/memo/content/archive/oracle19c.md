@@ -1,3 +1,70 @@
+#### 5. dump 파일 import 하기
+
+imp 명령어와 impdp 명령어가 있으며, exp 로 생성한 dump 는 imp 로 import 해야 함
+
+```
+# dump 파일의 메타 정보 확인
+$ imp system/passwd FILE=/opt/dump/fund.dmp LOG=dump_log.log SHOW=Y FULL=Y
+
+# dump 파일의 캐릭터셋은 NLS_LANG 변수로 설정
+$ export NLS_LANG=KOREAN_KOREA.KO16MSWIN949
+
+# only schema import
+$ imp system/passwd@develop FILE=/opt/dump/fund.dmp LOG=dump_log.log FROMUSER=FUNDO TOUSER=mkuser ROWS=N
+
+# data import (ignore=Y 는 schema 가 있을 경우 무시하고 data 를 import)
+$ imp system/passwd@develop FILE=/opt/dump/fund.dmp LOG=dump_log.log FROMUSER=FUNDO TOUSER=mkuser ROWS=Y IGNORE=Y
+
+```
+
+system 테이블스페이스에는 데이터를 import 할 수 없음 
+
+```
+# pdb 선택
+SQL> ALTER SESSION SET CONTAINER = develop;
+
+# 테이블스페이스 생성
+SQL> CREATE TABLESPACE develop
+  DATAFILE '/opt/oracle/oradata/ORCLCDB/develop/develop.dbf' 
+  SIZE 10G 
+  AUTOEXTEND ON 
+  NEXT 50M MAXSIZE UNLIMITED;
+
+# mkuser 기본 테이블스페이스 지정 및 할당량 지정
+SQL> ALTER USER mkuser DEFAULT TABLESPACE develop;
+SQL> ALTER USER mkuser QUOTA UNLIMITED ON develop;
+
+---
+
+# pdb 선택
+SQL> ALTER SESSION SET CONTAINER = develop;
+
+# mkuser 계정 삭제
+SQL> ALTER SESSION SET "_oracle_script"=true;
+SQL> DROP USER mkuser CASCADE;
+# ORA-28014: cannot drop administrative user or role
+SQL> SELECT * FROM dba_role_privs WHERE grantee = 'mkuser';
+SQL> REVOKE SYSDBA FROM mkuser;
+SQL> REVOKE DBA FROM mkuser;
+# ORA-01940: cannot drop a user that is currently connected
+SQL> SELECT SID,SERIAL# FROM V$SESSION WHERE USERNAME = 'MKUSER';
+SQL> ALTER SYSTEM KILL SESSION 'SID,SERIAL#';
+
+# 테이블스페이스 삭제 (dbf 파일은 삭제되지 않음)
+SQL> DROP TABLESPACE develop;
+SQL> DROP TABLESPACE develop INCLUDING CONTENTS AND DATAFILES;
+
+# dbf 파일 삭제
+$ rm -rf /opt/oracle/oradata/ORCLCDB/develop/develop.dbf
+
+---
+
+# mkuser 계정 생성 (기본 테이블스페이스 지정)
+SQL> ALTER SESSION SET "_oracle_script"=true;
+SQL> CREATE USER mkuser IDENTIFIED BY 1 DEFAULT TABLESPACE develop;
+```
+
+
 #### 4. pdb 삭제
 
 ```
@@ -49,7 +116,7 @@ SQL> SHOW PDBS;
 
 ```
 # 접속
-sqlplus sys as sysdba
+$ sqlplus sys as sysdba
 
 # 데이터베이스 상태 확인
 SQL> SELECT STATUS FROM V$INSTANCE;
@@ -60,6 +127,7 @@ SQL> SHOW CON_NAME;
 
 # pdb 생성
 SQL> CREATE PLUGGABLE DATABASE market ADMIN USER pdb_market IDENTIFIED BY 1 FILE_NAME_CONVERT = ('/opt/oracle/oradata/ORCLCDB', '/opt/oracle/oradata/ORCLCDB/market');
+SQL> CREATE PLUGGABLE DATABASE develop ADMIN USER pdb_market IDENTIFIED BY 1 FILE_NAME_CONVERT = ('/opt/oracle/oradata/ORCLCDB', '/opt/oracle/oradata/ORCLCDB/develop');
 
 Pluggable database created.
 
@@ -98,8 +166,8 @@ CON_NAME
 MARKET
 
 # 'ORA-65096: invalid common user or role name' 오류 발생
-alter session set "_oracle_script"=true;
-CREATE USER mkuser IDENTIFIED BY 1;
+SQL> ALTER SESSION SET "_oracle_script"=true;
+SQL> CREATE USER mkuser IDENTIFIED BY 1;
 
 # GRANT RESOURCE TO mkuser (ORA-01924: role 'RESOURCE' not granted or does not exist)
 SQL> GRANT CREATE SESSION TO mkuser;
@@ -111,6 +179,18 @@ SQL> GRANT CREATE TRIGGER TO mkuser;
 SQL> GRANT CREATE SYNONYM TO mkuser;
 SQL> GRANT CREATE TYPE TO mkuser;
 SQL> GRANT UNLIMITED TABLESPACE TO mkuser;
+
+# tnsnames.ora 추가 (sqlplus,imp,exp 사용시)
+/opt/oracle/product/19c/dbhome_1/network/admin/tnsnames.ora
+market =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = rocky8-oracle19c)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = market)
+    )
+  )
+
 ```
 
 
@@ -123,7 +203,7 @@ ORCLCDB:/opt/oracle/product/19c/dbhome_1:Y
 
 # 서비스명 확인
 # systemctl list-units | grep oracle
-oracledb_ORCLCDB-19c.service  loaded active running   SYSV: This script is responsible for taking care of configuring the Oracle Database and its associated services.
+$ oracledb_ORCLCDB-19c.service  loaded active running   SYSV: This script is responsible for taking care of configuring the Oracle Database and its associated services.
 
 # 서비스 실행 확인
 # systemctl status oracledb_ORCLCDB-19c
