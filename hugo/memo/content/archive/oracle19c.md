@@ -1,3 +1,56 @@
+#### 7. 데이터 이관 작업
+
+```
+# 임시 테이블스페이스, 계정 생성
+
+ALTER SESSION SET CONTAINER = develop;
+
+CREATE TABLESPACE develop_test
+  DATAFILE '/opt/oracle/oradata/ORCLCDB/develop/test.dbf' 
+  SIZE 100M 
+  AUTOEXTEND ON 
+  NEXT 50M MAXSIZE UNLIMITED;
+
+ALTER SESSION SET "_oracle_script"=true;
+CREATE USER testuser IDENTIFIED BY 1 DEFAULT TABLESPACE develop_test;
+ALTER USER testuser QUOTA UNLIMITED ON develop_test;
+GRANT CREATE SESSION TO testuser;
+GRANT CREATE TABLE TO testuser;
+GRANT CREATE VIEW TO testuser;
+GRANT CREATE PROCEDURE TO testuser;
+GRANT CREATE SEQUENCE TO testuser;
+GRANT CREATE TRIGGER TO testuser;
+GRANT CREATE SYNONYM TO testuser;
+GRANT CREATE TYPE TO testuser;
+GRANT UNLIMITED TABLESPACE TO testuser;
+GRANT READ, WRITE ON DIRECTORY backup_dir TO testuser;
+
+---
+
+# imp 실행
+export NLS_LANG=KOREAN_KOREA.KO16MSWIN949
+imp system/1 FILE=./backup.dmp LOG=dump_log.log SHOW=Y FULL=Y
+
+imp system/passwd@develop FILE=./backup.dmp LOG=dump_log.log FROMUSER=OCRM TOUSER=testuser ROWS=N
+imp system/passwd@develop FILE=./backup.dmp LOG=dump_log.log FROMUSER=OCRM TOUSER=testuser ROWS=Y IGNORE=Y
+
+---
+
+# (데이터 정리 후) exp 실행
+expdp testuser/passwd@develop DIRECTORY=backup_dir DUMPFILE=exp.dmp TABLES=tb_foo,tb_bar LOGFILE=backup_log.log
+
+# imp 실행
+impdp mkuser/passwd@develop DIRECTORY=backup_dir DUMPFILE=exp.dmp REMAP_SCHEMA=testuser:mkuser LOGFILE=import_log.log
+
+---
+
+# 임시 테이블스페이스, 계정 삭제
+drop user testuser cascade;
+DROP TABLESPACE develop_test INCLUDING CONTENTS AND DATAFILES;
+
+```
+
+
 #### 6. expdp 명령(pump)으로 dump 생성하기
 
 ```
