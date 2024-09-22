@@ -1,8 +1,13 @@
 #### 8. sqlldr 우편번호 적재
 
-```
+```shell
 # 우편번호 데이터
 $ curl -sOL https://www.epost.go.kr/search/areacd/zipcode_DB.zip
+# 압축 해제 대상 디렉토리 지정, 파일명 인코딩 설정
+$ unzip -O cp949 -d txt/ zipcode_DB.zip
+# 파일명 인코딩 변경
+#$ yum install -y convmv
+#$ convmv -f cp949 -t utf-8 --notest ./txt/*
 
 # zipcode.ctl 생성
 $ cat <<- EOF ./zipcode.ctl
@@ -100,7 +105,7 @@ COMMENT ON COLUMN MKUSER.CM_ZIPCODE_I.OLD_ZIPCODE IS '구우편번호';
 COMMENT ON COLUMN MKUSER.CM_ZIPCODE_I.ZIPCODE_SEQNO IS '우편번호일련번호';
 
 # 데이터 적재
-$ for file in *.txt; do
+$ for file in ./txt/*.txt; do
   sqlldr mkuser/passwd@develop control=zipcode.ctl data=$file SKIP=1
 done
 
@@ -108,7 +113,7 @@ done
 
 #### 7. 데이터 이관 작업
 
-```
+```sql
 # 임시 테이블스페이스, 계정 생성
 
 ALTER SESSION SET CONTAINER = develop;
@@ -161,7 +166,7 @@ DROP TABLESPACE develop_test INCLUDING CONTENTS AND DATAFILES;
 
 #### 6. expdp 명령(pump)으로 dump 생성하기
 
-```
+```sql
 # backup 디렉토리 설정
 SQL> CREATE DIRECTORY backup_dir AS '/home/oracle/dump';
 SQL> GRANT READ, WRITE ON DIRECTORY backup_dir TO mkuser;
@@ -185,7 +190,7 @@ SQL> GRANT READ, WRITE ON DIRECTORY backup_dir TO testuser;
 
 imp 명령어와 impdp 명령어가 있으며, exp 로 생성한 dump 는 imp 로 import 해야 함
 
-```
+```shell
 # dump 파일의 메타 정보 확인
 $ imp system/passwd FILE=/opt/dump/fund.dmp LOG=dump_log.log SHOW=Y FULL=Y
 
@@ -202,7 +207,7 @@ $ imp system/passwd@develop FILE=/opt/dump/fund.dmp LOG=dump_log.log FROMUSER=FU
 
 system 테이블스페이스에는 데이터를 import 할 수 없음 
 
-```
+```sql
 # pdb 선택
 SQL> ALTER SESSION SET CONTAINER = develop;
 
@@ -250,7 +255,7 @@ SQL> CREATE USER mkuser IDENTIFIED BY 1 DEFAULT TABLESPACE develop;
 
 #### 4. pdb 삭제
 
-```
+```sql
 SQL> SHOW PDBS
 
     CON_ID CON_NAME       OPEN MODE  RESTRICTED
@@ -297,7 +302,7 @@ SQL> SHOW PDBS;
 
 ##### 3.1 pdb 생성
 
-```
+```sql
 # 접속
 $ sqlplus sys as sysdba
 
@@ -329,7 +334,7 @@ SQL> ALTER PLUGGABLE DATABASE market OPEN;
 
 ##### 3.2 새로운 pdb 에 user 생성
 
-```
+```sql
 # 현재 세션이 연결된 컨테이너 확인
 SQL> SHOW CON_NAME;
 CON_NAME
@@ -379,7 +384,7 @@ market =
 
 #### 2. oracle19c 환경 정보
 
-```
+```sql
 # 설치 경로(디렉토리) 확인
 # cat /etc/oratab
 ORCLCDB:/opt/oracle/product/19c/dbhome_1:Y
@@ -431,7 +436,7 @@ SQL> select con_id, name, open_mode from v$pdbs;
 # 클라이언트에서 rocky8-oracle19:1521/orclpdb1 접속
 orclpdb1 =
   (DESCRIPTION =
-    (ADDRESS =(PROTOCOL=TCP)(HOST=172.28.200.60)(PORT=1521)
+    (ADDRESS =(PROTOCOL=TCP)(HOST=172.28.200.51)(PORT=1521)
   )
   (CONNECT_DATA =(SERVICE_NAME=orclpdb1)
   )
