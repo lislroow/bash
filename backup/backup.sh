@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # VAR
-CURRDIR=$( pwd -P )
+#CURRDIR=$( pwd -P )
 #FUNCFILE=${FUNCFILE#*/}
-FUNCDIR=$( cd $( dirname $0 ) && pwd -P )
-BASEDIR=$( cd $( dirname $0 ) && cd .. && pwd -P )
+FUNCDIR=$( cd "$( dirname "$0" )" && pwd -P )
+BASEDIR=$( cd "$( dirname "$0" )" && cd .. && pwd -P )
 PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 # //VAR
 
@@ -31,17 +31,17 @@ eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
 TAR_MODE=0
 function SetOptions {
-  opts=$( getopt --options $_OPTIONS,$OPTIONS \
-                 --longoptions $_LONGOPTIONS,$LONGOPTIONS \
-                 -- $* )
-  eval set -- $opts
+  opts=$( getopt --options "${_OPTIONS}",$OPTIONS \
+                 --longoptions "${_LONGOPTIONS}",$LONGOPTIONS \
+                 -- "$@" )
+  eval set -- "${opts}"
   
-  if [ $DEBUG_MODE == 1 ]; then
-    LOG "opts: " $opts
+  if [ "${DEBUG_MODE}" == "1" ]; then
+    LOG "opts: " "${opts}"
   fi
   
   while true; do
-    if [ -z $1 ]; then
+    if [ -z "$1" ]; then
       break
     fi
     case $1 in
@@ -54,11 +54,11 @@ function SetOptions {
         ;;
       --outdir)
         OUTDIR=$2
-        if [ ! -z $OUTDIR ]; then
-          if [[ $OUTDIR != '/'* ]]; then
+        if [ -n "${OUTDIR}" ]; then
+          if [[ "${OUTDIR}" != '/'* ]]; then
             OUTDIR="/c/$OUTDIR"
           fi
-          if [ ! -e $OUTDIR ]; then
+          if [ ! -e "${OUTDIR}" ]; then
             LOG "\e[0;31merror\e[0m: \"OUTDIR\" \"$OUTDIR\" 디렉토리가 존재하지 않습니다."
             exit 1
           fi
@@ -67,11 +67,10 @@ function SetOptions {
         ;;
       --drive)
         DRIVE=$2
-        if [ ! -z $DRIVE ]; then
+        if [ -n "${DRIVE}" ]; then
           if [[ $DRIVE != '/'* ]]; then
             DRIVE="/$DRIVE"
-          fi
-          if [ ! -e $DRIVE ]; then
+          if [ ! -e "${DRIVE}" ]; then
             LOG "\e[0;31merror\e[0m: \"DRIVE\" \"$DRIVE\" 가 존재하지 않습니다."
             exit 1
           fi
@@ -81,20 +80,20 @@ function SetOptions {
       --)
         ;;
       *)
-        params+=($1)
+        params+=("$1")
         ;;
     esac
     shift
   done
   
-  if [ -z $OUTDIR ]; then
+  if [ -z "${OUTDIR}" ]; then
     OUTDIR=$( GetProp "backup.outdir" )
   fi
-  if [ -z $DRIVE ]; then
+  if [ -z "${DRIVE}" ]; then
     DRIVE=$( GetProp "backup.drive" )
   fi
   
-  if [ $DEBUG_MODE == 1 ]; then
+  if [ "${DEBUG_MODE}" == "1" ]; then
     cat << EOF
 - SetOptions
   OUTDIR = $OUTDIR
@@ -103,11 +102,7 @@ function SetOptions {
 EOF
   fi
 }
-SetOptions $*
-if [ $? -ne 0 ]; then
-  USAGE
-  exit 1
-fi
+SetOptions "$@"
 # //options
 
 
@@ -115,7 +110,8 @@ fi
 function main {
   ## prepare
   if [ $LIST_MODE == 1 ] || [ -z "${params[*]}" ]; then
-    ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .name' | sed ''"))
+    #ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .name' | sed ''"))
+    mapfile -t ENTRIES < <(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .name' | sed ''")
     cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -126,12 +122,13 @@ EOF
   fi
   
   ## entries
-  IFS=","; read -a ENTRIES <<< ${params[*]}; unset IFS
+  IFS=","; read -r -a ENTRIES <<< "${params[@]}"; unset IFS
   mtot=${#ENTRIES[*]}
   midx=1
-  for entry in ${ENTRIES[*]}; do
-    if [ $entry == 'all' ]; then
-      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .name' | sed ''"))
+  for entry in "${ENTRIES[@]}"; do
+    if [ "${entry}" == 'all' ]; then
+      #ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .name' | sed ''"))
+      mapfile -t ENTRIES < <(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | .name' | sed ''")
       mtot=${#ENTRIES[*]}
       break
     fi
@@ -146,11 +143,11 @@ EOF
 EOF
   
   ## process
-  for entry in ${ENTRIES[*]}; do
-    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
+  for entry in "${ENTRIES[@]}"; do
+    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot]" "\"$entry\""
     row=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.entries[] | select(.name == \"$entry\") | \"\(.name)|\(.source)|\(.bcscript)\"' | sed ''")
     
-    IFS='|'; read name source bcscript <<< $row; unset IFS
+    IFS='|'; read -r name source bcscript <<< "${row}"; unset IFS
     
     ### validation
     if [ ! -e "$source" ]; then
@@ -158,7 +155,7 @@ EOF
       continue
     fi
     
-    if [ $bcscript == "null" ]; then
+    if [ "${bcscript}" == "null" ]; then
       bcscript="sync-mirror.bc"
     fi
     
@@ -181,8 +178,8 @@ EOF
       esac
     }
     
-    #((midx++))
-    let "midx = midx + 1"
+    ((midx++))
+    #let "midx = midx + 1"
   done
 }
 main
