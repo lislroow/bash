@@ -70,7 +70,7 @@ function SetOptions {
         if [ -n "${DRIVE}" ]; then
           if [[ $DRIVE != '/'* ]]; then
             DRIVE="/$DRIVE"
-          if [ ! -e "${DRIVE}" ]; then
+          elif [ ! -e "${DRIVE}" ]; then
             LOG "\e[0;31merror\e[0m: \"DRIVE\" \"$DRIVE\" 가 존재하지 않습니다."
             exit 1
           fi
