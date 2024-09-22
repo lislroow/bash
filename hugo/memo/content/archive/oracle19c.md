@@ -1,3 +1,15 @@
+#### 10. pdb mkuser 백업
+
+```shell
+# (참고) 디렉토리 변경
+SQL> CREATE DIRECTORY backup_dir AS '/home/oracle/dump';
+SQL> DROP DIRECTORY backup_dir;
+SQL> CREATE DIRECTORY backup_dir AS '/home/oracle';
+SQL> GRANT READ, WRITE ON DIRECTORY backup_dir TO mkuser;
+
+$ expdp mkuser/passwd@develop DIRECTORY=backup_dir DUMPFILE=develop.dmp LOGFILE=develop_backup.log
+```
+
 #### 9. pdb 관리자 계정 변경
 
 새로운 관리자 계정 생성 후 기존 계정을 삭제해야 함
@@ -167,10 +179,10 @@ imp system/passwd@develop FILE=./backup.dmp LOG=dump_log.log FROMUSER=OCRM TOUSE
 
 ---
 
-# (데이터 정리 후) exp 실행
+# (데이터 정리 후) expdp 실행
 expdp testuser/passwd@develop DIRECTORY=backup_dir DUMPFILE=exp.dmp TABLES=tb_foo,tb_bar LOGFILE=backup_log.log
 
-# imp 실행
+# impdp 실행
 impdp mkuser/passwd@develop DIRECTORY=backup_dir DUMPFILE=exp.dmp REMAP_SCHEMA=testuser:mkuser REMAP_TABLESPACE=develop_test:develop LOGFILE=import_log.log
 
 ---
@@ -186,7 +198,7 @@ DROP TABLESPACE develop_test INCLUDING CONTENTS AND DATAFILES;
 
 ```sql
 # backup 디렉토리 설정
-SQL> CREATE DIRECTORY backup_dir AS '/home/oracle/dump';
+SQL> CREATE DIRECTORY backup_dir AS '/home/oracle';
 SQL> GRANT READ, WRITE ON DIRECTORY backup_dir TO mkuser;
 
 # expdp 명령 dump 생성
@@ -199,7 +211,7 @@ $ expdp mkuser/passwd@develop DIRECTORY=backup_dir DUMPFILE=develop.dmp LOGFILE=
 $ impdp testuser/passwd@testdb DIRECTORY=backup_dir DUMPFILE=develop.dmp REMAP_SCHEMA=mkuser:testuser LOGFILE=import_log.log
 
 # impdp 실행 전 디렉토리 생성
-SQL> CREATE DIRECTORY backup_dir AS '/home/oracle/dump';
+SQL> CREATE DIRECTORY backup_dir AS '/home/oracle';
 SQL> GRANT READ, WRITE ON DIRECTORY backup_dir TO testuser;
 ```
 
