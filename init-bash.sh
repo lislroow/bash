@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASHDIR=$( cd $( dirname $0 ) && pwd -P )
+BASHDIR=$( cd "$( dirname "$0" )" && pwd -P )
 
 cat << EOF > ~/.bash_profile
 #!/bin/bash
