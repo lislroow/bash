@@ -1,3 +1,21 @@
+#### 9. pdb 관리자 계정 변경
+
+새로운 관리자 계정 생성 후 기존 계정을 삭제해야 함
+
+```sql
+CREATE USER pdb_develop IDENTIFIED BY passwd;
+
+-- 새로운 관리자 계정 권한 부여
+GRANT DBA TO pdb_develop;
+GRANT CREATE SESSION TO pdb_develop;
+GRANT CREATE ANY TABLE TO pdb_develop;
+GRANT UNLIMITED TABLESPACE TO pdb_develop;
+
+-- 기존 관리자 계정 권한 회수 및 삭제
+REVOKE DBA FROM pdb_market;
+DROP USER pdb_market CASCADE;
+```
+
 #### 8. sqlldr 우편번호 적재
 
 ```shell
@@ -315,7 +333,7 @@ SQL> SHOW CON_NAME;
 
 # pdb 생성
 SQL> CREATE PLUGGABLE DATABASE market ADMIN USER pdb_market IDENTIFIED BY 1 FILE_NAME_CONVERT = ('/opt/oracle/oradata/ORCLCDB', '/opt/oracle/oradata/ORCLCDB/market');
-SQL> CREATE PLUGGABLE DATABASE develop ADMIN USER pdb_market IDENTIFIED BY 1 FILE_NAME_CONVERT = ('/opt/oracle/oradata/ORCLCDB', '/opt/oracle/oradata/ORCLCDB/develop');
+SQL> CREATE PLUGGABLE DATABASE develop ADMIN USER pdb_develop IDENTIFIED BY 1 FILE_NAME_CONVERT = ('/opt/oracle/oradata/ORCLCDB', '/opt/oracle/oradata/ORCLCDB/develop');
 
 Pluggable database created.
 
