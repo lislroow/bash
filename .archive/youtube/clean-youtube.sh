@@ -131,7 +131,7 @@ EOF
       ((_idx+1))
     done
     #let "midx = midx + 1"
-    ((midx + 1))
+    ((midx=midx+1))
   done
 }
 main

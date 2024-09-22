@@ -2,8 +2,8 @@
 
 # VAR
 CURRDIR=$( pwd -P )
-FUNCDIR=$( cd $( dirname $0 ) && pwd -P )
-BASEDIR=$( cd $( dirname $0 ) && cd .. && pwd -P )
+FUNCDIR=$( cd "$( dirname "$0" )" && pwd -P )
+BASEDIR=$( cd "$( "dirname $0" ) "&& cd .. && pwd -P )
 PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 # //VAR
 
@@ -26,20 +26,20 @@ LONGOPTIONS="goal:"
 eval "source \"$BASEDIR/common.sh\""
 LIST_MODE=0
 function SetOptions {
-  opts=$( getopt --options $_OPTIONS,$OPTIONS \
-                 --longoptions $_LONGOPTIONS,$LONGOPTIONS \
-                 -- $* )
-  eval set -- $opts
+  opts=$( getopt --options "${_OPTIONS}","${OPTIONS}" \
+                 --longoptions "${_LONGOPTIONS}","${LONGOPTIONS}" \
+                 -- "$@" )
+  eval set -- "${opts}"
   
-  if [ $DEBUG_MODE == 1 ]; then
-    LOG "opts: " $opts
+  if [ "${DEBUG_MODE}" == 1 ]; then
+    LOG "opts: " "${opts}"
   fi
   
   while true; do
-    if [ -z $1 ]; then
+    if [ -z "$1" ]; then
       break
     fi
-    case $1 in
+    case "$1" in
       -h | -v | --help | --verbose) ;;
       -l)
         LIST_MODE=1
@@ -47,7 +47,8 @@ function SetOptions {
       --goal)
         shift; GOAL=$1
         allows="clean compile package install deploy"
-        if [[ ! " ${allows} " =~ " ${GOAL} " ]]; then
+        #if [[ ! " ${allows} " =~ " ${GOAL} " ]]; then
+        if [[ ! " ${allows} " =~ ${GOAL} ]]; then
           LOG "'--goal <goal>' requires value of [ ${allows} ]. (${GOAL} is wrong)"
           USAGE
         fi
@@ -55,7 +56,7 @@ function SetOptions {
       --)
         ;;
       *)
-        params+=($1)
+        params+=("$1")
         ;;
     esac
     shift
@@ -72,7 +73,7 @@ function SetOptions {
 
 EOF
 }
-SetOptions $*
+SetOptions "$@"
 if [ $? -ne 0 ]; then
   USAGE
   exit 1
@@ -82,7 +83,8 @@ fi
 # main
 function main {
   ## prepare
-  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.spring[] | .name'"))
+  #ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.spring[] | .name'"))
+  mapfile -t ENTRIES < <(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.spring[] | .name'")
   cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -91,13 +93,14 @@ EOF
   
   ## entries
   if [ ${#params[*]} -gt 0 ]; then
-    IFS=","; read -a ENTRIES <<< ${params[*]}; unset IFS
+    IFS=","; read -r -a ENTRIES <<< "${params[@]}"; unset IFS
   fi
   mtot=${#ENTRIES[*]}
   midx=1
-  for entry in ${ENTRIES[*]}; do
-    if [ $entry == 'all' ]; then
-      ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.spring[] | .name'"))
+  for entry in "${ENTRIES[@]}"; do
+    if [ "${entry}" == 'all' ]; then
+      #ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.spring[] | .name'"))
+      mapfile -t ENTRIES < <(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.spring[] | .name'")
       mtot=${#ENTRIES[*]}
       break
     fi
@@ -112,17 +115,18 @@ EOF
 EOF
   
   ## process
-  for entry in ${ENTRIES[*]}; do
-    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
+  for entry in "${ENTRIES[@]}"; do
+    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot]" "\"$entry\""
     
     SOURCE=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries.app[] | select(.name == \"${entry}\") | .source'")
-    cd ${SOURCE}
+    cd "${SOURCE:?}" || continue
     
     #exitCode=$(EXEC "./mvnw ${GOAL} -e -s ./.mvn/wrapper/settings.xml")
     #exitCode=$(EXEC "./mvnw ${GOAL} -e -s /c/develop/tools/maven/conf/settings.xml")
     exitCode=$(EXEC "./mvnw -s /c/develop/tools/maven/conf/settings.xml -U ${GOAL} -DskipTests")
     
-    let "midx = midx + 1"
+    #let "midx = midx + 1"
+    ((midx=midx+1))
   done
 }
 main
