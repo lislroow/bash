@@ -39,7 +39,7 @@ bin
 
 */.gradle
 */build
-*/bin
+;*/bin
 
 # [etc]
 bash.iml
