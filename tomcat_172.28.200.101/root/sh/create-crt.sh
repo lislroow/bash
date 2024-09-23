@@ -3,7 +3,7 @@
 DOMAIN=$1
 FILENM=star.${DOMAIN}
 
-cat <<- EOF > ${FILENM}.cnf
+cat <<- EOF > "${FILENM:?}.cnf"
 [req]
 distinguished_name = req_distinguished_name
 x509_extensions = v3_req
@@ -24,4 +24,4 @@ DNS.1 = *.${DOMAIN}
 EOF
 
 # crt 생성
-openssl req -x509 -nodes -days 730 -newkey rsa:2048 -keyout ${FILENM}.key -out ${FILENM}.crt -sha256 -config ${FILENM}.cnf
+openssl req -x509 -nodes -days 730 -newkey rsa:2048 -keyout "${FILENM}.key" -out "${FILENM}.crt" -sha256 -config "${FILENM}.cnf"

@@ -5,4 +5,3 @@ nmcli networking on
 systemctl restart NetworkManager
 
 ifconfig
-
