@@ -777,6 +777,7 @@ $ mvn -B clean release:prepare release:perform deploy
 $ mvn dependency:resolve -Dclassifier=javadoc
 $ mvn dependency:sources
 $ mvn dependency:get -Dartifact=javax.servlet:javax.servlet-api:4.0.1:jar
+$ mvn dependency:go-offline
 ```
 
 #### - "goal" deploy:deploy-file
