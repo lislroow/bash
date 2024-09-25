@@ -2,8 +2,8 @@
 
 # VAR
 CURRDIR=$( pwd -P )
-FUNCDIR=$( cd $( dirname $0 ) && pwd -P )
-BASEDIR=$( cd $( dirname $0 ) && cd .. && pwd -P )
+FUNCDIR=$( cd "$( dirname "$0" )" && pwd -P )
+BASEDIR=$( cd "$( dirname "$0" )" && cd .. && pwd -P )
 PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 # //VAR
 
@@ -24,17 +24,17 @@ OPTIONS="l,p:"
 LONGOPTIONS="list,project:,prod,local"
 eval "source \"$BASEDIR/common.sh\""
 function SetOptions {
-  opts=$( getopt --options $_OPTIONS,$OPTIONS \
-                 --longoptions $_LONGOPTIONS,$LONGOPTIONS \
-                 -- $* )
-  eval set -- $opts
+  opts=$( getopt --options "${_OPTIONS}",$OPTIONS \
+                 --longoptions "${_LONGOPTIONS}",$LONGOPTIONS \
+                 -- "$@" )
+  eval set -- "${opts}"
   
-  if [ $DEBUG_MODE == 1 ]; then
-    LOG "opts: " $opts
+  if [ "${DEBUG_MODE}" == 1 ]; then
+    LOG "opts: " "${opts}"
   fi
   
   while true; do
-    if [ -z $1 ]; then
+    if [ -z "$1" ]; then
       break
     fi
     case $1 in
@@ -46,7 +46,7 @@ function SetOptions {
       -p | --project)
         shift; PROJECT_NAME=$1
         allows="prod,local"
-        if [[ ! " ${allows} " =~ " ${PROJECT_NAME} " ]]; then
+        if [[ ! " ${allows} " =~ ${PROJECT_NAME} ]]; then
           LOG "'-p, --project' requires value of [ ${allows} ]. (${PROJECT_NAME} is wrong)"
           USAGE
         fi
@@ -60,7 +60,7 @@ function SetOptions {
       --)
         ;;
       *)
-        params+=($1)
+        params+=("$1")
         ;;
     esac
     shift
@@ -79,7 +79,7 @@ function SetOptions {
 
 EOF
 }
-SetOptions $*
+SetOptions "$@"
 if [ $? -ne 0 ]; then
   USAGE
   exit 1
@@ -89,7 +89,7 @@ fi
 # main
 function main {
   ## prepare
-  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.volumes[]'"))
+  mapfile -t ENTRIES < <(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.volumes[]'")
   cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -98,7 +98,7 @@ EOF
   
   ## entries
   if [ ${#params[*]} -gt 0 ]; then
-    IFS=","; read -a ENTRIES <<< ${params[*]}; unset IFS
+    IFS=","; read -r -a ENTRIES <<< "${params[@]}"; unset IFS
   fi
   mtot=${#ENTRIES[*]}
   midx=1
@@ -112,8 +112,8 @@ EOF
 EOF
   
   ## process
-  for entry in ${ENTRIES[*]}; do
-    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
+  for entry in "${ENTRIES[@]}"; do
+    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot]" "\"$entry\""
     
     compose=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries[\"${PROJECT_NAME}\"] | .[] | select(.service == \"${entry}\") | \"\(.compose)\"'")
     
@@ -122,12 +122,13 @@ EOF
     IMAGE_NAME="${entry}"
     
     # 컨테이너에 mount 된 volume 목록 조회 
-    local list=$(EXEC_R "docker inspect --format '{{ json .Mounts }}' ${CONTAINER_NAME} | jq -r '.[] | \"\(.Name)|\(.Destination)\"'")
-    for item in ${list[*]}; do
+    local list
+    mapfile -t list < <(EXEC_R "docker inspect --format '{{ json .Mounts }}' ${CONTAINER_NAME} | jq -r '.[] | \"\(.Name)|\(.Destination)\"'")
+    for item in "${list[@]}"; do
       # mount 명이 null 인 경우는 제외
       # mount 명이 null 로 된 것은 상대경로의 파일 디렉토리를 의미
       #   ex) docker inspect --format '{{ json .Mounts }}' 'prod.apache'' | jq -r '.[] | "\(.Name)|\(.Source)|\(.Destination)"'
-      IFS="|" read -r VOLUME_NAME MOUNT_PATH <<< ${item}
+      IFS="|" read -r VOLUME_NAME MOUNT_PATH <<< "${item}"
       if [ "${VOLUME_NAME}" == "null" ]; then
         continue
       fi
@@ -148,7 +149,7 @@ EOF
       # 백업 후, 중지된 컨테이너를 실행
       exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
     done
-    let "midx = midx + 1"
+    ((midx++))
   done
 }
 main

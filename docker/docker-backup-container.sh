@@ -2,8 +2,8 @@
 
 # VAR
 CURRDIR=$( pwd -P )
-FUNCDIR=$( cd $( dirname $0 ) && pwd -P )
-BASEDIR=$( cd $( dirname $0 ) && cd .. && pwd -P )
+FUNCDIR=$( cd "$( dirname "$0" )" && pwd -P )
+BASEDIR=$( cd "$( dirname "$0" )" && cd .. && pwd -P )
 PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 # //VAR
 
@@ -24,17 +24,17 @@ OPTIONS="l,p:"
 LONGOPTIONS="list,project:,prod,local"
 eval "source \"$BASEDIR/common.sh\""
 function SetOptions {
-  opts=$( getopt --options $_OPTIONS,$OPTIONS \
-                 --longoptions $_LONGOPTIONS,$LONGOPTIONS \
-                 -- $* )
-  eval set -- $opts
+  opts=$( getopt --options "${_OPTIONS}",$OPTIONS \
+                 --longoptions "${_LONGOPTIONS}",$LONGOPTIONS \
+                 -- "$@" )
+  eval set -- "${opts}"
   
-  if [ $DEBUG_MODE == 1 ]; then
-    LOG "opts: " $opts
+  if [ "${DEBUG_MODE}" == 1 ]; then
+    LOG "opts: " "${opts}"
   fi
   
   while true; do
-    if [ -z $1 ]; then
+    if [ -z "$1" ]; then
       break
     fi
     case $1 in
@@ -48,7 +48,7 @@ function SetOptions {
       -p | --project)
         shift; PROJECT_NAME=$1
         allows="prod,local"
-        if [[ ! " ${allows} " =~ " ${PROJECT_NAME} " ]]; then
+        if [[ ! " ${allows} " =~ ${PROJECT_NAME} ]]; then
           LOG "'-p, --project' requires value of [ ${allows} ]. (${PROJECT_NAME} is wrong)"
           USAGE
         fi
@@ -62,7 +62,7 @@ function SetOptions {
       --)
         ;;
       *)
-        params+=($1)
+        params+=("$1")
         ;;
     esac
     shift
@@ -81,7 +81,7 @@ function SetOptions {
 
 EOF
 }
-SetOptions $*
+SetOptions "$@"
 if [ $? -ne 0 ]; then
   USAGE
   exit 1
@@ -91,7 +91,7 @@ fi
 # main
 function main {
   ## prepare
-  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.containers[]'"))
+  mapfile -t ENTRIES < <(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.containers[]'")
   cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -100,7 +100,7 @@ EOF
   
   ## entries
   if [ ${#params[*]} -gt 0 ]; then
-    IFS=","; read -a ENTRIES <<< ${params[*]}; unset IFS
+    IFS=","; read -r -a ENTRIES <<< "${params[@]}"; unset IFS
   fi
   mtot=${#ENTRIES[*]}
   midx=1
@@ -114,8 +114,8 @@ EOF
 EOF
   
   ## process
-  for entry in ${ENTRIES[*]}; do
-    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
+  for entry in "${ENTRIES[@]}"; do
+    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot]" "\"$entry\""
     
     compose=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries[\"${PROJECT_NAME}\"] | .[] | select(.service == \"${entry}\") | \"\(.compose)\"'")
     
@@ -127,13 +127,14 @@ EOF
     if [ -z "${rslt}" ]; then
       LOG "'${CONTAINER_NAME}' not running. attempting to start ..."
       exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
-      if [ ${exitCode} -ne 0 ]; then
+      if [ "${exitCode}" -ne 0 ]; then
         LOG "fail to start '${CONTAINER_NAME}'"
         exit
       fi
     fi
     
-    local CURR_TIME=`date +%Y%m%d_%H%M%S`
+    local CURR_TIME
+    CURR_TIME=$(date +%Y%m%d_%H%M%S)
     # 실행중인 컨테이너ID 확인
     CID=$(EXEC_R "docker ps --filter 'Name=^${CONTAINER_NAME}$' --format '{{.ID}}'")
     # 실행중인 컨테이너의 이미지에서 commit
@@ -152,7 +153,7 @@ EOF
     # ID로 삭제할 수 없음(https://stackoverflow.com/questions/38118791/can-t-delete-docker-image-with-dependent-child-images)
     # 태그로 지워야함
     # Error response from daemon: conflict: unable to delete 2e3651b1bda7 (cannot be forced) - image has dependent child images
-    rslt=($(EXEC_R "docker image ls '${CONTAINER_NAME}' --format '{{.Repository}}:{{.Tag}}' | tail -n +3"))
+    mapfile -t rslt < <(EXEC_R "docker image ls '${CONTAINER_NAME}' --format '{{.Repository}}:{{.Tag}}' | tail -n +3")
     if [ -n "${rslt[*]}" ]; then
       # 있으면 삭제
       exitCode=$(EXEC "docker rmi -f ${rslt[*]}")
@@ -162,7 +163,7 @@ EOF
     # latest 태그 이미지로 컨테이너 실행
     exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
     
-    let "midx = midx + 1"
+    ((midx++))
   done
 }
 main

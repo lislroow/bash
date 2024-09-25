@@ -2,8 +2,8 @@
 
 # VAR
 CURRDIR=$( pwd -P )
-FUNCDIR=$( cd $( dirname $0 ) && pwd -P )
-BASEDIR=$( cd $( dirname $0 ) && cd .. && pwd -P )
+FUNCDIR=$( cd "$( dirname "$0" )" && pwd -P )
+BASEDIR=$( cd "$( dirname "$0" )" && cd .. && pwd -P )
 PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 # //VAR
 
@@ -25,17 +25,17 @@ OPTIONS="l,p:,r:"
 LONGOPTIONS="list,project:,run:,prod,local,build,create,up,down,stop,restart"
 eval "source \"$BASEDIR/common.sh\""
 function SetOptions {
-  opts=$( getopt --options $_OPTIONS,$OPTIONS \
-                 --longoptions $_LONGOPTIONS,$LONGOPTIONS \
-                 -- $* )
-  eval set -- $opts
+  opts=$( getopt --options "${_OPTIONS}",$OPTIONS \
+                 --longoptions "${_LONGOPTIONS}",$LONGOPTIONS \
+                 -- "$@" )
+  eval set -- "${opts}"
   
-  if [ $DEBUG_MODE == 1 ]; then
-    LOG "opts: " $opts
+  if [ "${DEBUG_MODE}" == 1 ]; then
+    LOG "opts: " "${opts}"
   fi
   
   while true; do
-    if [ -z $1 ]; then
+    if [ -z "$1" ]; then
       break
     fi
     case $1 in
@@ -53,7 +53,7 @@ function SetOptions {
       -p | --project)
         shift; PROJECT_NAME=$1
         allows="prod,local"
-        if [[ ! " ${allows} " =~ " ${PROJECT_NAME} " ]]; then
+        if [[ ! " ${allows} " =~ ${PROJECT_NAME} ]]; then
           LOG "'-p, --project' requires value of [ ${allows} ]. (${PROJECT_NAME} is wrong)"
           USAGE
         fi
@@ -67,7 +67,7 @@ function SetOptions {
       -r | --run)
         shift; RUN_TYPE=$1
         allows="build,create,up,down,stop,restart"
-        if [[ ! " ${allows} " =~ " ${RUN_TYPE} " ]]; then
+        if [[ ! " ${allows} " =~ ${RUN_TYPE} ]]; then
           LOG "'-r, --run' requires value of [ ${allows} ]. (${RUN_TYPE} is wrong)"
           USAGE
         fi
@@ -93,7 +93,7 @@ function SetOptions {
       --)
         ;;
       *)
-        params+=($1)
+        params+=("$1")
         ;;
     esac
     shift
@@ -117,7 +117,7 @@ function SetOptions {
 
 EOF
 }
-SetOptions $*
+SetOptions "$@"
 if [ $? -ne 0 ]; then
   USAGE
   exit 1
@@ -127,7 +127,7 @@ fi
 # main
 function main {
   ## prepare
-  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries[\"${PROJECT_NAME}\"] | .[] | \"\(.service)\"'"))
+  mapfile -t ENTRIES < <(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries[\"${PROJECT_NAME}\"] | .[] | \"\(.service)\"'")
   cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -136,7 +136,7 @@ EOF
   
   ## entries
   if [ ${#params[*]} -gt 0 ]; then
-    IFS=","; read -a ENTRIES <<< ${params[*]}; unset IFS
+    IFS=","; read -r -a ENTRIES <<< "${params[@]}"; unset IFS
   fi
   mtot=${#ENTRIES[*]}
   midx=1
@@ -150,8 +150,8 @@ EOF
 EOF
   
   ## process
-  for entry in ${ENTRIES[*]}; do
-    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
+  for entry in "${ENTRIES[@]}"; do
+    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot]" "\"$entry\""
     
     compose=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries[\"${PROJECT_NAME}\"] | .[] | select(.service == \"${entry}\") | \"\(.compose)\"'")
     
@@ -177,7 +177,7 @@ EOF
         exitCode=$(EXEC "docker-compose -p ${PROJECT_NAME} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
         ;;
     esac
-    let "midx = midx + 1"
+    ((midx++))
   done
 }
 main

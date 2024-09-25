@@ -2,8 +2,8 @@
 
 # VAR
 CURRDIR=$( pwd -P )
-FUNCDIR=$( cd $( dirname $0 ) && pwd -P )
-BASEDIR=$( cd $( dirname $0 ) && cd .. && pwd -P )
+FUNCDIR=$( cd "$( dirname "$0" )" && pwd -P )
+BASEDIR=$( cd "$( dirname "$0" )" && cd .. && pwd -P )
 PROP=$( bash -c "cat \"$FUNCDIR/property.json\"" )
 # //VAR
 
@@ -25,17 +25,17 @@ OPTIONS="l:"
 LONGOPTIONS="list,from:,from-prod,from-local,to:,to-prod,to-local"
 eval "source \"$BASEDIR/common.sh\""
 function SetOptions {
-  opts=$( getopt --options $_OPTIONS,$OPTIONS \
-                 --longoptions $_LONGOPTIONS,$LONGOPTIONS \
-                 -- $* )
-  eval set -- $opts
+  opts=$( getopt --options "${_OPTIONS}",$OPTIONS \
+                 --longoptions "${_LONGOPTIONS}",$LONGOPTIONS \
+                 -- "$@" )
+  eval set -- "${opts}"
   
-  if [ $DEBUG_MODE == 1 ]; then
-    LOG "opts: " $opts
+  if [ "${DEBUG_MODE}" == 1 ]; then
+    LOG "opts: " "${opts}"
   fi
   
   while true; do
-    if [ -z $1 ]; then
+    if [ -z "$1" ]; then
       break
     fi
     case $1 in
@@ -47,7 +47,7 @@ function SetOptions {
       --from)
         shift; FROM_PROJECT=$1
         allows="prod,local"
-        if [[ ! " ${allows} " =~ " ${FROM_PROJECT} " ]]; then
+        if [[ ! " ${allows} " =~ ${FROM_PROJECT} ]]; then
           LOG "'--from' requires value of [ ${allows} ]. (${FROM_PROJECT} is wrong)"
           USAGE
         fi
@@ -58,12 +58,10 @@ function SetOptions {
       --from-local)
         FROM_PROJECT="local"
         ;;
-      --)
-        ;;
       --to)
         shift; TO_PROJECT=$1
         allows="prod,local"
-        if [[ ! " ${allows} " =~ " ${TO_PROJECT} " ]]; then
+        if [[ ! " ${allows} " =~ ${TO_PROJECT} ]]; then
           LOG "'--to' requires value of [ ${allows} ]. (${TO_PROJECT} is wrong)"
           USAGE
         fi
@@ -77,7 +75,7 @@ function SetOptions {
       --)
         ;;
       *)
-        params+=($1)
+        params+=("$1")
         ;;
     esac
     shift
@@ -102,7 +100,7 @@ function SetOptions {
 
 EOF
 }
-SetOptions $*
+SetOptions "$@"
 if [ $? -ne 0 ]; then
   USAGE
   exit 1
@@ -112,7 +110,7 @@ fi
 # main
 function main {
   ## prepare
-  ENTRIES=($(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.volumes[]'"))
+  mapfile -t ENTRIES < <(EXEC_R "cat $FUNCDIR/property.json | jq -r '.backup.volumes[]'")
   cat << EOF
 - main
   ENTRIES = [ ${ENTRIES[*]} ]
@@ -121,7 +119,7 @@ EOF
   
   ## entries
   if [ ${#params[*]} -gt 0 ]; then
-    IFS=","; read -a ENTRIES <<< ${params[*]}; unset IFS
+    IFS=","; read -r -a ENTRIES <<< "${params[@]}"; unset IFS
   fi
   mtot=${#ENTRIES[*]}
   midx=1
@@ -135,8 +133,8 @@ EOF
 EOF
   
   ## process
-  for entry in ${ENTRIES[*]}; do
-    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot] \"$entry\""
+  for entry in "${ENTRIES[@]}"; do
+    printf " \e[1;36m%s\e[0m %s\n" "[$midx/$mtot]" "\"$entry\""
     
     compose=$(EXEC_R "cat $FUNCDIR/property.json | jq -r '.entries[\"${PROJECT_NAME}\"] | .[] | select(.service == \"${entry}\") | \"\(.compose)\"'")
     
@@ -145,25 +143,26 @@ EOF
     IMAGE_NAME="${entry}"
     
     # 컨테이너에 mount 된 volume 목록 조회 
-    local list=$(EXEC_R "docker inspect --format '{{ json .Mounts }}' ${CONTAINER_NAME} | jq -r '.[] | \"\(.Name)|\(.Destination)\"'")
+    local list
+    mapfile -t list < <(EXEC_R "docker inspect --format '{{ json .Mounts }}' ${CONTAINER_NAME} | jq -r '.[] | \"\(.Name)|\(.Destination)\"'")
     
     # 컨테이너가 생성되지 않았을 때 --no-start 로 생성만 실행
     if [ -z "${list[*]}" ]; then
       exitCode=$(EXEC "docker-compose -p ${TO_PROJECT} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' --no-start")
       # 생성 실패 시 continue
       LOG "exitCode=${exitCode}"
-      if [ ${exitCode} -ne 0 ]; then
+      if [ "${exitCode}" -ne 0 ]; then
         continue
       else
         list=$(EXEC_R "docker inspect --format '{{ json .Mounts }}' ${CONTAINER_NAME} | jq -r '.[] | \"\(.Name)|\(.Destination)\"'")
       fi
     fi
     
-    for item in ${list[*]}; do
+    for item in "${list[@]}"; do
       # mount 명이 null 인 경우는 제외
       # mount 명이 null 로 된 것은 상대경로의 파일 디렉토리를 의미
       #   ex) docker inspect --format '{{ json .Mounts }}' 'prod.apache'' | jq -r '.[] | "\(.Name)|\(.Source)|\(.Destination)"'
-      IFS="|" read -r VOLUME_NAME MOUNT_PATH <<< ${item}
+      IFS="|" read -r VOLUME_NAME MOUNT_PATH <<< "${item}"
       if [ "${VOLUME_NAME}" == "null" ]; then
         exitCode=$(EXEC "docker-compose -p ${TO_PROJECT} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
         continue
@@ -191,7 +190,8 @@ EOF
       # 백업 후, 중지된 컨테이너를 실행
       exitCode=$(EXEC "docker-compose -p ${TO_PROJECT} -f '${COMPOSE_FILE}' up '${CONTAINER_NAME}' -d")
     done
-    let "midx = midx + 1"
+
+    ((midx++))
   done
 }
 main
