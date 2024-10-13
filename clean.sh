@@ -30,4 +30,5 @@ for item in "${LIST[@]}"; do
     continue
   fi
   rm -rf "${BASEDIR:?}/${item:?}"
+  rm -rf "${BASEDIR:?}"/*/"${item:?}"
 done
