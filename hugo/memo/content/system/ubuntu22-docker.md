@@ -338,17 +338,21 @@ services:
   `http: 5000 (입력)`, `Enable Docker V1 API (체크)`
 - realms 'Docker Bearer Token Realm' 추가
 - daemon.json 항목 추가
-  - docker 이미지를 생성할 때 dns lookup 을 할 수 있도록 설정 추가
+   - docker 이미지를 생성할 때 dns lookup 을 할 수 있도록 설정 추가
+   - 원격 api 요청 수신 설정
+
 ```
 cat << EOF > /etc/docker/daemon.json
 {
   "insecure-registries": ["localhost:5000"],
-  "dns": ["8.8.8.8", "8.8.4.4"]
+  "dns": ["8.8.8.8", "8.8.4.4"],
+  "hosts": ["tcp://0.0.0.0:2375", "unix:///var/run/docker.sock"]
 }
 EOF
 ```
 - systemctl restart docker
 - docker login http://localhost:5000
+
 
 ##### 2) docker 이미지 push
 
@@ -416,6 +420,22 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 apt-get update
 apt-get install docker-ce docker-ce-cli containerd.io
+```
+
+#### docker host 설정
+
+```shell
+/usr/lib/systemd/system/docker.service
+
+#ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+ExecStart=/usr/bin/dockerd --containerd=/run/containerd/containerd.sock
+
+cat << EOF > /etc/docker/daemon.json
+{
+  ... ,
+  "hosts": ["tcp://0.0.0.0:2375", "unix:///var/run/docker.sock"]
+}
+EOF
 ```
 
 #### locale
