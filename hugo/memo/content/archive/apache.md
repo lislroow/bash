@@ -539,7 +539,7 @@ JAVA_OPTS="${JAVA_OPTS} -Dfile.encoding=utf-8"
 JAVA_OPTS="${JAVA_OPTS} -Djava.library.path=${BASE_DIR}/lib"
 JAVA_OPTS="${JAVA_OPTS} -Doracle.jdbc.autoCommitSpecCompliant=false"
 JAVA_OPTS="${JAVA_OPTS} -javaagent:${SCOUTER_AGENT_DIR}/scouter.agent.jar"
-JAVA_OPTS="${JAVA_OPTS} -Dscuter.config=${SCOUTER_AGENT_DIR}/conf/scouter.conf"
+JAVA_OPTS="${JAVA_OPTS} -Dscouter.config=${SCOUTER_AGENT_DIR}/conf/scouter.conf"
 JAVA_OPTS="${JAVA_OPTS} -Dobj_name=${INSTANCE_ID}_1"
 JAVA_OPTS="${JAVA_OPTS} -Djava.net.preferIPv4Stack=true"
 
