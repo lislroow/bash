@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASE_DIR=$( cd $( dirname $0 ) && pwd -P )
+BASEDIR=$( cd "$( dirname "$0" )" && pwd -P )
 IMAGE_NAME="amazoncorretto:17-alpine-jdk-scouter"
 DOCKER_USER="lislroow"
 REGISTRY="docker.io"
