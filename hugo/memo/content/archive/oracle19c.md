@@ -40,7 +40,7 @@ $ unzip -O cp949 -d txt/ zipcode_DB.zip
 #$ convmv -f cp949 -t utf-8 --notest ./txt/*
 
 # zipcode.ctl 생성
-$ cat <<- EOF ./zipcode.ctl
+$ cat <<- EOF > zipcode.ctl
 LOAD DATA
 CHARACTERSET AL32UTF8
 APPEND
