@@ -11,7 +11,7 @@
       "includes": [
         "develop/dbeaver",
         "develop/eclipse",
-        "develop/tools/java",
+        "develop/tools/corretto",
         "develop/tools/spring",
         "develop/workspace"
       ],
