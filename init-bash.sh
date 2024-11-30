@@ -9,20 +9,27 @@ set -o vi
 
 export LANG=ko_KR.utf8
 
-export JAVA8="/c/develop/tools/java/corretto-8.422.05.1"
-export JAVA11="/c/develop/tools/java/corretto-11.0.24.8.1"
-export JAVA17="/c/develop/tools/java/corretto-17.0.12.7.1"
-export JAVA21="/c/develop/tools/java/corretto-21.0.4.7.1"
+export JAVA8="/c/develop/tools/corretto/corretto-8.422.05.1"
+export JAVA11="/c/develop/tools/corretto/corretto-11.0.24.8.1"
+export JAVA17="/c/develop/tools/corretto/corretto-17.0.12.7.1"
+export JAVA21="/c/develop/tools/corretto/corretto-21.0.4.7.1"
 export JAVA_HOME="\$JAVA17"
 PATH="\$JAVA_HOME/bin:\$PATH"
+
 export MAVEN_HOME="/c/develop/tools/maven/maven-3.8.8"
 PATH="\$MAVEN_HOME/bin:\$PATH"
+
 export GRADLE_HOME="/c/develop/tools/gradle"
 PATH="\$GRADLE_HOME/bin:\$PATH"
+
 export SPRING23="/c/develop/tools/spring/spring-2.3.8.RELEASE"
 export SPRING27="/c/develop/tools/spring/spring-2.7.18"
 export SPRING3="/c/develop/tools/spring/spring-3.4.0"
 PATH="\$SPRING3/bin:\$PATH"
+
+export PYTHON_HOME="/c/develop/tools/python"
+PATH="\$PYTHON_HOME:\$PATH"
+PATH="\$PYTHON_HOME/Scripts:\$PATH"
 
 PATH="$BASHDIR:\$PATH"
 PATH="$BASHDIR/bin:\$PATH"
@@ -37,6 +44,7 @@ export PATH
 
 alias curl="curl -s"
 alias cdbash="cd '$BASHDIR'"
+alias cdtemp="cd /c/temp"
 alias cddocker="cd '$BASHDIR'/docker"
 alias cdweb="cd '/c/project/react'"
 alias cdhugo="cd '/c/bash/hugo/memo'"
@@ -66,6 +74,7 @@ cat << EOF
 [ alias ]
 
   alias cdbash="cd '$BASHDIR'"
+  alias cdbash="cd /c/temp"
   alias cddocker="cd '$BASHDIR'/docker"
   alias cdweb="cd '/c/project/react'"
   alias cdhugo="cd '/c/linux/hugo/memo'"
