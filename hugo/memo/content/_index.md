@@ -258,6 +258,17 @@ $ cat target.tgz.* | tar zxvf -
 $ tar cvfz tomcat.tgz --exclude 'work' --exclude 'logs' /engn/servers
 ```
 
+#### - 경로 유지: --absolute-name, -P, --transform
+```shell
+$ cd / && tar cvfzP etc.tgz etc/docker/daemon.json
+$ tar tvfz etc.tgz 
+-rw-r--r-- root/root       147 2024-11-09 21:13 etc/docker/daemon.json
+
+$ tar cvfzP etc.tgz --transform 's|^/||' /etc/docker/daemon.json
+$ tar tvfz etc.tgz 
+-rw-r--r-- root/root       147 2024-11-09 21:13 etc/docker/daemon.json
+```
+
 
 ### * `lsof`
 ```shell
