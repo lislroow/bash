@@ -21,7 +21,7 @@ export GRADLE_HOME="/c/develop/tools/gradle"
 PATH="\$GRADLE_HOME/bin:\$PATH"
 export SPRING23="/c/develop/tools/spring/spring-2.3.8.RELEASE"
 export SPRING27="/c/develop/tools/spring/spring-2.7.18"
-export SPRING3="/c/develop/tools/spring/spring-3.3.3"
+export SPRING3="/c/develop/tools/spring/spring-3.4.0"
 PATH="\$SPRING3/bin:\$PATH"
 
 PATH="$BASHDIR:\$PATH"
@@ -32,6 +32,7 @@ PATH="$BASHDIR/docker:\$PATH"
 PATH="$BASHDIR/build:\$PATH"
 PATH="$BASHDIR/docker/kafka-connector:\$PATH"
 PATH="$BASHDIR/nginx:/c/develop/tools/nginx:\$PATH"
+PATH="/c/Program Files/7-Zip:\$PATH"
 export PATH
 
 alias curl="curl -s"
@@ -44,6 +45,8 @@ alias gitlog="git log --oneline"
 
 alias backup='backup.sh develop project editplus react hyper-v python linux'
 alias restore='restore.sh develop project editplus react hyper-v python linux'
+
+source "${HOME}/.sdkman/bin/sdkman-init.sh"
 
 EOF
 
