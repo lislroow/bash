@@ -4,6 +4,45 @@
     "env": [],
     "path": []
   },
+  
+  "archive": {
+    "minimal": {
+      "basedir": "/c",
+      "includes": [
+        "develop/dbeaver",
+        "develop/eclipse",
+        "develop/tools/java",
+        "develop/tools/spring",
+        "develop/workspace"
+      ],
+      "excludes": [
+        "develop/eclipse/configuration/org.eclipse.equinox.app",
+        "develop/eclipse/configuration/org.eclipse.core.runtime/.manager",
+        "develop/workspace/.metadata/.lock",
+        "develop/workspace/.metadata/.log",
+        "develop/workspace/.metadata/.plugins/org.eclipse.core.resources",
+        "develop/workspace/.metadata/.plugins/org.eclipse.m2e.logback",
+        "develop/workspace/.metadata/.plugins/org.eclipse.egit.ui",
+        "develop/workspace/.metadata/.plugins/org.eclipse.jdt.core",
+        "develop/workspace/.metadata/.plugins/com.python.pydev.analysis",
+        "develop/workspace/.metadata/.plugins/com.genuitec.copilot4eclipse",
+        "develop/workspace/.metadata/.plugins/org.eclipse.buildship.core/project-preferences",
+        "develop/workspace/.metadata/.plugins/org.eclipse.team.ui",
+        "develop/workspace/.metadata/.plugins/org.eclipse.jdt.debug.ui",
+        "develop/workspace/.metadata/.plugins/org.eclipse.buildship.ui",
+        "develop/workspace/.metadata/.plugins/org.eclipse.wst.xml.core",
+        "develop/workspace/.metadata/.plugins/org.eclipse.debug.core",
+        "develop/workspace/.metadata/.plugins/org.eclipse.debug.ui",
+        "develop/workspace/.metadata/.plugins/org.eclipse.m2e.core",
+        "develop/workspace/.metadata/.plugins/org.eclipse.m2e.core.ui",
+        "develop/workspace/.metadata/.plugins/org.eclipse.ui.ide",
+        "develop/workspace/.metadata/.plugins/org.eclipse.wildwebdeveloper.xml",
+        "develop/workspace/.metadata/.plugins/org.eclipse.wst.sse.core",
+        "develop/workspace/.sonarlint",
+        "develop/workspace/languageServers-log"
+      ]
+    }
+  },
   "backup": {
     "drive": "/d",
     "entries": [
@@ -59,42 +98,5 @@
         "source": "/c/유튜브"
       }
     ]
-  },
-  "archive": {
-    "minimal": {
-      "basedir": "/c",
-      "includes": [
-        "develop/dbeaver",
-        "develop/eclipse",
-        "develop/tools/java",
-        "develop/tools/spring",
-        "develop/workspace"
-      ],
-      "excludes": [
-        "develop/eclipse/configuration/org.eclipse.equinox.app",
-        "develop/eclipse/configuration/org.eclipse.core.runtime/.manager",
-        "develop/workspace/.metadata/.lock",
-        "develop/workspace/.metadata/.log",
-        "develop/workspace/.metadata/.plugins/org.eclipse.core.resources",
-        "develop/workspace/.metadata/.plugins/org.eclipse.m2e.logback",
-        "develop/workspace/.metadata/.plugins/org.eclipse.egit.ui",
-        "develop/workspace/.metadata/.plugins/org.eclipse.jdt.core",
-        "develop/workspace/.metadata/.plugins/com.python.pydev.analysis",
-        "develop/workspace/.metadata/.plugins/com.genuitec.copilot4eclipse",
-        "develop/workspace/.metadata/.plugins/org.eclipse.buildship.core/project-preferences",
-        "develop/workspace/.metadata/.plugins/org.eclipse.team.ui",
-        "develop/workspace/.metadata/.plugins/org.eclipse.jdt.debug.ui",
-        "develop/workspace/.metadata/.plugins/org.eclipse.buildship.ui",
-        "develop/workspace/.metadata/.plugins/org.eclipse.wst.xml.core",
-        "develop/workspace/.metadata/.plugins/org.eclipse.debug.core",
-        "develop/workspace/.metadata/.plugins/org.eclipse.m2e.core",
-        "develop/workspace/.metadata/.plugins/org.eclipse.m2e.core.ui",
-        "develop/workspace/.metadata/.plugins/org.eclipse.ui.ide",
-        "develop/workspace/.metadata/.plugins/org.eclipse.wildwebdeveloper.xml",
-        "develop/workspace/.metadata/.plugins/org.eclipse.wst.sse.core",
-        "develop/workspace/.sonarlint",
-        "develop/workspace/languageServers-log"
-      ]
-    }
   }
 }
