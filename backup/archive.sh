@@ -9,7 +9,7 @@ CURRDIR=$( pwd -P )
 function USAGE {
   cat << EOF
 - USAGE
-Usage: ${0##*/} --target minimal
+Usage: ${0##*/} --target develop
 
 EOF
   exit 1
@@ -56,7 +56,7 @@ function SetOptions {
   done
   
   if [ -z "${TARGET}" ]; then
-    TARGET=minimal
+    TARGET=develop
   fi
   
   if [ "${DEBUG_MODE}" == "1" ]; then
@@ -77,14 +77,24 @@ function main {
   mapfile -t excludes < <(EXEC_R "jq -r '.archive.${TARGET}.excludes[]' < ${FUNCDIR}/property.json")
   
   basedir=$( GetProp "archive.${TARGET}.basedir" )
+  spf=$( GetProp "archive.${TARGET}.spf" )
   
-  CMD="cd ${basedir} && 7z a ${CURRDIR}/develop.zip \
-    ${includes[@]} \
-    $(printf -- "-xr!\"%s\" " "${excludes[@]}") \
-    -spf"
+  OUTPUT_FILE=$(printf "%s_%s.zip" ${TARGET} $(date +%Y%m%d_%H%M%S))
+  
+  CMD="cd ${basedir} && 7z a ${CURRDIR}/${OUTPUT_FILE} ${includes[@]}"
+  
+  if [ ${#excludes[@]} -gt 0 ]; then
+    CMD="${CMD} $(printf -- "-xr!\"%s\" " "${excludes[@]}")"
+  fi
+  
+  if [ "${spf}" == 'true' ]; then
+    CMD="${CMD} -spf"
+  fi
+  
   if [ "${DEBUG_MODE}" == "1" ]; then
     CMD="${CMD} -bb3"
   fi
+  
   EXEC "${CMD}"
 }
 

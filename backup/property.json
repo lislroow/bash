@@ -6,8 +6,9 @@
   },
   
   "archive": {
-    "minimal": {
+    "develop": {
       "basedir": "/c",
+      "spf": true,
       "includes": [
         "develop/dbeaver",
         "develop/eclipse",
@@ -40,6 +41,29 @@
         "develop/workspace/.metadata/.plugins/org.eclipse.wst.sse.core",
         "develop/workspace/.sonarlint",
         "develop/workspace/languageServers-log"
+      ]
+    },
+    "maven": {
+      "basedir": "$HOME",
+      "spf": false,
+      "includes": [
+        ".m2"
+      ],
+      "excludes": []
+    },
+    "gradle": {
+      "basedir": "$HOME",
+      "spf": false,
+      "includes": [
+        ".gradle"
+      ],
+      "excludes": [
+        ".tmp",
+        ".gradle/caches",
+        ".gradle/daemon",
+        ".gradle/undefined-build",
+        "*/*.lock",
+        "*/*.out.log"
       ]
     }
   },
