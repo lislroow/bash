@@ -352,6 +352,12 @@ git-bash 에서 ssl 통신 대상 서버가 ca 에 등록되지 않은 crt 인�
 
 crt 인증서를 `C:\Program Files\Git\mingw64\ssl\certs\ca-bundle.crt` 에 추가
 
+```
+# 간편 테스트
+$ git ls-remote https://es01:9280
+fatal: unable to access 'https://es01:9280/': SSL certificate problem: unable to get local issuer certificate
+```
+
 #### - "java" cacerts
 java 에서 ssl 통신 대상 서버가 ca 에 등록되지 않은 crt 인증서를 사용할 경우 `$JAVA_HOME/bin/keytool` 명령으로 java 에 crt 인증서 등록
 
