@@ -19,7 +19,7 @@ PATH="\$JAVA_HOME/bin:\$PATH"
 export MAVEN_HOME="/c/develop/tools/maven/maven-3.8.8"
 PATH="\$MAVEN_HOME/bin:\$PATH"
 
-export GRADLE_HOME="/c/develop/tools/gradle"
+export GRADLE_HOME="/c/develop/tools/gradle/gradle-8.9"
 PATH="\$GRADLE_HOME/bin:\$PATH"
 
 export SPRING23="/c/develop/tools/spring/spring-2.3.8.RELEASE"
