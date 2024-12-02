@@ -65,6 +65,31 @@
         "*/*.lock",
         "*/*.out.log"
       ]
+    },
+    "netsarang": {
+      "basedir": "$HOME/Documents",
+      "spf": false,
+      "includes": [
+        "\"NetSarang Computer\""
+      ],
+      "excludes": []
+    },
+    "roaming": {
+      "basedir": "$HOME/AppData/Roaming",
+      "spf": false,
+      "includes": [
+        "DBeaverData",
+        "EditPlus"
+      ],
+      "excludes": []
+    },
+    "locallow": {
+      "basedir": "$HOME/AppData/LocalLow",
+      "spf": false,
+      "includes": [
+        "NPKI"
+      ],
+      "excludes": []
     }
   },
   "backup": {
