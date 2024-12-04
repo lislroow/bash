@@ -1,3 +1,19 @@
+#### grep -q
+
+- `grep -q`: "quiet" 또는 "silent" 모드로 실행
+- grep은 검색 결과를 출력하지 않고, 검색 결과의 유무에 따라 exitCode 만 반환
+- 있을 경우 exitCode 는 0 이되고, 그렇지 않을 경우 1을 반환
+
+```shell
+root@a54d5bb18443:/etc# grep -q 'root' passwd
+root@a54d5bb18443:/etc# echo $?
+0
+root@a54d5bb18443:/etc# grep -q 'root2' passwd
+root@a54d5bb18443:/etc# echo $?
+1
+root@a54d5bb18443:/etc# 
+```
+
 #### ssh 파일 전송
 
 ```
