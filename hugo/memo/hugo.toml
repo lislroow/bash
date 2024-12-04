@@ -51,6 +51,16 @@ theme = 'simple'
     url = '/archive/oracle19c/'
     weight = 3
   [[menu.main]]
+    identifier = 'shell'
+    name = '+ shell'
+    weight = 1
+  [[menu.main]]
+    parent = 'shell'
+    identifier = 'bash'
+    name = 'bash'
+    url = '/shell/bash/'
+    weight = 3
+  [[menu.main]]
     parent = 'archive'
     identifier = 'others'
     name = 'others'
