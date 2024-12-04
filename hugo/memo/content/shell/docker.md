@@ -1,3 +1,23 @@
+#### lets encrypt
+
+```shell
+docker run -it --rm --name certbot -p 80:80 \
+    -v "/etc/letsencrypt:/etc/letsencrypt" \
+    -v "/lib/letsencrypt:/var/lib/letsencrypt" \
+    certbot/certbot certonly --standalone -d 'nexus.mgkim.net'
+
+---
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Requesting a certificate for nexus.mgkim.net
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/nexus.mgkim.net/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/nexus.mgkim.net/privkey.pem
+This certificate expires on 2025-03-04.
+These files will be updated when the certificate renews.
+```
+
+
 #### postgres /docker-entrypoint-initdb.d
 
 - /docker-entrypoint-initdb.d 디렉토리에 sh, sql 파일이 있으면 스크립트를 실행
