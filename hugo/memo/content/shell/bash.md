@@ -1,3 +1,11 @@
+#### ssh 파일 전송
+
+```
+tar cvfz - N305.sh \
+>  | ssh root@172.28.200.2 'tar zxvf - -C /root/bin'
+```
+
+
 #### getopts
 
 - getopts는 옵션을 하나씩 처리할 때마다 옵션 문자를 OPTIND와 같은 변수에 저장하고, 각 옵션에 대한 인수는 $OPTARG에 저장됩니다.
