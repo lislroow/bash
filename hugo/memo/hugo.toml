@@ -61,6 +61,12 @@ theme = 'simple'
     url = '/shell/bash/'
     weight = 3
   [[menu.main]]
+    parent = 'shell'
+    identifier = 'docker'
+    name = 'docker'
+    url = '/shell/docker/'
+    weight = 3
+  [[menu.main]]
     parent = 'archive'
     identifier = 'others'
     name = 'others'
