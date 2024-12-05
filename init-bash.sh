@@ -47,7 +47,7 @@ alias cdbash="cd '$BASHDIR'"
 alias cdtemp="cd /c/temp"
 alias cddocker="cd '$BASHDIR'/docker"
 alias cdweb="cd '/c/project/react'"
-alias cdhugo="cd '/c/bash/hugo/memo'"
+alias cdmemo="cd '/c/bash/hugo/memo'"
 alias cdnginx="cd '/c/develop/tools/nginx'"
 alias gitlog="git log --oneline"
 
@@ -77,7 +77,7 @@ cat << EOF
   alias cdbash="cd /c/temp"
   alias cddocker="cd '$BASHDIR'/docker"
   alias cdweb="cd '/c/project/react'"
-  alias cdhugo="cd '/c/linux/hugo/memo'"
+  alias cdmemo="cd '/c/linux/hugo/memo'"
   alias cdnginx="cd '/c/develop/tools/nginx'"
   alias gitlog="git log --oneline"
   
