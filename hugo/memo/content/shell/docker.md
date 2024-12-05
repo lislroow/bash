@@ -1,3 +1,17 @@
+#### docker login
+
+- `~/.docker/config.json` 파일에 인증정보 `echo -n "admin:password" | base64` 를 추가 (-n: newline 추가 하지 않음)
+
+```json
+{
+  "auths": {
+    "docker.mgkim.net:5000": {
+      "auth": "YWRtaW46cGFzc3dvcmQ="  // base64(username:password)
+    }
+  }
+}
+```
+
 #### lets encrypt
 
 ```shell
