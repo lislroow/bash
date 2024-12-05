@@ -14,21 +14,31 @@
 
 #### lets encrypt
 
+- ~/bin/letsencrypt.sh
+
 ```shell
+#!/bin/bash
+
+echo '[1/4] Set domain'
+read -p "Enter the x (x.mgkim.net) : " -ei "x" domain
+printf $'\n'$'\n'
+
+echo '[2/4] Shutdown nginx (http:80)'
+docker stop nginx
+printf $'\n'$'\n'
+
+echo '[3/4] Generate cert'
 docker run -it --rm --name certbot -p 80:80 \
     -v "/etc/letsencrypt:/etc/letsencrypt" \
     -v "/lib/letsencrypt:/var/lib/letsencrypt" \
-    certbot/certbot certonly --standalone -d 'nexus.mgkim.net'
+    certbot/certbot certonly --standalone -d "${domain}.mgkim.net"
+printf $'\n'$'\n'
 
----
-Saving debug log to /var/log/letsencrypt/letsencrypt.log
-Requesting a certificate for nexus.mgkim.net
+echo '[4/4] start nginx'
+docker start nginx
+printf $'\n'$'\n'
 
-Successfully received certificate.
-Certificate is saved at: /etc/letsencrypt/live/nexus.mgkim.net/fullchain.pem
-Key is saved at:         /etc/letsencrypt/live/nexus.mgkim.net/privkey.pem
-This certificate expires on 2025-03-04.
-These files will be updated when the certificate renews.
+echo 'finish'
 ```
 
 
