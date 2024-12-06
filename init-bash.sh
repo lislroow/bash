@@ -16,7 +16,7 @@ export JAVA21="/c/develop/tools/corretto/corretto-21.0.4.7.1"
 export JAVA_HOME="\$JAVA17"
 PATH="\$JAVA_HOME/bin:\$PATH"
 
-export MAVEN_HOME="/c/develop/tools/maven/maven-3.8.8"
+export MAVEN_HOME="/c/develop/tools/maven/maven-3.9.3"
 PATH="\$MAVEN_HOME/bin:\$PATH"
 
 export GRADLE_HOME="/c/develop/tools/gradle/gradle-8.9"

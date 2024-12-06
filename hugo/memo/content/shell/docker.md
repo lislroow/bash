@@ -1,3 +1,13 @@
+#### docker search
+
+```shell
+$ docker search gitlab/gitlab-runner
+NAME                                     DESCRIPTION                                     STARS     OFFICIAL
+gitlab/gitlab-runner                     GitLab CI Multi Runner used to fetch and run…   957
+
+$ curl -s https://registry.hub.docker.com/v2/repositories/gitlab/gitlab-runner/tags | grep '"name"'
+```
+
 #### docker login
 
 - `~/.docker/config.json` 파일에 인증정보 `echo -n "admin:password" | base64` 를 추가 (-n: newline 추가 하지 않음)
