@@ -9,7 +9,7 @@ set -o vi
 
 export LANG=ko_KR.utf8
 
-export JAVA8="/c/develop/tools/corretto/corretto-8.422.05.1"
+export JAVA8="/c/develop/tools/corretto/corretto-1.8.0_382"
 export JAVA11="/c/develop/tools/corretto/corretto-11.0.24.8.1"
 export JAVA17="/c/develop/tools/corretto/corretto-17.0.12.7.1"
 export JAVA21="/c/develop/tools/corretto/corretto-21.0.4.7.1"
@@ -49,6 +49,8 @@ alias cddocker="cd '$BASHDIR'/docker"
 alias cdweb="cd '/c/project/react'"
 alias cdmemo="cd '/c/bash/hugo/memo'"
 alias cdnginx="cd '/c/develop/tools/nginx'"
+alias cdscouter="cd '/c/develop/tools/scouter/scouter.server'"
+alias cdproject="cd '/c/project'"
 alias gitlog="git log --oneline"
 
 alias backup='backup.sh develop project editplus react hyper-v python linux'
@@ -79,6 +81,8 @@ cat << EOF
   alias cdweb="cd '/c/project/react'"
   alias cdmemo="cd '/c/linux/hugo/memo'"
   alias cdnginx="cd '/c/develop/tools/nginx'"
+  alias cdscouter="cd '/c/develop/tools/scouter/scouter.server'"
+  alias cdproject="cd '/c/project'"
   alias gitlog="git log --oneline"
   
   alias backup='backup.sh develop project editplus react hyper-v python linux'
