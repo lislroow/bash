@@ -9,10 +9,10 @@ set -o vi
 
 export LANG=ko_KR.utf8
 
-export JAVA8="/c/develop/tools/corretto/corretto-1.8.0_382"
-export JAVA11="/c/develop/tools/corretto/corretto-11.0.24.8.1"
-export JAVA17="/c/develop/tools/corretto/corretto-17.0.12.7.1"
-export JAVA21="/c/develop/tools/corretto/corretto-21.0.4.7.1"
+export JAVA8="/c/develop/tools/corretto/corretto-8"
+export JAVA11="/c/develop/tools/corretto/corretto-11"
+export JAVA17="/c/develop/tools/corretto/corretto-17"
+export JAVA21="/c/develop/tools/corretto/corretto-21"
 export JAVA_HOME="\$JAVA17"
 PATH="\$JAVA_HOME/bin:\$PATH"
 
