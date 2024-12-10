@@ -14,6 +14,7 @@
         "develop/eclipse",
         "develop/tools/corretto",
         "develop/tools/spring",
+        "develop/tools/docker",
         "develop/workspace"
       ],
       "excludes": [
@@ -39,6 +40,10 @@
         "develop/workspace/.metadata/.plugins/org.eclipse.ui.ide",
         "develop/workspace/.metadata/.plugins/org.eclipse.wildwebdeveloper.xml",
         "develop/workspace/.metadata/.plugins/org.eclipse.wst.sse.core",
+        "develop/workspace/.metadata/.plugins/org.eclipse.ui.workbench",
+        "develop/workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.rse.core.prefs",
+        "develop/workspace/.metadata/.plugins/org.eclipse.m2e.jdt",
+        "develop/workspace/.metadata/.plugins/org.eclipse.ui.workbench.texteditor",
         "develop/workspace/.sonarlint",
         "develop/workspace/languageServers-log"
       ]
