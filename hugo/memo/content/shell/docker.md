@@ -1,3 +1,43 @@
+#### docker ENTRYPOINT
+
+```
+ENTRYPOINT ["/bin/bash", "-c", "pwd && ls -al && /app/start-scouter.sh"]
+```
+
+```
+/app
+total 36
+drwxr-xr-x    1 root     root            18 Dec 11 07:53 .
+drwxr-xr-x    1 root     root            17 Dec 11 07:53 ..
+drwxr-xr-x    2 root     root           116 Dec 10 22:33 conf
+drwxr-xr-x   17 root     root          4096 Dec 11 07:42 data
+drwxr-xr-x    2 root     root            24 Dec  9 21:20 extweb
+drwxr-xr-x    2 root     root          8192 Dec 10 22:33 lib
+drwxr-xr-x    2 root     root          4096 Dec  9 21:20 plugin
+-rw-r--r--    1 root     root          5936 Dec  9 21:20 scouter-server-boot.jar
+-rwxr-xr-x    1 root     root           507 Dec 11 07:48 start-scouter.sh
+-rwxr-xr-x    1 root     root            90 Dec 11 07:48 stop-scouter.sh
+/bin/bash: line 1: /app/start-scouter.sh: cannot execute: required file not found
+```
+
+```
+$ file start-scouter.sh 
+start-scouter.sh: Bourne-Again shell script, ASCII text executable, with CRLF line terminators
+
+$ dos2unix start-scouter.sh
+dos2unix: converting file start-scouter.sh to Unix format...
+
+$ file start-scouter.sh 
+start-scouter.sh: Bourne-Again shell script, ASCII text executable
+```
+
+```
+docker run --rm -it scouter-image /bin/bash \
+cd /app \
+./start-scouter.sh
+```
+
+
 #### docker search
 
 ```shell
