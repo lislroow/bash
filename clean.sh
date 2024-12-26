@@ -22,6 +22,7 @@ target
 .gradle
 build
 bin
+.scannerwork
 
 EOF
 
