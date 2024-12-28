@@ -23,6 +23,9 @@ target
 build
 bin
 .scannerwork
+.sonarlint
+heapdump
+logs
 
 EOF
 
