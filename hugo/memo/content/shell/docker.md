@@ -51,6 +51,7 @@ $ curl -s https://registry.hub.docker.com/v2/repositories/gitlab/gitlab-runner/t
 #### docker login
 
 - `~/.docker/config.json` 파일에 인증정보 `echo -n "admin:password" | base64` 를 추가 (-n: newline 추가 하지 않음)
+- [중요] nexus 가 docker 로 실행 중일 경우 /etc/hosts 에 nexus 르 추가할 것. dns(8.8.8.8) 에서 nexus 를 찾지 못함
 
 ```json
 {
