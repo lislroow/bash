@@ -13,18 +13,32 @@ Usage:
 EOF
   exit 1
 }
-OPTIONS="fp:"
+OPTIONS="ap:"
 source ${BASEDIR}/common.inc
 # -- common
 
 
 # init
+if [ $# -eq 0 ]; then
+  set -- -a
+fi
+
 set -A PROC_LIST
 
 function init {
   typeset -i proc_idx=0
   while getopts "${_OPTIONS},${OPTIONS}" opt; do
     case "$opt" in
+      a)
+        typeset -i i=0
+        OLD_IFS="$IFS"
+        while IFS= read line; do
+          PROC_LIST[i]=$line
+          i=$((++i))
+        done < /root/bin/check-process.lst
+        IFS="$OLD_IFS"
+        break
+        ;;
       p)
         PROC_LIST[proc_idx]="${OPTARG}"
         proc_idx=$((proc_idx + 1))
@@ -57,7 +71,9 @@ function CheckProcess {
     set -A INBOUND_LIST
     
     ## 프로세스 검색
-    str="ps -ef | grep -v grep | grep $procItem | awk '{ print \$2 }'"
+    typeset procNm=$(expr "${procItem}" : "\(.*\)|.*")
+    typeset procGrep=$(expr "${procItem}" : ".*|\(.*\)")
+    str="ps -ef | grep -v grep | grep $procGrep | awk '{ print \$2 }'"
     LOG 2 $str
     set -A pidList -- $(eval $str)
     for pidItem in ${pidList[@]}; do
@@ -113,7 +129,7 @@ function CheckProcess {
     
     ## 프로세스별 socket 출력
     printf "───────────────────────────────────────────────────────────────\n"
-    printf "* process: %s %s개\n" "${procItem}" "${#pidList[@]}"
+    printf "* process: %s %s개\n" "${procNm}" "${#pidList[@]}"
     i=1
     for item in ${pidList[@]}; do
       printf "  %s) %s\n" "$i" "${item}"
