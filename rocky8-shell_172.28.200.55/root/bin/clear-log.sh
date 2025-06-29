@@ -61,7 +61,7 @@ init "$@"
 LOG 1 "== script started"
 START_TIME=$(date +%s)
 
-## find log files
+# main
 function FindLogFiles {
   typeset FIND_COND="-type f ! -name '*.gz'"
   if [ -n "${SIZE}" ]; then
@@ -97,7 +97,6 @@ function ProcessFiles {
     fi
     str="tail -n 4000 ${item} > temp.log && cat /dev/null > ${item} && cat temp.log > ${item}"
     LOG 1 $str
-    #RUN $str
   done
 }
 
@@ -107,7 +106,7 @@ PRINT_LIST ${list[@]}
 if [ ${ARCHIVE_YN} == 1 ] || [ ${TRUNCATE_YN} == 1 ]; then
   ProcessFiles "${list[@]}"
 fi
-
+# -- main
 
 END_TIME=$(date +%s)
 ELPASED_TIME=$((END_TIME - START_TIME))
