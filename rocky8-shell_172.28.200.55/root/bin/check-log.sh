@@ -26,9 +26,12 @@ source ${BASEDIR}/common.inc
 
 
 # init
-typeset SIZE
+if [ "${LOG_LEVEL}" -eq 0 ]; then
+  LOG_LEVEL=1
+fi
+typeset SIZE="+100000c"
 typeset MMIN
-typeset MTIME
+typeset MTIME="+1"
 typeset ARCHIVE_YN=0
 typeset TRUNCATE_YN=0
 
@@ -58,7 +61,7 @@ function init {
 init "$@"
 # -- init
 
-LOG 1 "== script started"
+LOG 2 "== script started"
 START_TIME=$(date +%s)
 
 # main
@@ -78,12 +81,13 @@ function FindLogFiles {
   fi
   typeset str="find /logs ${FIND_COND}"
   LOG 1 $str
-  typeset -a list=(`$str`)
+  set -A list -- $(eval "$str")
   echo ${list[@]}
 }
 
 function ProcessFiles {
   list="$@"
+  typeset cnt=0
   for item in ${list[@]}; do
     typeset str
     if [[ "${item}" =~ \.gz$ ]]; then
@@ -96,18 +100,39 @@ function ProcessFiles {
       RUN $str
     fi
     str="tail -n 4000 ${item} > temp.log && cat /dev/null > ${item} && cat temp.log > ${item}"
-    LOG 1 $str
+    LOG 2 $str
+    ksh -c "$str"
+    if [ $? -eq 0 ]; then
+      cnt=$((cnt+1))
+    fi
   done
+  LOG 1 "${cnt} 개 파일이 정리되었습니다."
 }
 
 list=(`FindLogFiles`)
-PRINT_LIST ${list[@]}
+
+printf "───────────────────────────────────────────────────────────────\n"
+printf "* 정리대상: %s개\n" "${#list[@]}"
+i=1
+for item in ${list[@]}; do
+  printf "  %s) %s\n" "$i" "$(ls -al ${item})"
+  i=$((++i))
+done
+printf "───────────────────────────────────────────────────────────────\n"
 
 if [ ${ARCHIVE_YN} == 1 ] || [ ${TRUNCATE_YN} == 1 ]; then
   ProcessFiles "${list[@]}"
+else
+  if [ "${#list[@]}" -gt 0 ]; then
+    printf "%s" "${#list[@]} 개의 파일을 삭제하시겠습니까? [y/n] "
+    read yn
+    if [ "${yn}" == "y" ]; then
+      ProcessFiles "${list[@]}"
+    fi
+  fi
 fi
 # -- main
 
 END_TIME=$(date +%s)
 ELPASED_TIME=$((END_TIME - START_TIME))
-LOG 1 "== script completed (elapsed time: ${ELPASED_TIME})"
+LOG 2 "== script completed (elapsed time: ${ELPASED_TIME})"

@@ -37,7 +37,7 @@ function init {
 init "$@"
 # -- init
 
-LOG 1 "== script started"
+LOG 2 "== script started"
 START_TIME=$(date +%s)
 
 set -A LOCAL_IP_LIST -- $(ifconfig -a | awk '{
@@ -116,25 +116,25 @@ function CheckProcess {
     printf "* process: %s %s개\n" "${procItem}" "${#pidList[@]}"
     i=1
     for item in ${pidList[@]}; do
-      printf "  [%s] %s\n" "$i" "${item}"
+      printf "  %s) %s\n" "$i" "${item}"
       i=$((++i))
     done
     printf "* listen port: %s개\n" "${#LISTEN_LIST[@]}"
     i=1
     for item in ${LISTEN_LIST[@]}; do
-      printf "  [%s] %s\n" "$i" "${item}"
+      printf "  %s) %s\n" "$i" "${item}"
       i=$((++i))
     done
     printf "* inbound: %s개\n" "${#INBOUND_LIST[@]}"
     i=1
     for item in ${INBOUND_LIST[@]}; do
-      printf "  [%s] %s\n" "$i" "${item}"
+      printf "  %s) %s\n" "$i" "${item}"
       i=$((++i))
     done
     printf "* outbound: %s개\n" "${#OUTBOUND_LIST[@]}"
     i=1
     for item in ${OUTBOUND_LIST[@]}; do
-      printf "  [%s] %s\n" "$i" "${item}"
+      printf "  %s) %s\n" "$i" "${item}"
       i=$((++i))
     done
     printf "───────────────────────────────────────────────────────────────\n"
@@ -145,4 +145,4 @@ CheckProcess
 
 END_TIME=$(date +%s)
 ELPASED_TIME=$((END_TIME - START_TIME))
-LOG 1 "== script completed (elapsed time: ${ELPASED_TIME})"
+LOG 2 "== script completed (elapsed time: ${ELPASED_TIME})"
