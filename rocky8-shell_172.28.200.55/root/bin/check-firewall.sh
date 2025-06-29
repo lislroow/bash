@@ -54,7 +54,7 @@ function CheckFirewall {
     if [ "${CONNECTED_YN}" -gt 0 ]; then
       LOG 1 "[O] ${ip}:${port} ${info}"
     else
-      LOG 1 "[X] ${ip}:${port} ${info}"
+      LOG 0 "[X] ${ip}:${port} ${info}"
     fi
     i=$((i+1))
   done < ${BASEDIR}/check-firewall.lst
