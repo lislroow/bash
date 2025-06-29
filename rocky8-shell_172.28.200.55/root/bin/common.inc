@@ -1,0 +1,57 @@
+#!/bin/ksh
+
+LOG_LEVEL=0
+_OPTIONS="hv"
+function _init {
+  while getopts "${_OPTIONS}${OPTIONS}" opt; do
+    case "$opt" in
+      h|\?)
+        USAGE
+        ;;
+      v)
+        LOG_LEVEL=$((LOG_LEVEL+1))
+        ;;
+    esac
+  done
+  shift $((OPTIND - 1))
+}
+
+_init "$@"
+
+function LOG {
+  typeset level="$1"
+  shift
+  typeset str="$@"
+  
+  TS=$(date +%Y-%m-%d\ %H:%M:%S)
+  if [ $level -gt "${LOG_LEVEL}" ]; then
+      return
+  fi
+  case "$level" in
+    0)
+      echo "[${TS}][error]" "${str}" >&2
+      ;;
+    1)
+      echo "[${TS}][info]" "${str}" >&2
+      ;;
+    2)
+      echo "[${TS}][debug]" "${str}" >&2
+      ;;
+    3)
+      echo "[${TS}][trace]" "${str}" >&2
+      ;;
+  esac
+}
+
+function RUN {
+  typeset str="$@"
+  LOG 1 "${str}"
+  /bin/ksh -c "${str}"
+}
+
+function PRINT_LIST {
+  typeset -a list="$@"
+  for item in ${list[@]}; do
+    LOG 1 "$item" >&2
+  done
+}
