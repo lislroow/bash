@@ -58,6 +58,7 @@ function CheckProcess {
     
     ## 프로세스 검색
     str="ps -ef | grep -v grep | grep $procItem | awk '{ print \$2 }'"
+    LOG 2 $str
     set -A pidList -- $(eval $str)
     for pidItem in ${pidList[@]}; do
       ### pid 의 listen port 검색
@@ -69,6 +70,7 @@ function CheckProcess {
       done
       ### pid 의 established 검색
       str="lsof -Pn -i4 | grep $pidItem | grep ESTA | awk '{ print \$9 }'"
+      LOG 2 $str
       set -A estaList -- $(eval $str)
       typeset -i listenCnt=${#LISTEN_LIST[*]}
       typeset -i _listenCnt=0
