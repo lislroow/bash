@@ -1,0 +1,2 @@
+172.28.200.55:22 # [rocky8-shell AP#1] sshd
+172.28.200.56:22 # [rocky8-shell AP#2] sshd
