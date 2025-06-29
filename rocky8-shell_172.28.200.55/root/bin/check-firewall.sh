@@ -7,31 +7,16 @@ function USAGE {
   cat << EOF
 ───────────────────────────────────────────────────────────────
 Usage:
--a:  전체 체크
 ───────────────────────────────────────────────────────────────
 EOF
   exit 1
 }
-OPTIONS="a"
+OPTIONS="fp:"
 source ${BASEDIR}/common.inc
 # -- common
 
 
 # init
-typeset ALL_YN=0
-
-function init {
-  while getopts "${_OPTIONS},${OPTIONS}" opt; do
-    case "$opt" in
-      a)
-        ALL_YN=${OPTARG}
-        ;;
-    esac
-  done
-  shift $((OPTIND - 1))
-}
-
-init "$@"
 # -- init
 
 LOG 1 "== script started"
@@ -65,7 +50,7 @@ function CheckFirewall {
     typeset str
     str="nc -zv -w 1 -i 1 -n ${ip} ${port} 2>&1 | grep -ic 'Connected to'"
     LOG 2 $str
-    CONNECTED_YN=$(eval "$str")
+    CONNECTED_YN=$(eval $str)
     if [ "${CONNECTED_YN}" -gt 0 ]; then
       LOG 1 "[O] ${ip}:${port} ${info}"
     else
@@ -75,12 +60,7 @@ function CheckFirewall {
   done < ${BASEDIR}/check-firewall.lst
 }
 
-function CheckSocket {
-
-}
-
 CheckFirewall
-
 # -- main
 
 END_TIME=$(date +%s)
