@@ -28,12 +28,11 @@ START_TIME=$(date +%s)
 # main
 function CheckFirewall {
   typeset -i i=0
-  IFS=''
   set -A result
-  typeset succ=0
-  typeset fail=0
-  while read line; do
-    target=$(echo $line | awk '{
+  typeset -i succ=0
+  typeset -i fail=0
+  while IFS= read line; do
+    typeset target=$(echo $line | awk '{
       if ($1 !~ /#/) {
         printf "%s", $1
       }
@@ -72,13 +71,13 @@ function CheckFirewall {
   
   printf "───────────────────────────────────────────────────────────────\n"
   printf "* 체크결과: %s개 (실패: %s)\n" "${#result[@]}" "${fail}"
-  i=1
+  typeset -i i=1
   for item in ${result[@]}; do
     ok_yn=$(echo "${item}" | cut -d'|' -f1)
     target=$(echo "${item}" | cut -d'|' -f2)
     info=$(echo "${item}" | cut -d'|' -f3)
     printf "  %s) [%s] %s # %s\n" "$i" "$ok_yn" "$target" "$info"
-    i=$((++i))
+    i=$((i+1))
   done
   printf "───────────────────────────────────────────────────────────────\n"
 }
@@ -87,5 +86,5 @@ CheckFirewall
 # -- main
 
 END_TIME=$(date +%s)
-ELPASED_TIME=$((END_TIME - START_TIME))
-LOG 2 "== script completed (elapsed time: ${ELPASED_TIME})"
+ELAPSED_TIME=$((END_TIME - START_TIME))
+LOG 2 "== script completed (elapsed time: ${ELAPSED_TIME})"
