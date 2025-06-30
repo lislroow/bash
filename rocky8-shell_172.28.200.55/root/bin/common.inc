@@ -52,6 +52,6 @@ function RUN {
 function PRINT_LIST {
   set -A list="$@"
   for item in ${list[@]}; do
-    LOG 1 "$item" >&2
+    LOG 2 "$item" 1>&2
   done
 }
