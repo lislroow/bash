@@ -50,7 +50,7 @@ function CheckFirewall {
       }
     }')
     
-    IFS=':'; set -- $target; ip="$1"; port="$2"; IFS=
+    OLD_IFS=$IFS; IFS=':'; set -- $target; ip="$1"; port="$2"; IFS=$OLD_IFS
     
     typeset str
     str="nc -zv -w 1 -i 1 -n ${ip} ${port} 2>&1 | grep -ic 'Connected to'"
