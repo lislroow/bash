@@ -141,5 +141,5 @@ fi
 # -- main
 
 END_TIME=$(date +%s)
-ELPASED_TIME=$((END_TIME - START_TIME))
-LOG 2 "== script completed (elapsed time: ${ELPASED_TIME})"
+ELAPSED_TIME=$((END_TIME - START_TIME))
+LOG 2 "== script completed (elapsed time: ${ELAPSED_TIME})"
