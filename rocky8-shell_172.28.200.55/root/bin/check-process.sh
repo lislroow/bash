@@ -13,7 +13,7 @@ Usage:
 EOF
   exit 1
 }
-OPTIONS="ap:"
+OPTIONS="ap:w:"
 source ${BASEDIR}/common.inc
 # -- common
 
@@ -42,6 +42,12 @@ function init {
       p)
         PROC_LIST[proc_idx]=${OPTARG}
         proc_idx=$((proc_idx+1))
+        ;;
+      w)
+        LOG_LEVEL=2
+        typeset str="grep '$OPTARG' ${BASEDIR}/check-process-knownport.lst | awk -F'|' '{ print \$1 \" # \" \$2 }'"
+        RUN $str
+        exit
         ;;
     esac
   done
@@ -102,6 +108,7 @@ function CheckProcess {
         typeset right=$(expr "${estaItem}" : '.*->\(.*\)')
         typeset rightIp=$(expr "${right}" : '\(.*\):.*')
         typeset rightPort=$(expr "${right}" : '.*:\(.*\)')
+        
         #### leftIp 가 local ip 인지 확인
         typeset isLocalIp=0
         for localIpItem in ${LOCAL_IP_LIST[@]}; do
@@ -110,6 +117,12 @@ function CheckProcess {
             break
           fi
         done
+        
+        #### local 연결은 제외
+        if [ $isListenPort -eq 1 ] && [ "${leftIp}" == "${rightIp}" ]; then
+          continue
+        fi
+        
         #### leftPort 가 listen port 인지 확인
         typeset isListenPort=0
         for listenItem in ${LISTEN_LIST[@]}; do
@@ -118,6 +131,7 @@ function CheckProcess {
             break
           fi
         done
+        
         #### inbound / outbound 여부
         if [ "${isLocalIp}" -eq 1 ] && [ "${isListenPort}" -eq 1 ]; then
           INBOUND_LIST[${#INBOUND_LIST[@]}]="${estaItem}"
