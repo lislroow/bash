@@ -108,7 +108,7 @@ function ProcessFiles {
     fi
     str="tail -n 4000 ${item} > temp.log && cat /dev/null > ${item} && cat temp.log > ${item}"
     LOG 2 "$str"
-    ksh -c "$str"
+    /bin/ksh -c "$str"
     if [ $? -eq 0 ]; then
       cnt=$((cnt+1))
     fi
@@ -120,7 +120,7 @@ list=(`FindLogFiles`)
 
 printf "───────────────────────────────────────────────────────────────\n"
 printf "* 정리대상: %s개\n" "${#list[@]}"
-i=1
+typeset -i i=1
 for item in ${list[@]}; do
   printf "  %s) %s\n" "$i" "$(ls -al ${item})"
   i=$((++i))
