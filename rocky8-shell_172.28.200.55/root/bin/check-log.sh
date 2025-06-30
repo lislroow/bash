@@ -116,7 +116,7 @@ function ProcessFiles {
   LOG 1 "${cnt} 개 파일이 정리되었습니다."
 }
 
-list=(`FindLogFiles`)
+set -A list=(`FindLogFiles`)
 
 printf "───────────────────────────────────────────────────────────────\n"
 printf "* 정리대상: %s개\n" "${#list[@]}"
