@@ -129,28 +129,28 @@ function CheckProcess {
     
     ## 프로세스별 socket 출력
     printf "───────────────────────────────────────────────────────────────\n"
-    printf "* process: %s %s개\n" "${procNm}" "${#pidList[@]}"
+    printf "* process: %s %d개\n" "${procNm}" ${#pidList[@]}
     typeset -i i=1
     for item in ${pidList[@]}; do
-      printf "  %s) %s\n" "$i" "${item}"
+      printf "  %2d) %s\n" $i "${item}"
       i=$((i+1))
     done
-    printf "* listen port: %s개\n" "${#LISTEN_LIST[@]}"
+    printf "* listen port: %d개\n" ${#LISTEN_LIST[@]}
     i=1
     for item in ${LISTEN_LIST[@]}; do
-      printf "  %s) %s\n" "$i" "${item}"
+      printf "  %2d) %s\n" $i "${item}"
       i=$((i+1))
     done
-    printf "* inbound: %s개\n" "${#INBOUND_LIST[@]}"
+    printf "* inbound: %d개\n" ${#INBOUND_LIST[@]}
     i=1
     for item in ${INBOUND_LIST[@]}; do
-      printf "  %s) %s\n" "$i" "${item}"
+      printf "  %2d) %s\n" $i "${item}"
       i=$((i+1))
     done
-    printf "* outbound: %s개\n" "${#OUTBOUND_LIST[@]}"
+    printf "* outbound: %d개\n" ${#OUTBOUND_LIST[@]}
     i=1
     for item in ${OUTBOUND_LIST[@]}; do
-      printf "  %s) %s\n" "$i" "${item}"
+      printf "  %2d) %s\n" $i "${item}"
       i=$((i+1))
     done
     printf "───────────────────────────────────────────────────────────────\n"
