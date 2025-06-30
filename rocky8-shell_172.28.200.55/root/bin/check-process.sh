@@ -105,7 +105,7 @@ function CheckProcess {
         #### leftIp 가 local ip 인지 확인
         typeset isLocalIp=0
         for localIpItem in ${LOCAL_IP_LIST[@]}; do
-          if [ "${leftIp}" == "${localIpItem}" ]; then
+          if [ "${localIpItem}" == "${leftIp}" ]; then
             isLocalIp=1
             break
           fi
