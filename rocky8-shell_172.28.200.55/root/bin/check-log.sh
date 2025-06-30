@@ -97,7 +97,7 @@ function ProcessFiles {
     #if [[ "${item}" =~ \.gz$ ]]; then
     #  LOG 1 "(exclude) gz file, ${item}"
     #fi
-    if [ $(expr "${item}" : ".*\.gz) -gt 0 ]; then
+    if [ $(expr "${item}" : ".*\.gz") -gt 0 ]; then
       LOG 1 "(exclude) gz file, ${item}"
     fi
     if [ -e "${item}.gz" ]; then
