@@ -40,7 +40,7 @@ function CheckFirewall {
     if [ -z "${target}" ]; then
       continue
     fi
-    info=$(echo $line | awk '{
+    typeset info=$(echo $line | awk '{
       for (i=1; i<=NF; i++) {
         if ($i ~ /#/) {
           for (j=i+1; j<=NF; j++) {
