@@ -1,10 +1,10 @@
 #!/bin/ksh
-BASEDIR=$( cd "$( dirname "$0" )" && pwd -P )
+BASEDIR=$(cd "$(dirname "$0")" && pwd -P)
 SYSNAME=$(uname -a | awk '{ print $1 }')
 
 # common
 function USAGE {
-  cat << EOF
+  cat <<EOF
 ───────────────────────────────────────────────────────────────
 Usage:
 -s:  s 크기(size) 파일을 선택합니다.
@@ -55,7 +55,7 @@ function init {
         ;;
     esac
   done
-  shift $((OPTIND - 1))
+  shift $((OPTIND-1))
 }
 
 init "$@"
@@ -79,9 +79,13 @@ function FindLogFiles {
   if [ -n "${MTIME}" ]; then
     FIND_COND="${FIND_COND} -mtime ${MTIME}"
   fi
+  
+  ## 파일 검색
   typeset str="find /logs ${FIND_COND}"
-  LOG 1 $str
+  LOG 1 "$str"
   set -A list -- $(eval "$str")
+  
+  ## 함수 반환
   echo ${list[@]}
 }
 
@@ -100,7 +104,7 @@ function ProcessFiles {
       RUN $str
     fi
     str="tail -n 4000 ${item} > temp.log && cat /dev/null > ${item} && cat temp.log > ${item}"
-    LOG 2 $str
+    LOG 2 "$str"
     ksh -c "$str"
     if [ $? -eq 0 ]; then
       cnt=$((cnt+1))
