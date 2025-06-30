@@ -62,7 +62,7 @@ START_TIME=$(date +%s)
 
 set -A LOCAL_IP_LIST -- $(ifconfig -a | awk '{
   for (i=1; i<NF; i++) {
-    if ($i ~ /inet/ && $(i+1) ~ /172.28/) {
+    if ($i ~ /inet$/ && $(i+1) ~ /172.28/) {
       print $(i+1)
     }
   }
