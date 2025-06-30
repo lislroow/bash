@@ -118,11 +118,6 @@ function CheckProcess {
           fi
         done
         
-        #### local 연결은 제외
-        if [ $isListenPort -eq 1 ] && [ "${leftIp}" == "${rightIp}" ]; then
-          continue
-        fi
-        
         #### leftPort 가 listen port 인지 확인
         typeset isListenPort=0
         for listenItem in ${LISTEN_LIST[@]}; do
@@ -131,6 +126,11 @@ function CheckProcess {
             break
           fi
         done
+        
+        #### local 연결은 제외
+        if [ $isListenPort -eq 1 ] && [ "${leftIp}" == "${rightIp}" ]; then
+          continue
+        fi
         
         #### inbound / outbound 여부
         if [ "${isLocalIp}" -eq 1 ] && [ "${isListenPort}" -eq 1 ]; then
