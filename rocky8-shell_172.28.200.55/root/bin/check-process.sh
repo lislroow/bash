@@ -40,7 +40,7 @@ function init {
         break
         ;;
       p)
-        PROC_LIST[proc_idx]="${OPTARG}"
+        PROC_LIST[proc_idx]=${OPTARG}
         proc_idx=$((proc_idx+1))
         ;;
     esac
