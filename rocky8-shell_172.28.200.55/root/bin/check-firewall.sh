@@ -27,7 +27,7 @@ START_TIME=$(date +%s)
 
 # main
 function CheckFirewall {
-  typeset i=0
+  typeset -i i=0
   IFS=''
   set -A result
   typeset succ=0
