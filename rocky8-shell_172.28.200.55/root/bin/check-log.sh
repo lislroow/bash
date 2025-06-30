@@ -122,7 +122,7 @@ printf "────────────────────────
 printf "* 정리대상: %s개\n" "${#list[@]}"
 typeset -i i=1
 for item in ${list[@]}; do
-  printf "  %s) %s\n" "$i" "$(ls -al ${item})"
+  printf "  %d) %s\n" $i "$(ls -al ${item})"
   i=$((i+1))
 done
 printf "───────────────────────────────────────────────────────────────\n"
