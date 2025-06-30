@@ -91,7 +91,7 @@ function FindLogFiles {
 
 function ProcessFiles {
   set -A list -- "$@"
-  typeset cnt=0
+  typeset -i cnt=0
   for item in ${list[@]}; do
     typeset str
     if [[ "${item}" =~ \.gz$ ]]; then
