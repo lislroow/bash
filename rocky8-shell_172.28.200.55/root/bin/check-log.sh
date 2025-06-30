@@ -127,7 +127,7 @@ for item in ${list[@]}; do
 done
 printf "───────────────────────────────────────────────────────────────\n"
 
-if [ ${ARCHIVE_YN} == 1 ] || [ ${TRUNCATE_YN} == 1 ]; then
+if [ ${ARCHIVE_YN} -eq 1 ] || [ ${TRUNCATE_YN} -eq 1 ]; then
   ProcessFiles "${list[@]}"
 else
   if [ "${#list[@]}" -gt 0 ]; then
