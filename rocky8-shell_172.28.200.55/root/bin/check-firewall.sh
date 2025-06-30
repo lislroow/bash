@@ -59,11 +59,11 @@ function CheckFirewall {
     if [ "${CONNECTED_YN}" -gt 0 ]; then
       LOG 1 "[O] ${ip}:${port} # ${info}"
       result[i]="O|${ip}:${port}|${info}"
-      succ=$((++succ))
+      succ=$((succ+1))
     else
       LOG 0 "[X] ${ip}:${port} # ${info}"
       result[i]="X|${ip}:${port}|${info}"
-      fail=$((++fail))
+      fail=$((fail+1))
     fi
     i=$((i+1))
   done < ${BASEDIR}/check-firewall.lst
