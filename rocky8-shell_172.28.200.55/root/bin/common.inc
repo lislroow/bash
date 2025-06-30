@@ -13,13 +13,13 @@ function _init {
         ;;
     esac
   done
-  shift $((OPTIND - 1))
+  shift $((OPTIND-1))
 }
 
 _init "$@"
 
 function LOG {
-  typeset level="$1"
+  typeset -i level="$1"
   shift
   typeset str="$@"
   
@@ -29,28 +29,28 @@ function LOG {
   fi
   case "$level" in
     0)
-      echo "[${TS}][error]" "${str}" >&2
+      echo "[${TS}][error]" "${str}" 1>&2
       ;;
     1)
-      echo "[${TS}][info]" "${str}" >&2
+      echo "[${TS}][info]" "${str}" 1>&2
       ;;
     2)
-      echo "[${TS}][debug]" "${str}" >&2
+      echo "[${TS}][debug]" "${str}" 1>&2
       ;;
     3)
-      echo "[${TS}][trace]" "${str}" >&2
+      echo "[${TS}][trace]" "${str}" 1>&2
       ;;
   esac
 }
 
 function RUN {
   typeset str="$@"
-  LOG 1 "${str}"
+  LOG 2 "${str}"
   /bin/ksh -c "${str}"
 }
 
 function PRINT_LIST {
-  typeset -a list="$@"
+  set -A list="$@"
   for item in ${list[@]}; do
     LOG 1 "$item" >&2
   done
