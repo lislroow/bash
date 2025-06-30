@@ -90,7 +90,7 @@ function FindLogFiles {
 }
 
 function ProcessFiles {
-  list="$@"
+  set -A list -- "$@"
   typeset cnt=0
   for item in ${list[@]}; do
     typeset str
