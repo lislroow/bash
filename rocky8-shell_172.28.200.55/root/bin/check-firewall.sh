@@ -76,7 +76,7 @@ function CheckFirewall {
     typeset ok_yn=$(echo "${item}" | cut -d'|' -f1)
     target=$(echo "${item}" | cut -d'|' -f2)
     info=$(echo "${item}" | cut -d'|' -f3)
-    printf "  %s) [%s] %s # %s\n" "$i" "$ok_yn" "$target" "$info"
+    printf "  %2d) [%s] %s # %s\n" $i "$ok_yn" "$target" "$info"
     i=$((i+1))
   done
   printf "───────────────────────────────────────────────────────────────\n"
