@@ -73,7 +73,7 @@ function CheckFirewall {
   printf "* 체크결과: %d개 (실패: %d)\n" ${#result[@]} ${fail}
   typeset -i i=1
   for item in ${result[@]}; do
-    ok_yn=$(echo "${item}" | cut -d'|' -f1)
+    typeset ok_yn=$(echo "${item}" | cut -d'|' -f1)
     target=$(echo "${item}" | cut -d'|' -f2)
     info=$(echo "${item}" | cut -d'|' -f3)
     printf "  %s) [%s] %s # %s\n" "$i" "$ok_yn" "$target" "$info"
