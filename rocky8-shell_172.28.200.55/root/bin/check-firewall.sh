@@ -70,7 +70,7 @@ function CheckFirewall {
 
   
   printf "───────────────────────────────────────────────────────────────\n"
-  printf "* 체크결과: %s개 (실패: %s)\n" "${#result[@]}" "${fail}"
+  printf "* 체크결과: %d개 (실패: %d)\n" ${#result[@]} ${fail}
   typeset -i i=1
   for item in ${result[@]}; do
     ok_yn=$(echo "${item}" | cut -d'|' -f1)
