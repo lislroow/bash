@@ -88,12 +88,12 @@ function CheckProcess {
       str="lsof -Pn -i4 | grep $pidItem | grep ESTA | awk '{ print \$9 }'"
       LOG 2 $str
       set -A estaList -- $(eval $str)
-      typeset -i listenCnt=${#LISTEN_LIST[*]}
+      typeset -i listenCnt=${#LISTEN_LIST[@]}
       typeset -i _listenCnt=0
-      while (( _listenCnt < ${#listenList[*]} )); do
+      while ((_listenCnt < ${#listenList[@]})); do
         LISTEN_LIST[listenCnt]=${listenList[_listenCnt]}
-        (( listenCnt += 1 ))
-        (( _listenCnt += 1 ))
+        listenCnt=$((listenCnt+1))
+        _listenCnt=$((_listenCnt+1))
       done
       for estaItem in ${estaList[@]}; do
         typeset left=$(expr "${estaItem}" : '\(.*\)->')
