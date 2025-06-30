@@ -1,5 +1,5 @@
 #!/bin/ksh
-BASEDIR=$( cd "$( dirname "$0" )" && pwd -P )
+BASEDIR=$(cd "$(dirname "$0")" && pwd -P)
 SYSNAME=$(uname -a | awk '{ print $1 }')
 
 # common
@@ -31,21 +31,21 @@ function init {
     case "$opt" in
       a)
         typeset -i i=0
-        OLD_IFS="$IFS"
+        OLD_IFS=$IFS
         while IFS= read line; do
           PROC_LIST[i]=$line
-          i=$((++i))
+          i=$((i+1))
         done < /root/bin/check-process.lst
-        IFS="$OLD_IFS"
+        IFS=$OLD_IFS
         break
         ;;
       p)
         PROC_LIST[proc_idx]="${OPTARG}"
-        proc_idx=$((proc_idx + 1))
+        proc_idx=$((proc_idx+1))
         ;;
     esac
   done
-  shift $((OPTIND - 1))
+  shift $((OPTIND-1))
 }
 
 init "$@"
@@ -130,28 +130,28 @@ function CheckProcess {
     ## 프로세스별 socket 출력
     printf "───────────────────────────────────────────────────────────────\n"
     printf "* process: %s %s개\n" "${procNm}" "${#pidList[@]}"
-    i=1
+    typeset -i i=1
     for item in ${pidList[@]}; do
       printf "  %s) %s\n" "$i" "${item}"
-      i=$((++i))
+      i=$((i+1))
     done
     printf "* listen port: %s개\n" "${#LISTEN_LIST[@]}"
     i=1
     for item in ${LISTEN_LIST[@]}; do
       printf "  %s) %s\n" "$i" "${item}"
-      i=$((++i))
+      i=$((i+1))
     done
     printf "* inbound: %s개\n" "${#INBOUND_LIST[@]}"
     i=1
     for item in ${INBOUND_LIST[@]}; do
       printf "  %s) %s\n" "$i" "${item}"
-      i=$((++i))
+      i=$((i+1))
     done
     printf "* outbound: %s개\n" "${#OUTBOUND_LIST[@]}"
     i=1
     for item in ${OUTBOUND_LIST[@]}; do
       printf "  %s) %s\n" "$i" "${item}"
-      i=$((++i))
+      i=$((i+1))
     done
     printf "───────────────────────────────────────────────────────────────\n"
   done
@@ -160,5 +160,5 @@ function CheckProcess {
 CheckProcess
 
 END_TIME=$(date +%s)
-ELPASED_TIME=$((END_TIME - START_TIME))
-LOG 2 "== script completed (elapsed time: ${ELPASED_TIME})"
+ELAPSED_TIME=$((END_TIME - START_TIME))
+LOG 2 "== script completed (elapsed time: ${ELAPSED_TIME})"
