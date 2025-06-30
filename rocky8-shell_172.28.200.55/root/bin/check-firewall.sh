@@ -50,13 +50,13 @@ function CheckFirewall {
       }
     }')
     
-    OLD_IFS=$IFS; IFS=':'; set -- $target; ip="$1"; port="$2"; IFS=$OLD_IFS
+    IFS=':'; set -- $target; ip="$1"; port="$2"; IFS=
     
     typeset str
     str="nc -zv -w 1 -i 1 -n ${ip} ${port} 2>&1 | grep -ic 'Connected to'"
-    LOG 2 $str
-    typeset CONNECTED_YN=$(eval $str)
-    if [ "${CONNECTED_YN}" -gt 0 ]; then
+    LOG 2 "$str"
+    typeset connectedYn=$(eval $str)
+    if [ "${connectedYn}" -gt 0 ]; then
       LOG 1 "[O] ${ip}:${port} # ${info}"
       result[i]="O|${ip}:${port}|${info}"
       succ=$((succ+1))
@@ -66,7 +66,7 @@ function CheckFirewall {
       fail=$((fail+1))
     fi
     i=$((i+1))
-  done < ${BASEDIR}/check-firewall.lst
+  done < ${BASEDIR}/check-firewall_`hostname`.lst
 
   
   printf "───────────────────────────────────────────────────────────────\n"

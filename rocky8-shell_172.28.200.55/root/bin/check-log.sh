@@ -106,7 +106,7 @@ function ProcessFiles {
       str="gzip -c ${item} > ${item}.gz"
       RUN $str
     fi
-    str="tail -n 4000 ${item} > temp.log && cat /dev/null > ${item} && cat temp.log > ${item}"
+    str="tail -n 4000 ${item} > ${item}.tmp && cat /dev/null > ${item} && cat ${item}.tmp > ${item} && rm -rf ${item}.tmp"
     LOG 2 "$str"
     /bin/ksh -c "$str"
     if [ $? -eq 0 ]; then

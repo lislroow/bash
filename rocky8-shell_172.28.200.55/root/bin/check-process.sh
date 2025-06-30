@@ -35,7 +35,7 @@ function init {
         while IFS= read line; do
           PROC_LIST[i]=$line
           i=$((i+1))
-        done < /root/bin/check-process.lst
+        done < /root/bin/check-process_`hostname`.lst
         IFS=$OLD_IFS
         break
         ;;
@@ -60,7 +60,7 @@ init "$@"
 LOG 2 "== script started"
 START_TIME=$(date +%s)
 
-set -A LOCAL_IP_LIST -- $(ifconfig -a | awk '{
+set -A localList -- $(ifconfig -a | awk '{
   for (i=1; i<NF; i++) {
     if ($i ~ /inet$/ && $(i+1) ~ /172.28/) {
       print $(i+1)
@@ -72,34 +72,33 @@ set -A LOCAL_IP_LIST -- $(ifconfig -a | awk '{
 function CheckProcess {
   typeset str
   for procItem in ${PROC_LIST[@]}; do
-    set -A LISTEN_LIST
-    set -A OUTBOUND_LIST
-    set -A INBOUND_LIST
+    set -A listenResult
+    set -A outboundResult
+    set -A inboundResult
     
     ## 프로세스 검색
     typeset procNm=$(expr "${procItem}" : "\(.*\)|.*")
     typeset procGrep=$(expr "${procItem}" : ".*|\(.*\)")
     str="ps -ef | grep -v grep | grep $procGrep | awk '{ print \$2 }'"
-    LOG 2 $str
+    LOG 2 "$str"
     set -A pidList -- $(eval $str)
     for pidItem in ${pidList[@]}; do
       ### pid 의 listen port 검색
       str="lsof -Pn -i4 | grep $pidItem | grep LIST | awk '{ print \$9 }' | awk -F':' '{ print \$NF }'"
-      LOG 2 $str
+      LOG 2 "$str"
       set -A listenList -- $(eval $str)
       for listenItem in ${listenList[@]}; do
-        LOG 1 $listenItem
+        LOG 1 "$listenItem"
       done
+
       ### pid 의 established 검색
       str="lsof -Pn -i4 | grep $pidItem | grep ESTA | awk '{ print \$9 }'"
-      LOG 2 $str
+      LOG 2 "$str"
       set -A estaList -- $(eval $str)
-      typeset -i listenCnt=${#LISTEN_LIST[@]}
-      typeset -i _listenCnt=0
-      while ((_listenCnt < ${#listenList[@]})); do
-        LISTEN_LIST[listenCnt]=${listenList[_listenCnt]}
-        listenCnt=$((listenCnt+1))
-        _listenCnt=$((_listenCnt+1))
+      typeset -i idx=0
+      while ((idx < ${#listenList[@]})); do
+        listenResult[${#listenResult[@]}+idx]=${listenList[idx]}
+        idx=$((idx+1))
       done
       for estaItem in ${estaList[@]}; do
         typeset left=$(expr "${estaItem}" : '\(.*\)->')
@@ -109,10 +108,10 @@ function CheckProcess {
         typeset rightIp=$(expr "${right}" : '\(.*\):.*')
         typeset rightPort=$(expr "${right}" : '.*:\(.*\)')
         
-        #### leftIp 가 local ip 인지 확인
+        #### leftIp 가 local 인지 확인
         typeset isLocalIp=0
-        for localIpItem in ${LOCAL_IP_LIST[@]}; do
-          if [ "${localIpItem}" == "${leftIp}" ]; then
+        for localItem in ${localList[@]}; do
+          if [ "${localItem}" == "${leftIp}" ]; then
             isLocalIp=1
             break
           fi
@@ -120,7 +119,7 @@ function CheckProcess {
         
         #### leftPort 가 listen port 인지 확인
         typeset isListenPort=0
-        for listenItem in ${LISTEN_LIST[@]}; do
+        for listenItem in ${listenResult[@]}; do
           if [ "${listenItem}" == "${leftPort}" ]; then
             isListenPort=1
             break
@@ -134,9 +133,9 @@ function CheckProcess {
         
         #### inbound / outbound 여부
         if [ "${isLocalIp}" -eq 1 ] && [ "${isListenPort}" -eq 1 ]; then
-          INBOUND_LIST[${#INBOUND_LIST[@]}]="${estaItem}"
+          inboundResult[${#inboundResult[@]}]="${estaItem}"
         else
-          OUTBOUND_LIST[${#OUTBOUND_LIST[@]}]="${estaItem}"
+          outboundResult[${#outboundResult[@]}]="${estaItem}"
         fi
       done
     done
@@ -149,21 +148,21 @@ function CheckProcess {
       printf "  %2d) %s\n" $i "${item}"
       i=$((i+1))
     done
-    printf "* listen port: %d개\n" ${#LISTEN_LIST[@]}
+    printf "* listen port: %d개\n" ${#listenResult[@]}
     i=1
-    for item in ${LISTEN_LIST[@]}; do
+    for item in ${listenResult[@]}; do
       printf "  %2d) %s\n" $i "${item}"
       i=$((i+1))
     done
-    printf "* inbound: %d개\n" ${#INBOUND_LIST[@]}
+    printf "* inbound: %d개\n" ${#inboundResult[@]}
     i=1
-    for item in ${INBOUND_LIST[@]}; do
+    for item in ${inboundResult[@]}; do
       printf "  %2d) %s\n" $i "${item}"
       i=$((i+1))
     done
-    printf "* outbound: %d개\n" ${#OUTBOUND_LIST[@]}
+    printf "* outbound: %d개\n" ${#outboundResult[@]}
     i=1
-    for item in ${OUTBOUND_LIST[@]}; do
+    for item in ${outboundResult[@]}; do
       printf "  %2d) %s\n" $i "${item}"
       i=$((i+1))
     done
