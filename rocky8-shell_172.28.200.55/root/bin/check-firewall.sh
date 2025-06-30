@@ -55,7 +55,7 @@ function CheckFirewall {
     typeset str
     str="nc -zv -w 1 -i 1 -n ${ip} ${port} 2>&1 | grep -ic 'Connected to'"
     LOG 2 $str
-    CONNECTED_YN=$(eval $str)
+    typeset CONNECTED_YN=$(eval $str)
     if [ "${CONNECTED_YN}" -gt 0 ]; then
       LOG 1 "[O] ${ip}:${port} # ${info}"
       result[i]="O|${ip}:${port}|${info}"
