@@ -128,7 +128,7 @@ function CheckProcess {
         done
         
         #### local 연결은 제외
-        if [ $isListenPort -eq 1 ] && [ "${leftIp}" == "${rightIp}" ]; then
+        if [ $isLocalIp -eq 1 ] && [ "${leftIp}" == "${rightIp}" ]; then
           continue
         fi
         
