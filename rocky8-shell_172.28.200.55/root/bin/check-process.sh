@@ -107,7 +107,7 @@ function CheckProcess {
         for localIpItem in ${LOCAL_IP_LIST[@]}; do
           if [ "${leftIp}" == "${localIpItem}" ]; then
             isLocalIp=1
-            break;
+            break
           fi
         done
         #### leftPort 가 listen port 인지 확인
@@ -115,7 +115,7 @@ function CheckProcess {
         for listenItem in ${LISTEN_LIST[@]}; do
           if [ "${listenItem}" == "${leftPort}" ]; then
             isListenPort=1
-            break;
+            break
           fi
         done
         #### inbound / outbound 여부
