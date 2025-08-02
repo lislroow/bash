@@ -16,7 +16,8 @@ export JAVA21="/c/develop/tools/corretto/corretto-21"
 export JAVA_HOME="\$JAVA17"
 PATH="\$JAVA_HOME/bin:\$PATH"
 
-export MAVEN_HOME="/c/develop/tools/maven/maven-3.9.3"
+#export MAVEN_HOME="/c/develop/tools/maven/maven-3.9.3"
+export MAVEN_HOME="/c/develop/tools/maven/maven-3.9.11"
 PATH="\$MAVEN_HOME/bin:\$PATH"
 
 export GRADLE_HOME="/c/develop/tools/gradle/gradle-8.9"
@@ -56,7 +57,7 @@ alias gitlog="git log --oneline"
 alias backup='backup.sh develop project editplus react hyper-v python linux'
 alias restore='restore.sh develop project editplus react hyper-v python linux'
 
-source "${HOME}/.sdkman/bin/sdkman-init.sh"
+#source "${HOME}/.sdkman/bin/sdkman-init.sh"
 
 EOF
 
