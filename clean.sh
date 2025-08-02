@@ -29,10 +29,13 @@ logs
 
 EOF
 
-for item in "${LIST[@]}"; do
-  if [ -z "${item}" ]; then
-    continue
-  fi
-  rm -rf "${BASEDIR:?}/${item:?}"
-  rm -rf "${BASEDIR:?}"/*/"${item:?}"
+for dir in $(find . -maxdepth 1 -type d ! -name '.*'); do
+  for item in "${LIST[@]}"; do
+    if [ -z "${item}" ]; then
+      continue
+    fi
+    rm -rf "${dir:?}/${item:?}"
+    rm -rf "${dir:?}"/*/"${item:?}"
+  done
 done
+
