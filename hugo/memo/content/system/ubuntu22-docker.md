@@ -353,6 +353,19 @@ EOF
 - systemctl restart docker
 - docker login http://localhost:5000
 
+- 인증정보
+```
+cat << EOF > ~/.docker/config.json
+{
+  "auths": {
+    "localhost:5000": {
+      "auth": "YWRtaW46c2tkaSwsMTIz"
+    }
+  }
+}
+EOF
+```
+
 
 ##### 2) docker 이미지 push
 
