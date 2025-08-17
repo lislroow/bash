@@ -348,7 +348,7 @@ esac
 #### - $HOME/.vimrc
 .vimrc 에는 # 주석 불가
 
-```
+```shell
 set paste
 
 set ts=2
@@ -363,7 +363,7 @@ git-bash 에서 ssl 통신 대상 서버가 ca 에 등록되지 않은 crt 인�
 
 crt 인증서를 `C:\Program Files\Git\mingw64\ssl\certs\ca-bundle.crt` 에 추가
 
-```
+```shell
 # 간편 테스트
 $ git ls-remote https://es01:9280
 fatal: unable to access 'https://es01:9280/': SSL certificate problem: unable to get local issuer certificate
@@ -860,7 +860,7 @@ $ git config --global alias.last 'log -1 HEAD'
 ```
 
 #### - commit
-```
+```shell
 $ git commit -m '메시지'
 $ git add forgotten_file
 $ git commit --amend
@@ -889,7 +889,7 @@ exit 0
 - 강제 push를 하게되면 원격지의 commit history 가 덮어씌워 집니다.
 
 #### - remote
-```
+```shell
 $ git remote -v
 ---
 origin  https://github.com/lislroow/dlog.git (fetch)
@@ -952,7 +952,7 @@ origin  git@github.com:lislroow/dlog.git (push)
 - `git diff HEAD --word-diff`
 
 #### - tag
-```
+```shell
 $ git tag -d framework-bom-0.2
 ---
 'framework-bom-0.2' 태그 삭제함 (과거 2c5b9f1)
@@ -976,13 +976,22 @@ $ git push origin --tags
 ```
 
 #### - 특정 경로만 checkout 하기
-```
+```shell
 $ git init
 $ git config core.sparseCheckout true
 #git config --local credential.helper ""
 $ git remote add -f origin git@github.com:lislroow/pilot.git
 $ echo "bom/framework-bom/*" > .git/info/sparse-checkout
 $ git pull origin main
+```
+
+#### - git submodule
+```shell
+$ git submodule add git@github.com:lislroow/child-repo.git path/to/child-repo
+# submodule까지 포함해서 clone
+$ git clone --recurse-submodules git@github.com:lislroow/parent-repo.git
+# 이미 clone한 경우
+$ git submodule update --init --recursive
 ```
 
 ### * `github`
@@ -1040,7 +1049,6 @@ $ unset SSH_ASKPASS
 - `Settings` > `Developer settings` > `Personal access tokens` 이동 후
 - `Generate new token` 버튼 클릭으로 token 생성 (`repo` 만 체크하면 push 할 수 있음)
 - token 생성 후 이클립스에서 id에 email 입력, password 에 생성된 토큰 입력
-```
-# token-name: centos
+```shell# token-name: centos
 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
 ```

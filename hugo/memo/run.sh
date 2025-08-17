@@ -53,15 +53,15 @@ function staging {
 
 case $1 in
   server)
-    server;
+    server
     ;;
   deploy)
-    deploy;
+    deploy
     ;;
   staging)
-    staging;
+    staging
     ;;
   *)
-    server;
+    server
     ;;
 esac
