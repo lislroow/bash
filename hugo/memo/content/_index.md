@@ -349,11 +349,14 @@ esac
 .vimrc 에는 # 주석 불가
 
 ```shell
+cat << EOF > $HOME/.vimrc 
 set paste
 
-set ts=2
-set sts=2
-set shiftwidth=2
+set expandtab      " Tab 입력 시 스페이스로 변환
+set tabstop=2      " 파일에서 탭을 몇 칸으로 보일지 (2칸)
+set shiftwidth=2   " 자동 들여쓰기 시 이동 칸수 (2칸)
+set softtabstop=2  " Tab 키 입력 시 실제 스페이스 2칸 삽입
+EOF
 ```
 
 ### * `self-signed-cert`
