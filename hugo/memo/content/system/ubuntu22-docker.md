@@ -437,6 +437,28 @@ apt-get install docker-ce docker-ce-cli containerd.io
 
 #### docker host 설정
 
+- `dnf update` 이후 docker-ce 업데이트 이후 docker.service 파일이 갱신되어 다시 수정해야함
+
+```
+[root@rocky10-develop ~]# rpm -ql docker-ce.x86_64 | xargs -I{} find {} -type f  | xargs ls -al
+-rw-r--r-- 1 root root       81  9월  6일  09:03 /etc/docker/daemon.json
+-rwxr-xr-x 1 root root  2759624  9월  4일  05:59 /usr/bin/docker-proxy
+-rwxr-xr-x 1 root root 86546056  9월  4일  05:59 /usr/bin/dockerd
+-rw-r--r-- 1 root root     1341  9월  6일  09:01 /usr/lib/systemd/system/docker.service
+-rw-r--r-- 1 root root      295  9월  4일  05:55 /usr/lib/systemd/system/docker.socket
+-rwxr-xr-x 1 root root   726856  9월  4일  05:59 /usr/libexec/docker/docker-init
+-rw-r--r-- 1 root root     6579  9월  4일  05:59 /usr/share/man/man8/dockerd.8.gz
+[root@rocky10-develop ~]# dnf list | grep docker-ce
+containerd.io.x86_64                                                                     1.7.27-3.1.el10                             @docker-ce-stable                                
+docker-buildx-plugin.x86_64                                                              0.27.0-1.el10                               @docker-ce-stable                                
+docker-ce.x86_64                                                                         3:28.4.0-1.el10                             @docker-ce-stable                                
+docker-ce-cli.x86_64                                                                     1:28.4.0-1.el10                             @docker-ce-stable                                
+docker-ce-rootless-extras.x86_64                                                         28.4.0-1.el10                               @docker-ce-stable                                
+docker-compose-plugin.x86_64                                                             2.39.2-1.el10                               @docker-ce-stable                                
+docker-model-plugin.x86_64                                                               0.1.39-1.el10                               docker-ce-stable                                 
+[root@rocky10-develop ~]# 
+```
+
 ```shell
 /usr/lib/systemd/system/docker.service
 
@@ -445,7 +467,8 @@ ExecStart=/usr/bin/dockerd --containerd=/run/containerd/containerd.sock
 
 cat << EOF > /etc/docker/daemon.json
 {
-  ... ,
+  "insecure-registries": ["localhost:5000"],
+  "dns": ["8.8.8.8", "8.8.4.4"],
   "hosts": ["tcp://0.0.0.0:2375", "unix:///var/run/docker.sock"]
 }
 EOF
