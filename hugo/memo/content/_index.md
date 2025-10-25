@@ -848,6 +848,8 @@ world
 #### - chmod
 ```shell
 $ git update-index --chmod=+x script.sh
+$ git ls-files --stage | grep script.sh
+100755 bd8896bf2217b46faa0291585e01ac1a3441a958 0       script.sh
 ```
 
 #### - 일반 옵션
