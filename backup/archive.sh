@@ -56,7 +56,7 @@ function SetOptions {
   done
   
   if [ -z "${TARGET}" ]; then
-    TARGET=develop
+    TARGET="develop"
   fi
   
   if [ "${DEBUG_MODE}" == "1" ]; then
@@ -76,15 +76,15 @@ function main {
   mapfile -t includes < <(EXEC_R "jq -r '.archive.${TARGET}.includes[]' < ${FUNCDIR}/property.json")
   mapfile -t excludes < <(EXEC_R "jq -r '.archive.${TARGET}.excludes[]' < ${FUNCDIR}/property.json")
   
-  basedir=$( GetProp "archive.${TARGET}.basedir" )
+  # basedir=$( GetProp "archive.${TARGET}.basedir" )
   spf=$( GetProp "archive.${TARGET}.spf" )
   
-  OUTPUT_FILE=$(printf "%s_%s.zip" ${TARGET} $(date +%Y%m%d_%H%M%S))
+  OUTPUT_FILE="${TARGET}.zip"
   
-  CMD="cd ${basedir} && 7z a ${CURRDIR}/${OUTPUT_FILE} ${includes[@]}"
+  CMD="cd /c && 7z a ${CURRDIR}/${OUTPUT_FILE} ${includes[@]}"
   
   if [ ${#excludes[@]} -gt 0 ]; then
-    CMD="${CMD} $(printf -- "-xr!\"%s\" " "${excludes[@]}")"
+    CMD="${CMD} $(printf -- "-xr!\"%s\"" "${excludes[@]}")"
   fi
   
   if [ "${spf}" == 'true' ]; then
@@ -96,6 +96,11 @@ function main {
   fi
   
   EXEC "${CMD}"
+  
+  if [[ ${TARGET} == "develop" ]]; then
+    EXEC "7z rn ${TARGET}.zip C:/develop develop"
+    EXEC "7z rn ${TARGET}.zip C:/Users Users"
+  fi
 }
 
 main
