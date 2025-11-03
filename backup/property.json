@@ -7,9 +7,9 @@
   
   "archive": {
     "develop": {
-      "spf": true,
       "includes": [
-        "develop",
+        "C:/bash",
+        "C:/develop",
         "$HOME/.docker",
         "$HOME/.eclipse",
         "$HOME/.gradle",
@@ -19,70 +19,35 @@
         "$HOME/.ssh",
         "$HOME/.vscode",
         "$HOME/.bash_profile",
-        "$HOME/.gitconfig"
-      ],
-      "excludes": [
-        "develop/eclipse-java-2025-09/configuration/org.eclipse.equinox.app",
-        "develop/eclipse-java-2025-09/configuration/org.eclipse.core.runtime/.manager",
-        "develop/eclipse-java-2025-09/workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.rse.core.prefs",
-        "develop/eclipse-java-2025-09/workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.rse.core.prefs"
-      ]
-    },
-    "eclipse": {
-      "spf": true,
-      "includes": [
-        "develop/eclipse-java-2025-09/workspace/.metadata/.plugins/org.eclipse.core.runtime"
-      ],
-      "excludes": [
-        "develop/eclipse-java-2025-09/workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.rse.core.prefs",
-        "develop/eclipse-java-2025-09/workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.rse.core.prefs"
-      ]
-    },
-    "maven": {
-      "basedir": "$HOME",
-      "spf": false,
-      "includes": [
-        ".m2"
+        "$HOME/.gitconfig",
+        "$HOME/AppData/Roaming/DBeaverData",
+        "$HOME/AppData/Roaming/EditPlus",
+        "$HOME/AppData/LocalLow/NPKI"
       ],
       "excludes": []
     },
-    "gradle": {
-      "basedir": "$HOME",
-      "spf": false,
+    "itunes": {
       "includes": [
-        ".gradle"
-      ],
-      "excludes": [
-        ".tmp",
-        ".gradle/caches",
-        ".gradle/daemon",
-        ".gradle/undefined-build",
-        "*/*.lock",
-        "*/*.out.log"
-      ]
-    },
-    "netsarang": {
-      "basedir": "$HOME/Documents",
-      "spf": false,
-      "includes": [
-        "\"NetSarang Computer\""
+        "$HOME/Music/iTunes"
       ],
       "excludes": []
     },
-    "roaming": {
-      "basedir": "$HOME/AppData/Roaming",
-      "spf": false,
+    "foo": {
       "includes": [
-        "DBeaverData",
-        "EditPlus"
+        "C:/develop/fonts/Hack-Regular.ttf",
+        "$HOME/.minttyrc"
       ],
       "excludes": []
     },
-    "locallow": {
-      "basedir": "$HOME/AppData/LocalLow",
-      "spf": false,
+    "bar": {
       "includes": [
-        "NPKI"
+        "$HOME/.viminfo"
+      ],
+      "excludes": []
+    },
+    "zar": {
+      "includes": [
+        "$HOME/docker.txt"
       ],
       "excludes": []
     }
@@ -91,59 +56,51 @@
     "drive": "/d",
     "entries": [
       {
-        "name": "rainmeter",
-        "source": "/c/Users/myeonggu.kim/AppData/Roaming/Rainmeter"
-      },
-      {
         "name": "editplus",
-        "source": "/c/Users/myeonggu.kim/AppData/Roaming/EditPlus"
+        "source": "C:/Users/myeonggu.kim/AppData/Roaming/EditPlus"
       },
       {
         "name": "bc4",
-        "source": "/c/Users/myeonggu.kim/AppData/Roaming/Scooter Software/Beyond Compare 4"
-      },
-      {
-        "name": "develop",
-        "source": "/c/develop"
+        "source": "C:/Users/myeonggu.kim/AppData/Roaming/Scooter Software/Beyond Compare 4"
       },
       {
         "name": "vm-disk",
-        "source": "/c/vm-disk",
+        "source": "C:/vm-disk",
         "bcscript": "sync-update.bc"
       },
       {
         "name": "bash",
-        "source": "/c/bash"
+        "source": "C:/bash"
       },
       {
         "name": "project",
-        "source": "/c/project"
+        "source": "C:/project"
       },
       {
         "name": "plex",
-        "source": "/c/Users/myeonggu.kim/AppData/Local/Plex Media Server"
+        "source": "C:/Users/myeonggu.kim/AppData/Local/Plex Media Server"
       },
       {
         "name": "itunes",
-        "source": "/c/Users/myeonggu.kim/Music/iTunes"
+        "source": "C:/Users/myeonggu.kim/Music/iTunes"
       },
       {
         "name": "util",
-        "source": "/c/util"
+        "source": "C:/util"
       },
       {
         "name": "tv",
-        "source": "/c/티브이",
+        "source": "C:/티브이",
         "bcscript": "sync-update.bc"
       },
       {
         "name": "movie",
-        "source": "/c/무비",
+        "source": "C:/무비",
         "bcscript": "sync-update.bc"
       },
       {
         "name": "youtube",
-        "source": "/c/유튜브"
+        "source": "C:/유튜브"
       }
     ]
   }

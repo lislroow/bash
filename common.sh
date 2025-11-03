@@ -52,70 +52,54 @@ fi
 
 # [2] functions
 function LOG {
-  local str
-  str=$*
-  local func lineNo
-  if [ "${FUNCNAME[1]}" == "EXEC" ]; then
+  local cmd func lineNo TS
+  cmd=$*
+  if [[ ${FUNCNAME[1]} == "EXEC" ]]; then
     func=${FUNCNAME[2]}
     lineNo=${BASH_LINENO[1]}
   else
     func=${FUNCNAME[1]}
     lineNo=${BASH_LINENO[0]}
   fi
-  local TS
   TS=$(date "+%Y-%m-%d %H:%M:%S")
-  echo -e "$TS" "[$func:$lineNo]" "${str}" 1>&2
+  echo -e "$TS [$func:$lineNo] ${cmd}" 1>&2
 }
 
 function EXEC {
-  local cmd
+  local cmd func lineNo TS start end exitCode
   cmd=$*
-  local func=${FUNCNAME[1]}
-  local lineNo=${BASH_LINENO[0]}
-  local TS
+  func=${FUNCNAME[1]}
+  lineNo=${BASH_LINENO[0]}
   TS=$(date "+%Y-%m-%d %H:%M:%S")
   
-  printf "%s %s \e[1;37m%s %s\e[0m %s" "$TS" "[$func:$lineNo]" "\$" "$cmd" $'\n' 1>&2
-  local start
+  echo -e "$TS [$func:$lineNo] \e[1;37m\$ ${cmd}\e[0m\n" 1>&2
   start=$(date +%s%N)
-  # local rslt=$(bash -c "$cmd") # @see EXEC_R
-  bash -c "$cmd" 1>&2
-  local exitCode=$?
-  local end
+  bash -c "${cmd[@]}" 1>&2
+  exitCode=$?
   end=$(date +%s%N)
-  if [ $exitCode -eq 0 ]; then
-    #printf "%s(\e[0;32msuccess:%d\e[0m, %'d ms)\n" $'\n' $exitCode $(($(($end - $start))/1000000)) 1>&2
+  if (( $exitCode == 0 )); then
     printf "%s(\e[0;32msuccess:%d\e[0m, %'d ms)\n" $'\n' $exitCode $(( (end - start) / 1000000 )) 1>&2
   else
-    #printf "%s(\e[0;31merror:%d\e[0m, %'d ms)\n" $'\n' $exitCode $(($(($end - $start))/1000000)) 1>&2
     printf "%s(\e[0;31merror:%d\e[0m, %'d ms)\n" $'\n' $exitCode $(( (end - start) / 1000000 )) 1>&2
   fi
   echo $exitCode
-  # if [ ! -z "${rslt[*]}" ]; then   # @see EXEC_R
-  #   printf "${rslt[*]}"
-  # fi
 }
 
 function EXEC_R {
-  local cmd=$*
-  local func=${FUNCNAME[1]}
-  local lineNo=${BASH_LINENO[0]}
-  local TS
+  local cmd func lineNo TS start end exitCode rslt
+  cmd=$*
+  func=${FUNCNAME[1]}
+  lineNo=${BASH_LINENO[0]}
   TS=$(date "+%Y-%m-%d %H:%M:%S")
   
-  printf "%s %s \e[1;37m%s %s\e[0m %s" "$TS" "[$func:$lineNo]" "\$" "$cmd" $'\n' 1>&2
-  local start
+  echo -e "$TS [$func:$lineNo] \e[1;37m\$ ${cmd[@]}\e[0m\n" 1>&2
   start=$(date +%s%N)
-  local rslt
   rslt=$(bash -c "$cmd")
-  local exitCode=$?
-  local end
+  exitCode=$?
   end=$(date +%s%N)
-  if [ $exitCode -eq 0 ]; then
-    #printf "%s(\e[0;32msuccess:%d\e[0m, %'d ms)\n" $'\n' $exitCode $(($(($end - $start))/1000000)) 1>&2
+  if (( $exitCode == 0 )); then
     printf "%s(\e[0;32msuccess:%d\e[0m, %'d ms)\n" $'\n' $exitCode $(( (end - start) / 1000000)) 1>&2
   else
-    #printf "%s(\e[0;31merror:%d\e[0m, %'d ms)\n" $'\n' $exitCode $(($(($end - $start))/1000000)) 1>&2
     printf "%s(\e[0;31merror:%d\e[0m, %'d ms)\n" $'\n' $exitCode $(( (end - start) / 1000000)) 1>&2
   fi
   if [ -n "${rslt[*]}" ]; then
@@ -140,12 +124,12 @@ function _SetConfig {
   }
   
   mapfile -t list < <( jq -r '.config.env[] | "\(.name)=\(.value)"' <<< "${PROP}" | sed '' )
-  for item in "${list[@]}"; do
+  for item in ${list[@]}; do
     eval "$item"
   done
   
   mapfile -t list < <( jq -r '.config.path[]' <<< "${PROP}" | sed '' )
-  for item in "${list[@]}"; do
+  for item in ${list[@]}; do
     export PATH="$item:$PATH"
   done
   
