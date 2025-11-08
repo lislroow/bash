@@ -855,9 +855,9 @@ $ git ls-files --stage | grep script.sh
 #### - 일반 옵션
 ```shell
 $ git config --global core.autocrlf true
+$ git config --global core.safecrlf true
 $ git config --global user.name 김명구
 $ git config --global user.email myeonggu.kim@kakao.com
-$ git config --global core.safecrlf false
 $ git config --global pull.ff only
 $ git config --global alias.br branch
 $ git config --global alias.unstage 'reset HEAD --'
