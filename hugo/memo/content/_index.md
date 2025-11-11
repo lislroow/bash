@@ -860,6 +860,7 @@ $ git config --global user.name 김명구
 $ git config --global user.email myeonggu.kim@kakao.com
 $ git config --global pull.ff only
 $ git config --global alias.br branch
+$ git config --global init.defaultBranch main
 $ git config --global alias.unstage 'reset HEAD --'
 $ git config --global alias.last 'log -1 HEAD'
 ```
@@ -1057,3 +1058,4 @@ $ unset SSH_ASKPASS
 ```shell# token-name: centos
 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
 ```
+
