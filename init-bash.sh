@@ -57,6 +57,8 @@ alias gitlog="git log --oneline"
 alias backup='backup.sh develop project editplus react hyper-v python linux'
 alias restore='restore.sh develop project editplus react hyper-v python linux'
 
+alias docker-ps='docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"'
+
 #source "${HOME}/.sdkman/bin/sdkman-init.sh"
 
 EOF
@@ -85,9 +87,10 @@ cat << EOF
   alias cdscouter="cd '/c/develop/tools/scouter/scouter.server'"
   alias cdproject="cd '/c/project'"
   alias gitlog="git log --oneline"
-  
+
   alias backup='backup.sh develop project editplus react hyper-v python linux'
   alias restore='restore.sh develop project editplus react hyper-v python linux'
+  alias docker-ps='docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"'
 
 EOF
 
