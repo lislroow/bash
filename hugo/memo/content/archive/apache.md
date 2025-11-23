@@ -1,4 +1,4 @@
-## `Ⅰ. apache`
+# `apache`
 
 - 버전: apache 2.4.x
 
@@ -322,7 +322,7 @@ $ setsebool -P httpd_can_network_connect on
 ```
 
 
-## `Ⅱ. 인증서`
+## `인증서`
 ### 1. openssl 인증서 생성
 
 ```shell
@@ -425,7 +425,7 @@ $ keytool -import \
 ```
 
 
-## `Ⅲ. tomcat`
+## `tomcat`
 
 ### 1. 다운로드
 ```shell

@@ -1,10 +1,10 @@
 baseURL = 'https://lislroow.github.io/'
-languageCode = 'ko-kr'
+languageCode = "ko"
 title = 'MEMO'
-theme = 'simple'
+# theme = 'simple'
 
 [Params]
-  author = "lislroow@daum.net"
+  author = "myeonggu.kim@kakao.com"
   description = "KIM MYEONGGU's MEMO site"
 
 [markup]
