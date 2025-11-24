@@ -9,7 +9,7 @@ echo -e "\e[0;32m${HUGO_VERSION}\e[0m"
 server() {
   HUGO_OPTS=""
   HUGO_OPTS="${HUGO_OPTS} --bind=0.0.0.0"
-  HUGO_OPTS="${HUGO_OPTS} --port=80"
+  HUGO_OPTS="${HUGO_OPTS} --port=1313"
   HUGO_OPTS="${HUGO_OPTS} --buildDrafts"
   HUGO_OPTS="${HUGO_OPTS} --disableFastRender"
   HUGO_OPTS="${HUGO_OPTS} --logLevel debug"

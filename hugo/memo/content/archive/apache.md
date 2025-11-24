@@ -1,11 +1,7 @@
 # `apache`
 
-- 버전: apache 2.4.x
-
-### 1. 다운로드
-
+## 1. 다운로드
 다운로드 후 tar zxvf *.tar.gz 로 압축 해제 합니다.
-
 ```shell
 $ wget https://dlcdn.apache.org/httpd/httpd-2.4.58.tar.gz
 $ wget https://dlcdn.apache.org/apr/apr-1.7.4.tar.gz
@@ -13,10 +9,9 @@ $ wget https://dlcdn.apache.org/apr/apr-util-1.6.3.tar.gz
 $ wget https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.42/pcre2-10.42.tar.gz
 ```
 
-### 2. 설치
+## 2. 설치
 
-#### 1) 의존성 설치
-
+### 1) 의존성 설치
 ```shell
 $ yum install gcc gcc-c++ expat expat-devel expat-static
 $ cd /opt/apache/apr-1.7.4 && \
@@ -38,8 +33,7 @@ $ cd /opt/apache/pcre2-10.42 && \
   make install
 ```
 
-#### 2) 설치
-
+### 2) apache 설치
 ```shell
 # no-ssl compile
 $ cd /opt/apache/httpd-2.4.58 && \
@@ -71,10 +65,8 @@ $ cd /opt/apache/httpd-2.4.58 && \
   make install
 ```
 
-### 3. 설정
-
-#### 1) 기본 항목
-
+## 3. 설정
+### 1) 기본 항목
 - User, Group 설정: `User apache`, `Group apache`
 - 디렉토리 설정: `DocumentRoot`, `<Directory>`, `<Location>`
   ```apacheconf
@@ -112,8 +104,7 @@ $ cd /opt/apache/httpd-2.4.58 && \
   ServerSignature Off
   ```
 
-#### 2) 성능 및 옵션
-
+### 2) 성능 및 옵션
 - mpm 설정: `mpm_prefork_module`
   ```apacheconf
   <IfModule mpm_prefork_module>
@@ -144,8 +135,7 @@ $ cd /opt/apache/httpd-2.4.58 && \
   ExtendedStatus On
   ```
 
-#### 3) 가상호스트 및 proxy 설정
-
+### 3) 가상호스트 및 proxy 설정
 ```apacheconf
 <VirtualHost *:80>
   ServerName smpl.develop.net
@@ -177,8 +167,7 @@ $ cd /opt/apache/httpd-2.4.58 && \
 </VirtualHost>
 ```
 
-#### 4) SSL 인증서 적용
-
+### 4) SSL 인증서 적용
 ```apacheconf
 # conf/httpd.conf
 LoadModule socache_shmcb_module modules/mod_socache_shmcb.so
@@ -272,9 +261,8 @@ SSLSessionCacheTimeout  300
   ProxyPassMatch /(.*\.jsp.*) balancer://cluster
 </VirtualHost>
 ```
-#### 5) systemd 등록
+### 5) systemd 등록
 /etc/systemd/system/apache.service
-
 ```shell
 [Unit]
 Description=apache httpd 2.4.58
@@ -292,7 +280,7 @@ Restart=no
 WantedBy=multi-user.target
 ```
 
-#### 5) weblogic-connector
+### 5) weblogic-connector
 ```apacheconf
 LoadModule weblogic_module modules/mod_wl_24.so
 
@@ -314,7 +302,7 @@ LoadModule weblogic_module modules/mod_wl_24.so
 </Location>
 ```
 
-#### 6) selinux
+### 6) selinux
 ```shell
 $ chcon -Rt httpd_log_t /log/apache
 $ chcon -Rt httpd_sys_content_t /sorc/memo
@@ -322,9 +310,8 @@ $ setsebool -P httpd_can_network_connect on
 ```
 
 
-## `인증서`
-### 1. openssl 인증서 생성
-
+# `인증서`
+## 1. openssl 인증서 생성
 ```shell
 #!/bin/bash
 
@@ -385,9 +372,8 @@ $ keytool -importkeystore \
     -deststoretype jks
 ```
 
-### 2. keytool 인증서 생성
+## 2. keytool 인증서 생성
 java 에 포함된 keytool 은 keystore 기반으로 인증서와 키를 관리할 수 있습니다.
-
 ```shell
 # private-key(mgkim.net.jks 파일) 생성
 $ keytool -genkeypair \
@@ -426,13 +412,12 @@ $ keytool -import \
 
 
 ## `tomcat`
-
-### 1. 다운로드
+## 1. 다운로드
 ```shell
 $ wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.96/bin/apache-tomcat-8.5.96.tar.gz
 ```
 
-### 2. 디렉토리 구조
+## 2. 디렉토리 구조
 ```
 servers/
 └── smpl
@@ -484,8 +469,8 @@ scouter/
     └── scouter.agent.jar
 ```
 
-### 3. 스크립트
-#### 1) start-smpl.sh 
+## 3. 스크립트
+### 1) start-smpl.sh
 ```shell
 #!/bin/bash
 
@@ -546,7 +531,7 @@ JAVA_OPTS="${JAVA_OPTS} -Djava.net.preferIPv4Stack=true"
 source ${CATALINA_HOME}/bin/catalina.sh start "$@"
 ```
 
-#### 2) stop-smpl.sh 
+### 2) stop-smpl.sh 
 ```shell
 #!/bin/bash
   
@@ -589,9 +574,8 @@ fi
 echo "tomcat stopped"
 ```
 
-### 4. 설정
-
-#### 1) conf/server.xml
+## 4. 설정
+### 1) conf/server.xml
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Server port="8015" shutdown="SHUTDOWN"><!-- default-port: 8005 -->
@@ -665,7 +649,7 @@ echo "tomcat stopped"
 </Server>
 ```
 
-#### 2) conf/context.xml
+### 2) conf/context.xml
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
@@ -677,15 +661,15 @@ echo "tomcat stopped"
 </Context>
 ```
 
-#### 3) conf/Catalina/localhost/ROOT.xml
+### 3) conf/Catalina/localhost/ROOT.xml
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <Context path="" docBase="/sorc/smpl/war" reloadable="false">
 </Context>
 ```
 
-### 5. 기타
-#### 1) alias
+## 5. 기타
+### 1) alias
 ```shell
 alias cdwas='cd /engn/servers/smpl'
 alias cdapp='cd /sorc/smpl'
@@ -697,7 +681,7 @@ alias curlwas='curl -X GET http://localhost:8010/'
 alias pswas='ps -ef | grep java | grep "instance.id=smpl "'
 ```
 
-#### 2) config-list.sh
+### 2) config-list.sh
 ```shell
 #!/bin/bash
 
