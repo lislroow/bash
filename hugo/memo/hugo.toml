@@ -1,10 +1,10 @@
 baseURL = 'https://lislroow.github.io/'
-languageCode = 'ko-kr'
+languageCode = "ko"
 title = 'MEMO'
-theme = 'simple'
+# theme = 'simple'
 
 [Params]
-  author = "lislroow@daum.net"
+  author = "myeonggu.kim@kakao.com"
   description = "KIM MYEONGGU's MEMO site"
 
 [markup]
@@ -29,9 +29,15 @@ theme = 'simple'
 
 [menu]
   [[menu.main]]
+    identifier = 'post'
+    name = '+ post'
+    name = 'post'
+    url = '/post/01'
+    weight = 1
+  [[menu.main]]
     identifier = 'archive'
     name = '+ archive'
-    weight = 1
+    weight = 2
   [[menu.main]]
     parent = 'archive'
     identifier = 'apache'
@@ -40,15 +46,9 @@ theme = 'simple'
     weight = 1
   [[menu.main]]
     parent = 'archive'
-    identifier = 'nginx'
-    name = 'nginx'
-    url = '/archive/nginx/'
-    weight = 2
-  [[menu.main]]
-    parent = 'archive'
-    identifier = 'oracle19c'
-    name = 'oracle19c'
-    url = '/archive/oracle19c/'
+    identifier = 'oracle'
+    name = 'oracle'
+    url = '/archive/oracle/'
     weight = 3
   [[menu.main]]
     identifier = 'shell'

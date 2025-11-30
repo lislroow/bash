@@ -1,0 +1,10 @@
+<aside class="aside">
+<span>{{ .Title }}</span>
+{{ if not .Params.notoc }}
+{{ with .TableOfContents }}
+{{ if ge (len .) 10 }}
+{{ . }}
+{{ end }}
+{{ end }}
+{{ end }}
+</aside>
