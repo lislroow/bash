@@ -32,26 +32,27 @@ if [ ! -z "$pid" ]; then
 fi
 
 SCOUTER_AGENT_DIR=/engn/scouter/agent.java
-JAVA_OPTS="-server"
-JAVA_OPTS="${JAVA_OPTS} -Xms512m -Xmx512m"
-JAVA_OPTS="${JAVA_OPTS} -verbose:gc"
-JAVA_OPTS="${JAVA_OPTS} -Xloggc:${LOG_BASE}/gc/`date +%Y%m%d_%H%M%S`-gc.log"
-JAVA_OPTS="${JAVA_OPTS} -XX:+PrintGCDetails"
-JAVA_OPTS="${JAVA_OPTS} -XX:+PrintGCDateStamps"
-JAVA_OPTS="${JAVA_OPTS} -XX:+PrintHeapAtGC"
-JAVA_OPTS="${JAVA_OPTS} -XX:+UseGCLogFileRotation"
-JAVA_OPTS="${JAVA_OPTS} -XX:+ExitOnOutOfMemoryError"
-JAVA_OPTS="${JAVA_OPTS} -XX:+HeapDumpOnOutOfMemoryError"
-JAVA_OPTS="${JAVA_OPTS} -XX:HeapDumpPath=${LOG_BASE}/dump_${INSTANCE_ID}_`date+%Y%m%d_%H%M%S`.hprof"
-JAVA_OPTS="${JAVA_OPTS} -XX:+DisableExplicitGC"
-JAVA_OPTS="${JAVA_OPTS} -Dinstance.id=${INSTANCE_ID}"
-JAVA_OPTS="${JAVA_OPTS} -Dlog.base=${LOG_BASE}"
-JAVA_OPTS="${JAVA_OPTS} -Dfile.encoding=utf-8"
-JAVA_OPTS="${JAVA_OPTS} -Djava.library.path=${BASE_DIR}/lib"
-JAVA_OPTS="${JAVA_OPTS} -Doracle.jdbc.autoCommitSpecCompliant=false"
-JAVA_OPTS="${JAVA_OPTS} -javaagent:${SCOUTER_AGENT_DIR}/scouter.agent.jar"
-JAVA_OPTS="${JAVA_OPTS} -Dscuter.config=${SCOUTER_AGENT_DIR}/conf/scouter.conf"
-JAVA_OPTS="${JAVA_OPTS} -Dobj_name=${INSTANCE_ID}_1"
-JAVA_OPTS="${JAVA_OPTS} -Djava.net.preferIPv4Stack=true"
 
-source ${CATALINA_HOME}/bin/catalina.sh start "$@"
+JAVA_OPTS="\
+  -Xms512m -Xmx512m \
+  -verbose:gc \
+  -Xloggc:${LOG_BASE}/gc/`date +%Y%m%d_%H%M%S`-gc.log \
+  -XX:+PrintGCDetails \
+  -XX:+PrintGCDateStamps \
+  -XX:+PrintHeapAtGC \
+  -XX:+UseGCLogFileRotation \
+  -XX:+ExitOnOutOfMemoryError \
+  -XX:+HeapDumpOnOutOfMemoryError \
+  -XX:HeapDumpPath=${LOG_BASE}/dump_${INSTANCE_ID}_`date+%Y%m%d_%H%M%S`.hprof \
+  -XX:+DisableExplicitGC \
+  -Dinstance.id=${INSTANCE_ID} \
+  -Dlog.base=${LOG_BASE} \
+  -Dfile.encoding=utf-8 \
+  -Djava.library.path=${BASE_DIR}/lib \
+  -Djava.net.preferIPv4Stack=true \
+  -Doracle.jdbc.autoCommitSpecCompliant=false \
+  -javaagent:${SCOUTER_AGENT_DIR}/scouter.agent.jar \
+  -Dscuter.config=${SCOUTER_AGENT_DIR}/conf/scouter.conf \
+  -Dobj_name=${INSTANCE_ID}_1 \
+"
+sudo -u ${EXEC_USER} ${CATALINA_HOME}/bin/catalina.sh start "$@"
