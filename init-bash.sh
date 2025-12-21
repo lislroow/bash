@@ -42,6 +42,7 @@ PATH="$BASHDIR/build:\$PATH"
 PATH="$BASHDIR/docker/kafka-connector:\$PATH"
 PATH="$BASHDIR/nginx:/c/develop/tools/nginx:\$PATH"
 PATH="/c/Program Files/7-Zip:\$PATH"
+PATH="/c/develop/tools/node/node-v25.2.1:\$PATH"
 export PATH
 
 alias curl="curl -s"
