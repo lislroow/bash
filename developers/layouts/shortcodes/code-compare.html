@@ -1,0 +1,39 @@
+
+{{/*
+Parameters:
+  lang
+  leftTitle
+  centerTitle (optional)
+  rightTitle
+*/}}
+
+{{ $lang := .Get "lang" | default "" }}
+{{ $leftTitle := .Get "leftTitle" }}
+{{ $centerTitle := .Get "centerTitle" }}
+{{ $rightTitle := .Get "rightTitle" }}
+
+{{ $parts := split .Inner "---" }}
+
+<div class="code-compare {{ if $centerTitle }}three-col{{ else }}two-col{{ end }}">
+
+  <!-- left -->
+  <div class="code-col good">
+    <div class="code-title">{{ $leftTitle }}</div>
+    {{ highlight (trim (index $parts 0) "\n") $lang "" }}
+  </div>
+  
+  <!-- center (optional) -->
+  {{ if $centerTitle }}
+  <div class="code-col middle">
+    <div class="code-title">{{ $centerTitle }}</div>
+    {{ highlight (trim (index $parts 1) "\n") $lang "" }}
+  </div>
+  {{ end }}
+
+  <!-- right -->
+  <div class="code-col bad">
+    <div class="code-title">{{ $rightTitle }}</div>
+    {{ highlight (trim (index $parts (cond $centerTitle 2 1)) "\n") $lang "" }}
+  </div>
+
+</div>

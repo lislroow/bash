@@ -1,0 +1,16 @@
+baseURL = 'https://lislroow.github.io/'
+languageCode = "ko"
+
+[Params]
+  author = "myeonggu.kim@kakao.com"
+  description = ""
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.highlight]
+    guessSyntax = true
+    codeFences = true
+  [markup.tableOfContents]
+    startLevel = 1
+    endLevel = 5

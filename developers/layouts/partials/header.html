@@ -1,0 +1,29 @@
+<header>
+  <div class="navbar">
+    <div>
+      <a href="#" id="toggleTocButton" style="margin-left: auto;">+</a>
+    </div>
+    {{ with .Site.Menus.main }}
+    {{ range . }}
+      {{ if .HasChildren }}
+      <div class="dropdown">
+        <button class="dropbtn">{{ .Name }}</button>
+        <div class="dropdown-content">
+        {{ range .Children }}
+          <a href="{{ .Page.RelPermalink }}">{{ .Name }}</a>
+        {{ end }}
+        </div>
+      </div>
+      {{ else }}
+      <a href="{{ .Page.RelPermalink }}">{{ .Name }}</a>
+      {{ end }}
+    {{ end }}
+    {{ end }}
+  </div>
+</header>
+
+<script>
+document.getElementById('toggleTocButton').addEventListener('click', function() {
+  document.querySelector('.aside').classList.toggle('hidden');
+});
+</script>

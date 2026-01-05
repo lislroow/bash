@@ -1,0 +1,28 @@
+{{/*
+Parameters:
+  lang
+  leftTitle
+  rightTitle
+*/}}
+
+{{ $lang := .Get "lang" | default "" }}
+{{ $leftTitle := .Get "leftTitle" | default "Good" }}
+{{ $rightTitle := .Get "rightTitle" | default "Bad"  }}
+
+{{ $parts := split .Inner "---" }}
+
+<div class="code-compare">
+
+  <!-- left -->
+  <div class="code-col good">
+    <div class="code-title good">{{ $leftTitle }}</div>
+    {{ highlight (trim (index $parts 0) "\n") $lang "" }}
+  </div>
+  
+  <!-- right -->
+  <div class="code-col bad">
+    <div class="code-title bad">{{ $rightTitle }}</div>
+    {{ highlight (trim (index $parts 1) "\n") $lang "" }}
+  </div>
+
+</div>
