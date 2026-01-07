@@ -2,15 +2,36 @@
 {{/*
 Parameters:
   lang
+  leftLang
+  centerLang
+  rightLang
   leftTitle
   centerTitle (optional)
   rightTitle
 */}}
 
 {{ $lang := .Get "lang" | default "" }}
+{{ $leftLang := .Get "leftLang" | default $lang }}
+{{ $centerLang := .Get "centerLang" | default $lang }}
+{{ $rightLang := .Get "rightLang" | default $lang }}
 {{ $leftTitle := .Get "leftTitle" }}
 {{ $centerTitle := .Get "centerTitle" }}
 {{ $rightTitle := .Get "rightTitle" }}
+
+{{ $leftLang := $lang }}
+{{ if $leftLang }}
+  {{ $leftLang = $leftLang }}
+{{ end }}
+
+{{ $centerLang := $lang }}
+{{ if $centerLang }}
+  {{ $centerLang = $centerLang }}
+{{ end }}
+
+{{ $rightLang := $lang }}
+{{ if $rightLang }}
+  {{ $rightLang = $rightLang }}
+{{ end }}
 
 {{ $parts := split .Inner "---" }}
 
@@ -19,21 +40,21 @@ Parameters:
   <!-- left -->
   <div class="code-col good">
     <div class="code-title">{{ $leftTitle }}</div>
-    {{ highlight (trim (index $parts 0) "\n") $lang "" }}
+    {{ highlight (trim (index $parts 0) "\n") $leftLang "" }}
   </div>
   
   <!-- center (optional) -->
   {{ if $centerTitle }}
   <div class="code-col middle">
     <div class="code-title">{{ $centerTitle }}</div>
-    {{ highlight (trim (index $parts 1) "\n") $lang "" }}
+    {{ highlight (trim (index $parts 1) "\n") $centerLang "" }}
   </div>
   {{ end }}
 
   <!-- right -->
   <div class="code-col bad">
     <div class="code-title">{{ $rightTitle }}</div>
-    {{ highlight (trim (index $parts (cond $centerTitle 2 1)) "\n") $lang "" }}
+    {{ highlight (trim (index $parts (cond $centerTitle 2 1)) "\n") $rightLang "" }}
   </div>
 
 </div>
