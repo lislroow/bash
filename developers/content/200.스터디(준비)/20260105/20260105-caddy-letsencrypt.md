@@ -1,5 +1,5 @@
 <details>
-<summary>caddy: letencrypt 인증서 발급 로그 → (정상)</summary>
+<summary>(log) letsencrypt 발급 조건 충족 시 발급 완료</summary>
 
 ```json
 Jan 05 22:28:26 develop caddy[3129]: {"level":"info","ts":1767619706.854623,"msg":"trying to solve challenge","identifier":"code.dlog.my","challenge_type":"tls-alpn-01","ca":"https://acme-v02.api.letsencrypt.org/directory"}
