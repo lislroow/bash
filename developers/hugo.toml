@@ -13,4 +13,4 @@ languageCode = "ko"
     codeFences = true
   [markup.tableOfContents]
     startLevel = 1
-    endLevel = 5
+    endLevel = 6
