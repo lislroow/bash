@@ -54,7 +54,7 @@
     }
   },
   "backup": {
-    "drive": "/d",
+    "drive": "/e",
     "entries": [
       {
         "name": "editplus",
@@ -65,8 +65,8 @@
         "source": "C:/Users/myeonggu.kim/AppData/Roaming/Scooter Software/Beyond Compare 4"
       },
       {
-        "name": "vm-disk",
-        "source": "C:/vm-disk",
+        "name": "vm",
+        "source": "C:/vm",
         "bcscript": "sync-update.bc"
       },
       {
